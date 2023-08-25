@@ -1,4 +1,4 @@
-﻿namespace PdfGenerator.Models;
+﻿namespace PdfGenerator.Sample_Models;
 
 public class Address
 {

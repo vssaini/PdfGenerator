@@ -1,8 +1,9 @@
 ﻿using PdfGenerator.Models;
+using PdfGenerator.Sample_Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
-namespace PdfGenerator.Services
+namespace PdfGenerator.Components.Invoice
 {
     public class AddressComponent : IComponent
     {

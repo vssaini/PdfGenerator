@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PdfGenerator.Sample_Models;
 
 namespace PdfGenerator.Data
 {
-    using PdfGenerator.Models;
     using QuestPDF.Helpers;
 
     public static class InvoiceDocumentDataSource
     {
-        private static Random Random = new Random();
+        private static readonly Random Random = new();
 
         public static InvoiceModel GetInvoiceDetails()
         {

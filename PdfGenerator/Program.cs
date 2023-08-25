@@ -1,23 +1,14 @@
-﻿using PdfGenerator.Data;
+﻿using PdfGenerator.Components.Royalty;
 using PdfGenerator.Services;
-using System.Diagnostics;
-using QuestPDF.Fluent;
-using QuestPDF.Infrastructure;
-using QuestPDF.Previewer;
 
-// Ref - https://www.questpdf.com/license/configuration.html
-QuestPDF.Settings.License = LicenseType.Community;
+PdfService.ConfigureQuestPdfLicense();
 
-var filePath = "invoice.pdf";
+//var document = InvoiceService.GenerateInvoiceDoc();
+var document = RoyaltyService.GenerateRoyaltyDoc();
 
-var model = InvoiceDocumentDataSource.GetInvoiceDetails();
-var document = new InvoiceDocument(model);
-
-// instead of the standard way of generating a PDF file
-//document.GeneratePdf(filePath);
-//Process.Start("explorer.exe", filePath);
+var filePath = document is RoyaltyDocument ? "royalty.pdf" : "invoice.pdf";
+PdfService.GeneratePdf(document, filePath);
 
 // Ref - https://www.questpdf.com/document-previewer.html
 // To view in previewer
-document.ShowInPreviewer();
-
+//document.ShowInPreviewer();
