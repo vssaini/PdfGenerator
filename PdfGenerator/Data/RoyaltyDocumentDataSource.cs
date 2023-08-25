@@ -1,6 +1,5 @@
 ﻿using Bogus;
 using PdfGenerator.Models;
-using QuestPDF.Helpers;
 
 namespace PdfGenerator.Data
 {
@@ -11,20 +10,23 @@ namespace PdfGenerator.Data
 
         public RoyaltyDocumentDataSource()
         {
-            _faker = new Faker("en_US");
+            _faker = new Faker();
         }
 
         public RoyaltyModel GetRoyaltyDetails()
         {
             var royaltyItems = Enumerable
                 .Range(1, 5)
-                .Select(i => GenerateRandomRoyaltyItem())
+                .Select(_ => GenerateRandomRoyaltyItem())
                 .ToList();
+
+            var startDate = new DateTime(1996, 01, 01);
+            var endDate = new DateTime(1997, 06, 30);
 
             return new RoyaltyModel
             {
-                AsOfDate = new DateTime(1997, 06, 30),
-                RunDate = new DateTime(1997, 07, 18),
+                AsOfDate = _faker.Date.Between(startDate, endDate),
+                RunDate = _faker.Date.Between(startDate, endDate),
 
                 StatementTitle = "Statement of Artist Royalties From Foreign Sales",
                 StatementSubTitle = "First Six Months of 1997",
@@ -33,15 +35,17 @@ namespace PdfGenerator.Data
                 Artist = "PETER DUCHIN",
                 Account = 001694,
 
-                Items = royaltyItems
+                Items = royaltyItems,
+
+                Year = endDate.Year
             };
         }
 
         private RoyaltyItem GenerateRandomRoyaltyItem()
         {
             var rows = Enumerable
-                .Range(1, 3)
-                .Select(i => GenerateRandomRoyaltyRow())
+                .Range(1, 4)
+                .Select(_ => GenerateRandomRoyaltyRow())
                 .ToList();
 
             return new RoyaltyItem
@@ -55,9 +59,12 @@ namespace PdfGenerator.Data
 
         private static RoyaltyRow GenerateRandomRoyaltyRow()
         {
+            var catalogNumber = new[] { "005 002", "005 033" };
+            var catalogSuffixes = new[] { "060017", "060017@" };
+
             return new RoyaltyRow
             {
-                CatalogNumber = Placeholders.Label(),
+                CatalogNumber = $"{catalogNumber[Random.Next(0, catalogNumber.Length)]} {catalogSuffixes[Random.Next(0, catalogSuffixes.Length)]}",
                 Units = Random.Next(-3, 4000),
                 Rate = (decimal)Math.Round(Random.NextDouble() * 100, 2),
                 Amount = (decimal)Math.Round(Random.NextDouble() * 100, 2),

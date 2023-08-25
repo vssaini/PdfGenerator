@@ -1,13 +1,20 @@
 ﻿using PdfGenerator.Components.Invoice;
+using PdfGenerator.Contracts;
 using PdfGenerator.Data;
+using QuestPDF.Previewer;
 
 namespace PdfGenerator.Services;
 
-public class InvoiceService
+public class InvoiceService : IDocService
 {
-    public static InvoiceDocument GenerateInvoiceDoc()
+    public void GenerateDoc(bool showInPreviewer, int fontSize)
     {
         var model = InvoiceDocumentDataSource.GetInvoiceDetails();
-        return new InvoiceDocument(model);
+        var document = new InvoiceDocument(model, fontSize);
+
+        if (showInPreviewer)
+            document.ShowInPreviewer();
+        else
+            PdfService.GeneratePdf(document, "invoice.pdf");
     }
 }

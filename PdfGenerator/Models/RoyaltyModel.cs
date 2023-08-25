@@ -13,4 +13,6 @@ public sealed class RoyaltyModel
     public int Account { get; set; }
 
     public List<RoyaltyItem> Items { get; set; }
+
+    public int Year { get; set; }
 }

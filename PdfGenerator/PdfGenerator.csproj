@@ -12,4 +12,8 @@
     <PackageReference Include="QuestPDF" Version="2023.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\" />
+  </ItemGroup>
+
 </Project>

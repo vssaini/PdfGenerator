@@ -1,14 +1,9 @@
-﻿using PdfGenerator.Components.Royalty;
-using PdfGenerator.Services;
+﻿using PdfGenerator.Services;
 
-PdfService.ConfigureQuestPdfLicense();
+PdfService.SetQuestPdfLicense();
 
-//var document = InvoiceService.GenerateInvoiceDoc();
-var document = RoyaltyService.GenerateRoyaltyDoc();
+//var invoiceService = new InvoiceService();
+//var document = invoiceService.GenerateDoc(false,8);
 
-var filePath = document is RoyaltyDocument ? "royalty.pdf" : "invoice.pdf";
-PdfService.GeneratePdf(document, filePath);
-
-// Ref - https://www.questpdf.com/document-previewer.html
-// To view in previewer
-//document.ShowInPreviewer();
+var docService = new RoyaltyService();
+docService.GenerateDoc(false, 8);

@@ -7,14 +7,13 @@ namespace PdfGenerator.Components.Invoice
 {
     public class InvoiceDocument : IDocument
     {
-        /// <summary>
-        /// Gets the model for the invoice.
-        /// </summary>
-        public InvoiceModel Model { get; }
+        private readonly int _fontSize;
+        private readonly InvoiceModel _model;
 
-        public InvoiceDocument(InvoiceModel model)
+        public InvoiceDocument(InvoiceModel model, int fontSize)
         {
-            Model = model;
+            _fontSize = fontSize;
+            _model = model;
         }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
@@ -26,6 +25,7 @@ namespace PdfGenerator.Components.Invoice
                 .Page(page =>
                 {
                     page.Margin(50);
+                    page.DefaultTextStyle(x => x.FontSize(_fontSize));
 
                     page.Header().Element(ComposeHeader);
                     page.Content().Element(ComposeContent);
@@ -47,18 +47,18 @@ namespace PdfGenerator.Components.Invoice
             {
                 row.RelativeItem().Column(column =>
                 {
-                    column.Item().Text($"Invoice #{Model.InvoiceNumber}").Style(titleStyle);
+                    column.Item().Text($"Invoice #{_model.InvoiceNumber}").Style(titleStyle);
 
                     column.Item().Text(text =>
                     {
                         text.Span("Issue date: ").SemiBold();
-                        text.Span($"{Model.IssueDate:d}");
+                        text.Span($"{_model.IssueDate:d}");
                     });
 
                     column.Item().Text(text =>
                     {
                         text.Span("Due date: ").SemiBold();
-                        text.Span($"{Model.DueDate:d}");
+                        text.Span($"{_model.DueDate:d}");
                     });
                 });
 
@@ -74,17 +74,17 @@ namespace PdfGenerator.Components.Invoice
 
                 column.Item().Row(row =>
                 {
-                    row.RelativeItem().Component(new AddressComponent("From", Model.SellerAddress));
+                    row.RelativeItem().Component(new AddressComponent("From", _model.SellerAddress));
                     row.ConstantItem(50);
-                    row.RelativeItem().Component(new AddressComponent("For", Model.CustomerAddress));
+                    row.RelativeItem().Component(new AddressComponent("For", _model.CustomerAddress));
                 });
 
                 column.Item().Element(ComposeTable);
 
-                var totalPrice = Model.Items.Sum(x => x.Price * x.Quantity);
+                var totalPrice = _model.Items.Sum(x => x.Price * x.Quantity);
                 column.Item().AlignRight().Text($"Grand total: {totalPrice}$").FontSize(14);
 
-                if (!string.IsNullOrWhiteSpace(Model.Comments))
+                if (!string.IsNullOrWhiteSpace(_model.Comments))
                     column.Item().PaddingTop(25).Element(ComposeComments);
             });
         }
@@ -119,9 +119,9 @@ namespace PdfGenerator.Components.Invoice
                 });
 
                 // step 3
-                foreach (var item in Model.Items)
+                foreach (var item in _model.Items)
                 {
-                    table.Cell().Element(CellStyle).Text(Model.Items.IndexOf(item) + 1);
+                    table.Cell().Element(CellStyle).Text(_model.Items.IndexOf(item) + 1);
                     table.Cell().Element(CellStyle).Text(item.Name);
                     table.Cell().Element(CellStyle).AlignRight().Text($"{item.Price}$");
                     table.Cell().Element(CellStyle).AlignRight().Text(item.Quantity);
@@ -141,7 +141,7 @@ namespace PdfGenerator.Components.Invoice
             {
                 column.Spacing(5);
                 column.Item().Text("Comments").FontSize(14);
-                column.Item().Text(Model.Comments);
+                column.Item().Text(_model.Comments);
             });
         }
     }

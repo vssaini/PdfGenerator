@@ -8,13 +8,22 @@ namespace PdfGenerator.Components.Royalty
 {
     public sealed class RoyaltyDocument : IDocument
     {
-        public RoyaltyModel Model { get; }
+        private readonly RoyaltyModel _model;
+        private readonly int _fontSize;
 
-        public RoyaltyDocument(RoyaltyModel model)
+        public RoyaltyDocument(RoyaltyModel model, int fontSize)
         {
-            Model = model;
+            _model = model;
+            _fontSize = fontSize;
+
+            FilePath = $"{_model.Account} - {_model.Artist} -{_model.Year}.pdf";
         }
 
+        /// <summary>
+        /// Gets or sets the PDF file path.
+        /// </summary>
+        public string FilePath { get; set; }
+        
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
         public DocumentSettings GetSettings() => DocumentSettings.Default;
 
@@ -25,7 +34,7 @@ namespace PdfGenerator.Components.Royalty
                 {
                     page.Size(PageSizes.Letter);
                     page.Margin(30);
-                    page.DefaultTextStyle(x => x.FontFamily(Fonts.Calibri).FontSize(10));
+                    page.DefaultTextStyle(x => x.FontFamily(Fonts.Calibri).FontSize(_fontSize));
 
                     page.Header().Element(ComposeHeader);
                     page.Content().Element(ComposeSubHeader);
@@ -42,13 +51,13 @@ namespace PdfGenerator.Components.Royalty
                      column.Item().Text(text =>
                      {
                          text.Span("As of: ").SemiBold();
-                         text.Span($"{Model.AsOfDate:MM/dd/yy}");
+                         text.Span($"{_model.AsOfDate:MM/dd/yy}");
                      });
 
                      column.Item().Text(text =>
                      {
                          text.Span("Run Date: ").SemiBold();
-                         text.Span($"{Model.RunDate:MM/dd/yy}");
+                         text.Span($"{_model.RunDate:MM/dd/yy}");
                      });
                  });
 
@@ -57,11 +66,11 @@ namespace PdfGenerator.Components.Royalty
                      column.Item().Text(text =>
                      {
                          text.AlignCenter();
-                         text.Span(Model.StatementTitle);
+                         text.Span(_model.StatementTitle);
                          text.EmptyLine();
-                         text.Span(Model.StatementSubTitle);
+                         text.Span(_model.StatementSubTitle);
                          text.EmptyLine();
-                         text.Span(Model.PrintedFromTitle);
+                         text.Span(_model.PrintedFromTitle);
                      });
 
                      //column.Item().Text(Placeholders.Sentence());
@@ -88,7 +97,7 @@ namespace PdfGenerator.Components.Royalty
                     column.Item().Text(text =>
                     {
                         text.Span("Artist: ").SemiBold();
-                        text.Span(Model.Artist);
+                        text.Span(_model.Artist);
                     });
                 });
 
@@ -98,7 +107,7 @@ namespace PdfGenerator.Components.Royalty
                     {
                         text.AlignLeft();
                         text.Span("Account: ").SemiBold();
-                        text.Span(Model.Account.ToString());
+                        text.Span(_model.Account.ToString());
                     });
                 });
             });
@@ -172,7 +181,7 @@ namespace PdfGenerator.Components.Royalty
                 });
 
                 // step 3
-                foreach (var item in Model.Items)
+                foreach (var item in _model.Items)
                 {
                     table.Cell().Element(CellStyle).AlignLeft().Text(item.Country);
                     table.Cell().Element(CellStyle).AlignMiddle().Text($"{item.Period.StartDate:MM/dd/yy} TO {item.Period.EndDate:MM/dd/yy}");
