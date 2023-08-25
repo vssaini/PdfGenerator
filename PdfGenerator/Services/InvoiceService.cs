@@ -7,7 +7,7 @@ namespace PdfGenerator.Services;
 
 public class InvoiceService : IDocService
 {
-    public void GenerateDoc(bool showInPreviewer, int fontSize)
+    public void GenerateDoc(bool showInPreviewer = false, int fontSize = 8)
     {
         var model = InvoiceDocumentDataSource.GetInvoiceDetails();
         var document = new InvoiceDocument(model, fontSize);

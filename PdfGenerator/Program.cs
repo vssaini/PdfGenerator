@@ -3,7 +3,7 @@
 PdfService.SetQuestPdfLicense();
 
 //var invoiceService = new InvoiceService();
-//var document = invoiceService.GenerateDoc(false,8);
+//var document = invoiceService.GenerateDoc();
 
 var docService = new RoyaltyService();
-docService.GenerateDoc(false, 8);
+docService.GenerateDoc();

@@ -7,7 +7,7 @@ namespace PdfGenerator.Services;
 
 public class RoyaltyService : IDocService
 {
-    public void GenerateDoc(bool showInPreviewer, int fontSize)
+    public void GenerateDoc(bool showInPreviewer = false, int fontSize = 8)
     {
         var source = new RoyaltyDocumentDataSource();
         var model = source.GetRoyaltyDetails();
