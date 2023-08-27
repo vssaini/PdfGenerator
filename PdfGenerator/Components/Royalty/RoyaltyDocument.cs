@@ -1,8 +1,8 @@
-﻿using System.Globalization;
-using PdfGenerator.Models;
+﻿using PdfGenerator.Models;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
+using System.Globalization;
 
 namespace PdfGenerator.Components.Royalty
 {
@@ -23,7 +23,7 @@ namespace PdfGenerator.Components.Royalty
         /// Gets or sets the PDF file path.
         /// </summary>
         public string FilePath { get; set; }
-        
+
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
         public DocumentSettings GetSettings() => DocumentSettings.Default;
 
@@ -37,7 +37,6 @@ namespace PdfGenerator.Components.Royalty
                     page.DefaultTextStyle(x => x.FontFamily(Fonts.Calibri).FontSize(_fontSize));
 
                     page.Header().Element(ComposeHeader);
-                    page.Content().Element(ComposeSubHeader);
                     page.Content().Element(ComposeContent);
                 });
         }
@@ -72,8 +71,6 @@ namespace PdfGenerator.Components.Royalty
                          text.EmptyLine();
                          text.Span(_model.PrintedFromTitle);
                      });
-
-                     //column.Item().Text(Placeholders.Sentence());
                  });
 
                  row.RelativeItem().Column(column =>
@@ -115,11 +112,11 @@ namespace PdfGenerator.Components.Royalty
 
         private void ComposeContent(IContainer container)
         {
-            container.PaddingVertical(40).Column(column =>
+            container.PaddingVertical(10).Column(column =>
             {
-                column.Spacing(5);
+                //column.Spacing(5);
 
-                // TODO: Add sub header here
+                column.Item().Element(ComposeSubHeader);
                 //column.Item().Row(row =>
                 //{
                 //    row.RelativeItem().Component(new AddressComponent("From", Model.SellerAddress));
@@ -128,12 +125,6 @@ namespace PdfGenerator.Components.Royalty
                 //});
 
                 column.Item().Element(ComposeTable);
-
-                //var totalPrice = Model.Items.Sum(x => x.Price * x.Quantity);
-                //column.Item().AlignRight().Text($"Grand total: {totalPrice}$").FontSize(14);
-
-                //if (!string.IsNullOrWhiteSpace(Model.Comments))
-                //    column.Item().PaddingTop(25).Element(ComposeComments);
             });
         }
 
@@ -186,48 +177,44 @@ namespace PdfGenerator.Components.Royalty
                     table.Cell().Element(CellStyle).AlignLeft().Text(item.Country);
                     table.Cell().Element(CellStyle).AlignMiddle().Text($"{item.Period.StartDate:MM/dd/yy} TO {item.Period.EndDate:MM/dd/yy}");
 
-                    bool firstRowProcessed = false;
-
-                    foreach (var row in item.Rows)
-                    {
-                        if (firstRowProcessed)
-                        {
-                            table.Cell().ColumnSpan(3).Element(CellStyle).AlignRight().Text(row.CatalogNumber);
-                        }
-                        else
-                        {
-                            table.Cell().Element(CellStyle).AlignRight().Text(row.CatalogNumber);
-                        }
-
-                        table.Cell().Element(CellStyle).AlignRight().Text(row.Units.ToString(CultureInfo.InvariantCulture));
-                        table.Cell().Element(CellStyle).AlignRight().Text(row.Rate.ToString(CultureInfo.InvariantCulture));
-                        table.Cell().Element(CellStyle).AlignRight().Text(row.Amount.ToString(CultureInfo.InvariantCulture));
-                        table.Cell().Element(CellStyle).AlignRight().Text(row.Cycle);
-                        table.Cell().Element(CellStyle).AlignRight().Text(row.AfmLia.ToString(CultureInfo.InvariantCulture));
-                        table.Cell().Element(CellStyle).AlignRight().Text(row.RoyaltyBase.ToString(CultureInfo.InvariantCulture));
-                        table.Cell().Element(CellStyle).AlignRight().Text(row.RoyaltyRate.ToString(CultureInfo.InvariantCulture));
-                        table.Cell().Element(CellStyle).AlignRight().Text(row.Type);
-                        table.Cell().Element(CellStyle).AlignRight().Text(row.LicPercentage.ToString(CultureInfo.InvariantCulture));
-
-                        firstRowProcessed = true;
-                    }
+                    AddItemRowsToTable(item.Rows, table);
 
                     static IContainer CellStyle(IContainer container)
                     {
-                        return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5);
+                        return container.PaddingVertical(5);
                     }
                 }
             });
         }
 
-        //private void ComposeComments(IContainer container)
-        //{
-        //    container.Background(Colors.Grey.Lighten3).Padding(10).Column(column =>
-        //    {
-        //        column.Spacing(5);
-        //        column.Item().Text("Comments").FontSize(14);
-        //        column.Item().Text(Model.Comments);
-        //    });
-        //}
+        private static void AddItemRowsToTable(List<RoyaltyRow> rows, TableDescriptor table)
+        {
+            var firstRowProcessed = false;
+
+            foreach (var row in rows)
+            {
+                if (firstRowProcessed)
+                    table.Cell().ColumnSpan(3).Element(CellStyle).AlignRight().Text(row.CatalogNumber);
+                else
+                    table.Cell().Element(CellStyle).AlignRight().Text(row.CatalogNumber);
+
+                table.Cell().Element(CellStyle).AlignRight().Text(row.Units.ToString(CultureInfo.InvariantCulture));
+                table.Cell().Element(CellStyle).AlignRight().Text(row.Rate.ToString(CultureInfo.InvariantCulture));
+                table.Cell().Element(CellStyle).AlignRight().Text(row.Amount.ToString(CultureInfo.InvariantCulture));
+                table.Cell().Element(CellStyle).AlignRight().Text(row.Cycle);
+                table.Cell().Element(CellStyle).AlignRight().Text(row.AfmLia.ToString(CultureInfo.InvariantCulture));
+                table.Cell().Element(CellStyle).AlignRight().Text(row.RoyaltyBase.ToString(CultureInfo.InvariantCulture));
+                table.Cell().Element(CellStyle).AlignRight().Text(row.RoyaltyRate.ToString(CultureInfo.InvariantCulture));
+                table.Cell().Element(CellStyle).AlignRight().Text(row.Type);
+                table.Cell().Element(CellStyle).AlignRight().Text(row.LicPercentage.ToString(CultureInfo.InvariantCulture));
+
+                firstRowProcessed = true;
+            }
+
+            static IContainer CellStyle(IContainer container)
+            {
+                return container.PaddingVertical(5);
+            }
+        }
     }
 }
