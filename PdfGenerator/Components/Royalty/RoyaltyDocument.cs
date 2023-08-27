@@ -211,6 +211,15 @@ namespace PdfGenerator.Components.Royalty
                 firstRowProcessed = true;
             }
 
+            // Sub-total period row
+            var totalUnits = rows.Sum(r => r.Units).ToString("##,###");
+            var totalAmount = rows.Sum(r => r.Amount).ToString("C");
+
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text("Subtotal Period");
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text($"{totalUnits}*");
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text($"{totalAmount}*");
+            table.Cell().ColumnSpan(6).Element(CellStyle).AlignRight().Text("");
+
             static IContainer CellStyle(IContainer container)
             {
                 return container.PaddingVertical(5);
