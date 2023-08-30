@@ -32,7 +32,7 @@ namespace PdfGenerator.Components.Royalty
             container
                 .Page(page =>
                 {
-                    page.Size(PageSizes.Letter);
+                    page.Size(PageSizes.Letter.Landscape());
                     page.Margin(30);
                     page.DefaultTextStyle(x => x.FontFamily(Fonts.Calibri).FontSize(_fontSize));
 
