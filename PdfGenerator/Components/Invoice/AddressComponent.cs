@@ -1,5 +1,4 @@
-﻿using PdfGenerator.Models;
-using PdfGenerator.Sample_Models;
+﻿using PdfGenerator.Sample_Models;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 

@@ -1,14 +1,15 @@
 ﻿using Bogus;
+using PdfGenerator.Contracts;
 using PdfGenerator.Models;
 
 namespace PdfGenerator.Data
 {
-    internal sealed class RoyaltyDocumentDataSource
+    internal sealed class RoyaltyDocDataSource : IRoyaltyDocDataSource
     {
         private static readonly Random Random = new();
         private readonly Faker _faker;
 
-        public RoyaltyDocumentDataSource()
+        public RoyaltyDocDataSource()
         {
             _faker = new Faker();
         }

@@ -1,14 +1,14 @@
 ﻿using PdfGenerator.Sample_Models;
+using PdfGenerator.Contracts;
+using QuestPDF.Helpers;
 
 namespace PdfGenerator.Data
 {
-    using QuestPDF.Helpers;
-
-    public static class InvoiceDocumentDataSource
+    public class InvoiceDocDataSource : IInvoiceDocDataSource
     {
         private static readonly Random Random = new();
 
-        public static InvoiceModel GetInvoiceDetails()
+        public InvoiceModel GetInvoiceDetails()
         {
             var items = Enumerable
                 .Range(1, 8)

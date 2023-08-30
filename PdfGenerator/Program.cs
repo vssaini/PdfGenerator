@@ -1,10 +1,11 @@
-﻿using PdfGenerator.Services;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PdfGenerator;
+using PdfGenerator.Services;
+using Serilog;
 
-PdfService.SetQuestPdfLicense();
-PdfService.SetAppCulture();
+var host = Startup.ConfigureHostBuilder();
 
-//var invoiceService = new InvoiceService();
-//invoiceService.GenerateDoc();
+var pdfSvc = ActivatorUtilities.CreateInstance<PdfService>(host.Services);
+pdfSvc.Run();
 
-var docService = new RoyaltyService();
-docService.GenerateDoc();
+Log.CloseAndFlush();
