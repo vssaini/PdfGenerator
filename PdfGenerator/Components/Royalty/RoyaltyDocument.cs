@@ -39,6 +39,8 @@ namespace PdfGenerator.Components.Royalty
                     page.DefaultTextStyle(x => x.FontFamily(Fonts.Calibri).FontSize(FontSize));
 
                     page.Header().Element(ComposeHeader);
+                    page.Footer().Element(ComposeFooter);
+
                     page.Content().Element(ComposeContent);
                 });
         }
@@ -107,6 +109,23 @@ namespace PdfGenerator.Components.Royalty
                         text.AlignLeft();
                         text.Span("Account: ").SemiBold();
                         text.Span(RoyaltyModel.Account.ToString());
+                    });
+                });
+            });
+        }
+
+        private void ComposeFooter(IContainer container)
+        {
+            container.Row(row =>
+            {
+                row.RelativeItem().Column(column =>
+                {
+                    column.Item().Text(text =>
+                    {
+                        text.AlignLeft();
+                        text.Span(RoyaltyModel.Account.ToString());
+                        text.Span(" : ");
+                        text.Span(RoyaltyModel.Artist);
                     });
                 });
             });
