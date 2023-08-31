@@ -25,9 +25,9 @@ public class RoyaltyService : IDocService
         _config = config;
     }
 
-    public async Task GenerateDocAsync()
+    public async Task GenerateDocAsync(DocFilter filter)
     {
-        var model = await _sender.Send(new GetRoyaltyQuery(new DocFilter(1997, 153043)));
+        var model = await _sender.Send(new GetRoyaltyQuery(filter));
 
         var fontSize = _config.GetValue<int>("Pdf:FontSize");
         var document = new RoyaltyDocument(model, fontSize);

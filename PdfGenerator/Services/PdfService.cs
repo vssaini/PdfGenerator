@@ -2,6 +2,7 @@
 using PdfGenerator.Contracts;
 using QuestPDF.Infrastructure;
 using System.Globalization;
+using PdfGenerator.Models;
 
 namespace PdfGenerator.Services;
 
@@ -16,12 +17,12 @@ public class PdfService
         _docService = docService;
     }
 
-    public async Task Run()
+    public async Task Run(DocFilter filter)
     {
         SetQuestPdfLicense();
         SetAppCulture();
 
-        await _docService.GenerateDocAsync();
+        await _docService.GenerateDocAsync(filter);
     }
 
     private void SetQuestPdfLicense()

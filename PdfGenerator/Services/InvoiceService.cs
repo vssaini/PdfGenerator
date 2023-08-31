@@ -8,6 +8,7 @@ using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
 using System.Diagnostics;
+using PdfGenerator.Models;
 
 namespace PdfGenerator.Services;
 
@@ -24,7 +25,7 @@ public class InvoiceService : IDocService
         _config = config;
     }
 
-    public async Task GenerateDocAsync()
+    public async Task GenerateDocAsync(DocFilter filter)
     {
         var model = await _sender.Send(new GetInvoiceQuery());
 

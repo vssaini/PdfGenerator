@@ -13,11 +13,14 @@ internal static class Startup
     public static IHost ConfigureHostBuilder()
     {
         var builder = GetConfigBuilder();
-        ConfigureLogger(builder);
+        var configuration = builder.Build();
 
-        Log.Logger.Information("Starting PDF Generator application");
+        ConfigureLogger(configuration);
 
-        return GetHost(builder);
+        var appName = configuration.GetSection("ApplicationName").Value;
+        Log.Logger.Information("Starting {ApplicationName} application", appName);
+
+        return GetHost(configuration);
     }
 
     private static ConfigurationBuilder GetConfigBuilder()
@@ -32,16 +35,16 @@ internal static class Startup
         return builder;
     }
 
-    private static void ConfigureLogger(IConfigurationBuilder builder)
+    private static void ConfigureLogger(IConfiguration config)
     {
         Log.Logger = new LoggerConfiguration()
-            .ReadFrom.Configuration(builder.Build())
+            .ReadFrom.Configuration(config)
             .CreateLogger();
     }
 
-    private static IHost GetHost(IConfigurationBuilder builder)
+    private static IHost GetHost(IConfiguration config)
     {
-        var connectionString = builder.Build().GetConnectionString("UmgConString");
+        var connectionString = config.GetConnectionString("UmgConString");
 
         var host = Host.CreateDefaultBuilder()
             .ConfigureServices((_, services) =>
