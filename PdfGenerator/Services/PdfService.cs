@@ -5,7 +5,7 @@ using System.Globalization;
 
 namespace PdfGenerator.Services;
 
-public class PdfService : IPdfService
+public class PdfService
 {
     private readonly ILogger<PdfService> _logger;
     private readonly IDocService _docService;
@@ -16,12 +16,12 @@ public class PdfService : IPdfService
         _docService = docService;
     }
 
-    public void Run()
+    public async Task Run()
     {
         SetQuestPdfLicense();
         SetAppCulture();
 
-        _docService.GenerateDoc();
+        await _docService.GenerateDocAsync();
     }
 
     private void SetQuestPdfLicense()

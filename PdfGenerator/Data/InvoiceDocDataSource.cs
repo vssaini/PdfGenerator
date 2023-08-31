@@ -8,7 +8,7 @@ namespace PdfGenerator.Data
     {
         private static readonly Random Random = new();
 
-        public InvoiceModel GetInvoiceDetails()
+        public InvoiceModel GetInvoiceModel()
         {
             var items = Enumerable
                 .Range(1, 8)

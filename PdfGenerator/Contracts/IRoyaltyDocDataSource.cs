@@ -1,8 +1,9 @@
 ﻿using PdfGenerator.Models;
+using PdfGenerator.Queries;
 
 namespace PdfGenerator.Contracts;
 
 public interface IRoyaltyDocDataSource
 {
-    RoyaltyModel GetRoyaltyDetails();
+    Task<RoyaltyModel> GetRoyaltyModelAsync(GetRoyaltyQuery query);
 }

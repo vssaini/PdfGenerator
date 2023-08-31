@@ -1,6 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MediatR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using PdfGenerator.Components.Invoice;
 using PdfGenerator.Contracts;
+using PdfGenerator.Queries;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
@@ -11,21 +14,26 @@ namespace PdfGenerator.Services;
 public class InvoiceService : IDocService
 {
     private readonly ILogger<InvoiceService> _logger;
-    private readonly IInvoiceDocDataSource _invDocDs;
+    private readonly ISender _sender;
+    private readonly IConfiguration _config;
 
-    public InvoiceService(ILogger<InvoiceService> logger, IInvoiceDocDataSource invDocDs)
+    public InvoiceService(ILogger<InvoiceService> logger, ISender sender, IConfiguration config)
     {
         _logger = logger;
-        _invDocDs = invDocDs;
+        _sender = sender;
+        _config = config;
     }
 
-    public void GenerateDoc(bool showInPreviewer = false, int fontSize = 8)
+    public async Task GenerateDocAsync()
     {
-        var model = _invDocDs.GetInvoiceDetails();
+        var model = await _sender.Send(new GetInvoiceQuery());
+
+        var fontSize = _config.GetValue<int>("Pdf:FontSize");
         var document = new InvoiceDocument(model, fontSize);
 
+        var showInPreviewer = _config.GetValue<bool>("Pdf:ShowInPreviewer");
         if (showInPreviewer)
-            document.ShowInPreviewer();
+            await document.ShowInPreviewerAsync();
         else
             GeneratePdf(document, "invoice.pdf");
     }

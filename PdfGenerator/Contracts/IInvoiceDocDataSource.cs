@@ -4,5 +4,5 @@ namespace PdfGenerator.Contracts;
 
 public interface IInvoiceDocDataSource
 {
-    InvoiceModel GetInvoiceDetails();
+    InvoiceModel GetInvoiceModel();
 }

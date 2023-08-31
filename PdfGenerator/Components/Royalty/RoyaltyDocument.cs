@@ -3,26 +3,28 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using System.Globalization;
+using System.Text.Json.Serialization;
 
 namespace PdfGenerator.Components.Royalty
 {
     public sealed class RoyaltyDocument : IDocument
     {
-        private readonly RoyaltyModel _model;
-        private readonly int _fontSize;
-
-        public RoyaltyDocument(RoyaltyModel model, int fontSize)
-        {
-            _model = model;
-            _fontSize = fontSize;
-
-            FilePath = $"{_model.Account} - {_model.Artist} -{_model.Year}.pdf";
-        }
+        public RoyaltyModel RoyaltyModel { get; set; }
+        public int FontSize { get; set; }
 
         /// <summary>
-        /// Gets or sets the PDF file path.
+        /// Gets or sets the PDF file name.
         /// </summary>
-        public string FilePath { get; set; }
+        public string FileName { get; set; }
+
+        [JsonConstructor]
+        public RoyaltyDocument(RoyaltyModel royaltyModel, int fontSize)
+        {
+            RoyaltyModel = royaltyModel;
+            FontSize = fontSize;
+
+            FileName = $"{RoyaltyModel.Account} - {RoyaltyModel.Artist} -{RoyaltyModel.Year}.pdf";
+        }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
         public DocumentSettings GetSettings() => DocumentSettings.Default;
@@ -32,9 +34,9 @@ namespace PdfGenerator.Components.Royalty
             container
                 .Page(page =>
                 {
-                    page.Size(PageSizes.Letter.Landscape());
+                    page.Size(PageSizes.A4.Landscape());
                     page.Margin(30);
-                    page.DefaultTextStyle(x => x.FontFamily(Fonts.Calibri).FontSize(_fontSize));
+                    page.DefaultTextStyle(x => x.FontFamily(Fonts.Calibri).FontSize(FontSize));
 
                     page.Header().Element(ComposeHeader);
                     page.Content().Element(ComposeContent);
@@ -44,45 +46,45 @@ namespace PdfGenerator.Components.Royalty
         private void ComposeHeader(IContainer container)
         {
             container.Row(row =>
-             {
-                 row.RelativeItem().Column(column =>
-                 {
-                     column.Item().Text(text =>
-                     {
-                         text.Span("As of: ").SemiBold();
-                         text.Span($"{_model.AsOfDate:MM/dd/yy}");
-                     });
+            {
+                row.RelativeItem().Column(column =>
+                {
+                    column.Item().Text(text =>
+                    {
+                        text.Span("As of: ").SemiBold();
+                        text.Span($"{RoyaltyModel.AsOfDate:MM/dd/yy}");
+                    });
 
-                     column.Item().Text(text =>
-                     {
-                         text.Span("Run Date: ").SemiBold();
-                         text.Span($"{_model.RunDate:MM/dd/yy}");
-                     });
-                 });
+                    column.Item().Text(text =>
+                    {
+                        text.Span("Run Date: ").SemiBold();
+                        text.Span($"{RoyaltyModel.RunDate:MM/dd/yy}");
+                    });
+                });
 
-                 row.RelativeItem().Column(column =>
-                 {
-                     column.Item().Text(text =>
-                     {
-                         text.AlignCenter();
-                         text.Span(_model.StatementTitle);
-                         text.EmptyLine();
-                         text.Span(_model.StatementSubTitle);
-                         text.EmptyLine();
-                         text.Span(_model.PrintedFromTitle);
-                     });
-                 });
+                row.RelativeItem().Column(column =>
+                {
+                    column.Item().Text(text =>
+                    {
+                        text.AlignCenter();
+                        text.Span(RoyaltyModel.StatementTitle);
+                        text.EmptyLine();
+                        text.Span(RoyaltyModel.StatementSubTitle);
+                        text.EmptyLine();
+                        text.Span(RoyaltyModel.PrintedFromTitle);
+                    });
+                });
 
-                 row.RelativeItem().Column(column =>
-                 {
-                     column.Item().Text(text =>
-                     {
-                         text.AlignRight();
-                         text.Span("Page: ");
-                         text.CurrentPageNumber();
-                     });
-                 });
-             });
+                row.RelativeItem().Column(column =>
+                {
+                    column.Item().Text(text =>
+                    {
+                        text.AlignRight();
+                        text.Span("Page: ");
+                        text.CurrentPageNumber();
+                    });
+                });
+            });
         }
 
         private void ComposeSubHeader(IContainer container)
@@ -94,7 +96,7 @@ namespace PdfGenerator.Components.Royalty
                     column.Item().Text(text =>
                     {
                         text.Span("Artist: ").SemiBold();
-                        text.Span(_model.Artist);
+                        text.Span(RoyaltyModel.Artist);
                     });
                 });
 
@@ -104,7 +106,7 @@ namespace PdfGenerator.Components.Royalty
                     {
                         text.AlignLeft();
                         text.Span("Account: ").SemiBold();
-                        text.Span(_model.Account.ToString());
+                        text.Span(RoyaltyModel.Account.ToString());
                     });
                 });
             });
@@ -172,12 +174,23 @@ namespace PdfGenerator.Components.Royalty
                 });
 
                 // step 3
-                foreach (var item in _model.Items)
+                foreach (var item in RoyaltyModel.Items)
                 {
                     table.Cell().Element(CellStyle).AlignLeft().Text(item.Country);
-                    table.Cell().Element(CellStyle).AlignMiddle().Text($"{item.Period.StartDate:MM/dd/yy} TO {item.Period.EndDate:MM/dd/yy}");
 
-                    AddItemRowsToTable(item.Rows, table);
+                    var firstPeriodProcessed = false;
+                    foreach (var pr in item.PeriodRows)
+                    {
+                        var periodTxt = $"{pr.Period.StartDate:MM/dd/yy} TO {pr.Period.EndDate:MM/dd/yy}";
+
+                        if (firstPeriodProcessed)
+                            table.Cell().ColumnSpan(2).Element(CellStyle).AlignMiddle().Text(periodTxt);
+                        else
+                            table.Cell().Element(CellStyle).AlignMiddle().Text(periodTxt);
+
+                        AddItemRowsToTable(pr.Rows, table);
+                        firstPeriodProcessed = true;
+                    }
 
                     static IContainer CellStyle(IContainer container)
                     {
@@ -194,7 +207,7 @@ namespace PdfGenerator.Components.Royalty
             foreach (var row in rows)
             {
                 if (firstRowProcessed)
-                    table.Cell().ColumnSpan(3).Element(CellStyle).AlignRight().Text(row.CatalogNumber);
+                    table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text(row.CatalogNumber);
                 else
                     table.Cell().Element(CellStyle).AlignRight().Text(row.CatalogNumber);
 

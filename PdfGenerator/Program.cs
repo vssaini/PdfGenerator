@@ -6,6 +6,6 @@ using Serilog;
 var host = Startup.ConfigureHostBuilder();
 
 var pdfSvc = ActivatorUtilities.CreateInstance<PdfService>(host.Services);
-pdfSvc.Run();
+await pdfSvc.Run();
 
 Log.CloseAndFlush();

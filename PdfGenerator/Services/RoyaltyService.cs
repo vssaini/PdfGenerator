@@ -1,33 +1,42 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using MediatR;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using PdfGenerator.Components.Royalty;
 using PdfGenerator.Contracts;
+using PdfGenerator.Queries;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
 using System.Diagnostics;
+using PdfGenerator.Models;
 
 namespace PdfGenerator.Services;
 
 public class RoyaltyService : IDocService
 {
     private readonly ILogger<RoyaltyService> _logger;
-    private readonly IRoyaltyDocDataSource _royDocDs;
+    private readonly ISender _sender;
+    private readonly IConfiguration _config;
 
-    public RoyaltyService(ILogger<RoyaltyService> logger, IRoyaltyDocDataSource royDocDs)
+    public RoyaltyService(ILogger<RoyaltyService> logger, ISender sender, IConfiguration config)
     {
         _logger = logger;
-        _royDocDs = royDocDs;
+        _sender = sender;
+        _config = config;
     }
 
-    public void GenerateDoc(bool showInPreviewer = false, int fontSize = 8)
+    public async Task GenerateDocAsync()
     {
-        var model = _royDocDs.GetRoyaltyDetails();
+        var model = await _sender.Send(new GetRoyaltyQuery(new DocFilter(1997, 153043)));
+
+        var fontSize = _config.GetValue<int>("Pdf:FontSize");
         var document = new RoyaltyDocument(model, fontSize);
 
+        var showInPreviewer = _config.GetValue<bool>("Pdf:ShowInPreviewer");
         if (showInPreviewer)
-            document.ShowInPreviewer();
+            await document.ShowInPreviewerAsync();
         else
-            GeneratePdf(document, document.FilePath);
+            GeneratePdf(document, document.FileName);
     }
 
     public void GeneratePdf(IDocument document, string filePath)

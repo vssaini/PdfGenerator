@@ -17,7 +17,7 @@ internal static class Startup
 
         Log.Logger.Information("Starting PDF Generator application");
 
-        return GetHost();
+        return GetHost(builder);
     }
 
     private static ConfigurationBuilder GetConfigBuilder()
@@ -32,24 +32,28 @@ internal static class Startup
         return builder;
     }
 
-    private static void ConfigureLogger(ConfigurationBuilder builder)
+    private static void ConfigureLogger(IConfigurationBuilder builder)
     {
         Log.Logger = new LoggerConfiguration()
             .ReadFrom.Configuration(builder.Build())
             .CreateLogger();
     }
 
-    private static IHost GetHost()
+    private static IHost GetHost(IConfigurationBuilder builder)
     {
+        var connectionString = builder.Build().GetConnectionString("UmgConString");
+
         var host = Host.CreateDefaultBuilder()
             .ConfigureServices((_, services) =>
             {
-                //services.AddLogging();
+                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
 
-                services.AddTransient<IDocService, RoyaltyService>();
-                services.AddTransient<IPdfService, PdfService>();
+                services.AddSingleton<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
 
                 services.AddTransient<IInvoiceDocDataSource, InvoiceDocDataSource>();
+
+                services.AddTransient<IRoyaltyRepo, RoyaltyRepo>();
+                services.AddTransient<IDocService, RoyaltyService>();
                 services.AddTransient<IRoyaltyDocDataSource, RoyaltyDocDataSource>();
             })
             .UseSerilog()
