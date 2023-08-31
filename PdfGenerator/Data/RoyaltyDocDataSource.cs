@@ -31,15 +31,15 @@ namespace PdfGenerator.Data
                 StatementSubTitle = $"First Six Months of {_asOfDate.Year}",
                 PrintedFromTitle = "Printed from View",
 
-                Artist = _royalties.Select(r => r.Artist).First(),
-                Account = _royalties.Select(r => r.AccountNumber).First(),
+                Artist = _royalties.Any() ? _royalties.Select(r => r.Artist).First() : "NA",
+                Account = _royalties.Any() ? _royalties.Select(r => r.AccountNumber).First() : 0,
 
                 Items = royaltyItems,
 
                 Year = _asOfDate.Year
             };
         }
-        
+
         private List<RoyaltyItem> GetRoyaltyItems()
         {
             var royaltyItems = new List<RoyaltyItem>();

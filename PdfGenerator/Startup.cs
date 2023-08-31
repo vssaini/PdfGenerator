@@ -10,7 +10,7 @@ namespace PdfGenerator;
 
 internal static class Startup
 {
-    public static IHost ConfigureHostBuilder()
+    public static IHost CreateHostBuilder()
     {
         var builder = GetConfigBuilder();
         var configuration = builder.Build();

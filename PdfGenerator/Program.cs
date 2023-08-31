@@ -4,7 +4,7 @@ using PdfGenerator.Models;
 using PdfGenerator.Services;
 using Serilog;
 
-var host = Startup.ConfigureHostBuilder();
+var host = Startup.CreateHostBuilder();
 
 var pdfSvc = ActivatorUtilities.CreateInstance<PdfService>(host.Services);
 await pdfSvc.Run(new DocFilter(1997, 153043));

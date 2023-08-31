@@ -119,13 +119,6 @@ namespace PdfGenerator.Components.Royalty
                 //column.Spacing(5);
 
                 column.Item().Element(ComposeSubHeader);
-                //column.Item().Row(row =>
-                //{
-                //    row.RelativeItem().Component(new AddressComponent("From", Model.SellerAddress));
-                //    row.ConstantItem(50);
-                //    row.RelativeItem().Component(new AddressComponent("For", Model.CustomerAddress));
-                //});
-
                 column.Item().Element(ComposeTable);
             });
         }
@@ -184,7 +177,7 @@ namespace PdfGenerator.Components.Royalty
                         var periodTxt = $"{pr.Period.StartDate:MM/dd/yy} TO {pr.Period.EndDate:MM/dd/yy}";
 
                         if (firstPeriodProcessed)
-                            table.Cell().ColumnSpan(2).Element(CellStyle).AlignMiddle().Text(periodTxt);
+                            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text(periodTxt);
                         else
                             table.Cell().Element(CellStyle).AlignMiddle().Text(periodTxt);
 
@@ -207,7 +200,7 @@ namespace PdfGenerator.Components.Royalty
             foreach (var row in rows)
             {
                 if (firstRowProcessed)
-                    table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text(row.CatalogNumber);
+                    table.Cell().ColumnSpan(3).Element(CellStyle).AlignRight().Text(row.CatalogNumber);
                 else
                     table.Cell().Element(CellStyle).AlignRight().Text(row.CatalogNumber);
 
