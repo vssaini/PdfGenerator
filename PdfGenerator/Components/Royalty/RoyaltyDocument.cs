@@ -204,9 +204,11 @@ namespace PdfGenerator.Components.Royalty
                         firstPeriodProcessed = true;
                     }
 
+                    AddCountryTotalSumRow(item, table);
+
                     static IContainer CellStyle(IContainer container)
                     {
-                        return container.PaddingVertical(5);
+                        return container.PaddingVertical(1);
                     }
                 }
             });
@@ -248,6 +250,29 @@ namespace PdfGenerator.Components.Royalty
             static IContainer CellStyle(IContainer container)
             {
                 return container.PaddingVertical(5);
+            }
+        }
+
+        private static void AddCountryTotalSumRow(RoyaltyItem item, TableDescriptor table)
+        {
+            var rowTotalUnit = item.PeriodRows
+                .SelectMany(x => x.Rows)
+                .Sum(x => x.Units)
+                .ToString("##,###");
+
+            var rowsTotalAmount = item.PeriodRows
+                .SelectMany(x => x.Rows)
+                .Sum(x => x.Amount)
+                .ToString("C");
+
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text(item.Country);
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text($"{rowTotalUnit}*");
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text($"{rowsTotalAmount}*");
+            table.Cell().ColumnSpan(6).Element(CellStyle).AlignRight().Text("");
+
+            static IContainer CellStyle(IContainer container)
+            {
+                return container.PaddingVertical(0);
             }
         }
     }
