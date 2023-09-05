@@ -208,9 +208,12 @@ namespace PdfGenerator.Components.Royalty
 
                     static IContainer CellStyle(IContainer container)
                     {
-                        return container.PaddingVertical(1);
+                        return container.PaddingVertical(5);
                     }
                 }
+
+                //AddHalfYearlyAdjustmentsRow(table);
+                AddTotalRoyaltiesFinalRow(table, RoyaltyModel.Items);
             });
         }
 
@@ -273,6 +276,47 @@ namespace PdfGenerator.Components.Royalty
             static IContainer CellStyle(IContainer container)
             {
                 return container.PaddingVertical(0);
+            }
+        }
+
+        // ReSharper disable once UnusedMember.Local
+        private static void AddHalfYearlyAdjustmentsRow(TableDescriptor table)
+        {
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text("Total Adjustments for 12/97");
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text("0*");
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text("$0*");
+            table.Cell().ColumnSpan(6).Element(CellStyle).AlignRight().Text("");
+
+            static IContainer CellStyle(IContainer container)
+            {
+                return container.PaddingVertical(10);
+            }
+        }
+
+        private static void AddTotalRoyaltiesFinalRow(TableDescriptor table, IReadOnlyCollection<RoyaltyItem> royItems)
+        {
+            var royTotalUnits = royItems
+                .SelectMany(x => x.PeriodRows)
+                .SelectMany(x => x.Rows)
+                .Sum(x => x.Units)
+                .ToString("##,###");
+
+            var royTotalAmount = royItems
+                .SelectMany(x => x.PeriodRows)
+                .SelectMany(x => x.Rows)
+                .Sum(x => x.Amount)
+                .ToString("C");
+
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text("TOTAL ROYALTIES For P/E 12/97");
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text($"{royTotalUnits}**");
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text($"{royTotalAmount}**");
+            table.Cell().ColumnSpan(6).Element(CellStyle).AlignRight().Text("");
+
+            static IContainer CellStyle(IContainer container)
+            {
+                return container
+                    .DefaultTextStyle(t => t.Bold())
+                    .PaddingVertical(10);
             }
         }
     }
