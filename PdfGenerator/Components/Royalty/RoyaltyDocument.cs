@@ -23,7 +23,7 @@ namespace PdfGenerator.Components.Royalty
             RoyaltyModel = royaltyModel;
             FontSize = fontSize;
 
-            FileName = $"{RoyaltyModel.Account} - {RoyaltyModel.Artist} -{RoyaltyModel.Year}.pdf";
+            FileName = $"{RoyaltyModel.Account} - {RoyaltyModel.Artist}-{RoyaltyModel.Year}.pdf";
         }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
@@ -213,7 +213,7 @@ namespace PdfGenerator.Components.Royalty
                 }
 
                 //AddHalfYearlyAdjustmentsRow(table);
-                AddTotalRoyaltiesFinalRow(table, RoyaltyModel.Items);
+                AddTotalRoyaltiesFinalRow(table, RoyaltyModel);
             });
         }
 
@@ -293,8 +293,11 @@ namespace PdfGenerator.Components.Royalty
             }
         }
 
-        private static void AddTotalRoyaltiesFinalRow(TableDescriptor table, IReadOnlyCollection<RoyaltyItem> royItems)
+        private static void AddTotalRoyaltiesFinalRow(TableDescriptor table, RoyaltyModel model)
         {
+            var date = model.AsOfDate;
+            var royItems = model.Items;
+
             var royTotalUnits = royItems
                 .SelectMany(x => x.PeriodRows)
                 .SelectMany(x => x.Rows)
@@ -307,7 +310,7 @@ namespace PdfGenerator.Components.Royalty
                 .Sum(x => x.Amount)
                 .ToString("C");
 
-            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text("TOTAL ROYALTIES For P/E 12/97");
+            table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text($"TOTAL ROYALTIES For P/E {date:MM/yy}");
             table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text($"{royTotalUnits}**");
             table.Cell().ColumnSpan(2).Element(CellStyle).AlignRight().Text($"{royTotalAmount}**");
             table.Cell().ColumnSpan(6).Element(CellStyle).AlignRight().Text("");
