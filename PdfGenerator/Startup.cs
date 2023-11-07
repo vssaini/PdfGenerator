@@ -51,8 +51,8 @@ internal static class Startup
 
     private static IHost GetHost(IConfiguration config)
     {
-        //var connectionString = config.GetConnectionString("UnionManagerConString");
-        var connectionString = config.GetConnectionString("UmgConString");
+        var connectionString = config.GetConnectionString("UnionManagerConString");
+        //var connectionString = config.GetConnectionString("UmgConString");
 
         var host = Host.CreateDefaultBuilder()
             .ConfigureServices((_, services) =>

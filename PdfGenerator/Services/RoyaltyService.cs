@@ -28,7 +28,7 @@ public class RoyaltyService : IRoyaltyDocService, IPdfService
 
     public async Task GenerateRoyaltyDocAsync(RoyaltyFilter filter)
     {
-        _logger.LogInformation("Generating oyalty document for {AccountNumber} and {Year}", filter.AccountNumber, filter.Year);
+        _logger.LogInformation("Generating Royalty document for {AccountNumber} and {Year}", filter.AccountNumber, filter.Year);
 
         var model = await _sender.Send(new GetRoyaltyQuery(filter));
 
