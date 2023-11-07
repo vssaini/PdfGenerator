@@ -1,8 +1,8 @@
-﻿using PdfGenerator.Contracts;
-using PdfGenerator.Models;
+﻿using PdfGenerator.Contracts.Royalty;
+using PdfGenerator.Models.Royalty;
 using PdfGenerator.Queries;
 
-namespace PdfGenerator.Data
+namespace PdfGenerator.Data.Royalty
 {
     public sealed class RoyaltyDocDataSource : IRoyaltyDocDataSource
     {
@@ -50,7 +50,7 @@ namespace PdfGenerator.Data
             {
                 var royItem = new RoyaltyItem { Country = cr.Key };
 
-                var quarterRoyalties = cr.GroupBy(rr => ((rr.FromDate.Month - 1) / 3)).ToList();
+                var quarterRoyalties = cr.GroupBy(rr => (rr.FromDate.Month - 1) / 3).ToList();
                 royItem.PeriodRows = quarterRoyalties.Select(GetPeriodRow).ToList();
 
                 royaltyItems.Add(royItem);

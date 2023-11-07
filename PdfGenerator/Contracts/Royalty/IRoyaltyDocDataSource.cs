@@ -1,7 +1,7 @@
-﻿using PdfGenerator.Models;
+﻿using PdfGenerator.Models.Royalty;
 using PdfGenerator.Queries;
 
-namespace PdfGenerator.Contracts;
+namespace PdfGenerator.Contracts.Royalty;
 
 public interface IRoyaltyDocDataSource
 {

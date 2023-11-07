@@ -2,9 +2,16 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PdfGenerator.Contracts;
+using PdfGenerator.Contracts.Grievance;
+using PdfGenerator.Contracts.Invoice;
+using PdfGenerator.Contracts.Royalty;
 using PdfGenerator.Data;
+using PdfGenerator.Data.Grievance;
+using PdfGenerator.Data.Royalty;
 using PdfGenerator.Services;
+using PdfGenerator.Services.Grievance;
 using Serilog;
+using System.Reflection;
 
 namespace PdfGenerator;
 
@@ -44,20 +51,26 @@ internal static class Startup
 
     private static IHost GetHost(IConfiguration config)
     {
+        //var connectionString = config.GetConnectionString("UnionManagerConString");
         var connectionString = config.GetConnectionString("UmgConString");
 
         var host = Host.CreateDefaultBuilder()
             .ConfigureServices((_, services) =>
             {
-                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+                services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
                 services.AddSingleton<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
 
+                services.AddTransient<IInvoiceDocService, InvoiceService>();
                 services.AddTransient<IInvoiceDocDataSource, InvoiceDocDataSource>();
 
-                services.AddTransient<IRoyaltyRepo, RoyaltyRepo>();
-                services.AddTransient<IDocService, RoyaltyService>();
+                services.AddTransient<IRoyaltyDocService, RoyaltyService>();
                 services.AddTransient<IRoyaltyDocDataSource, RoyaltyDocDataSource>();
+                services.AddTransient<IRoyaltyRepo, RoyaltyRepo>();
+
+                services.AddTransient<IGrievanceDocService, GrievanceStepOneDocService>();
+                services.AddTransient<IGrievanceDocDataSource, GrievanceDocDataSource>();
+                services.AddTransient<IGrievanceRepo, GrievanceRepo>();
             })
             .UseSerilog()
             .Build();

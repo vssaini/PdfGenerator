@@ -1,4 +1,4 @@
-﻿using PdfGenerator.Models;
+﻿using PdfGenerator.Models.Royalty;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;

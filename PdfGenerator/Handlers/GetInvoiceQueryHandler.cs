@@ -1,7 +1,7 @@
 ﻿using MediatR;
-using PdfGenerator.Contracts;
+using PdfGenerator.Contracts.Invoice;
+using PdfGenerator.Models.Invoice;
 using PdfGenerator.Queries;
-using PdfGenerator.Sample_Models;
 
 namespace PdfGenerator.Handlers;
 

@@ -1,4 +1,4 @@
-﻿namespace PdfGenerator.Models;
+﻿namespace PdfGenerator.Models.Royalty;
 
 public sealed class RoyaltyResponse
 {

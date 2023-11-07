@@ -1,8 +1,8 @@
 ﻿using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
-using Address = PdfGenerator.Models.Invoice.Address;
+using Address = PdfGenerator.Models.Grievance.LetterStepOne.Address;
 
-namespace PdfGenerator.Components.Invoice
+namespace PdfGenerator.Components.Grievance
 {
     public class AddressComponent : IComponent
     {
@@ -23,11 +23,10 @@ namespace PdfGenerator.Components.Invoice
 
                 column.Item().BorderBottom(1).PaddingBottom(5).Text(Title).SemiBold();
 
-                column.Item().Text(Address.CompanyName);
-                column.Item().Text(Address.Street);
-                column.Item().Text($"{Address.City}, {Address.State}");
-                column.Item().Text(Address.Email);
-                column.Item().Text(Address.Phone);
+                column.Item().Text(Address.Name);
+                column.Item().Text(Address.Designation);
+                column.Item().Text($"{Address.Address1}, {Address.Address2}");
+                column.Item().Text(Address.CountryWithPinCode);
             });
         }
     }

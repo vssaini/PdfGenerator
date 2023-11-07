@@ -1,4 +1,4 @@
-﻿namespace PdfGenerator.Models;
+﻿namespace PdfGenerator.Models.Royalty;
 
 /// <summary>
 /// Represents the row of royalty starting from Catalog number.

@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using PdfGenerator.Sample_Models;
+using PdfGenerator.Models.Invoice;
 
 namespace PdfGenerator.Queries;
 

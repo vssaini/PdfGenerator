@@ -1,4 +1,4 @@
-﻿using PdfGenerator.Sample_Models;
+﻿using PdfGenerator.Models.Invoice;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;

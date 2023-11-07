@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using PdfGenerator.Contracts;
-using PdfGenerator.Models;
+using PdfGenerator.Contracts.Royalty;
+using PdfGenerator.Models.Royalty;
 using PdfGenerator.Queries;
 
 namespace PdfGenerator.Handlers;

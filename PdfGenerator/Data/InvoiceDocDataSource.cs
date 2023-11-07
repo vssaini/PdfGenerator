@@ -1,6 +1,7 @@
-﻿using PdfGenerator.Sample_Models;
-using PdfGenerator.Contracts;
+﻿using PdfGenerator.Contracts.Invoice;
+using PdfGenerator.Models.Invoice;
 using QuestPDF.Helpers;
+using Address = PdfGenerator.Models.Invoice.Address;
 
 namespace PdfGenerator.Data
 {

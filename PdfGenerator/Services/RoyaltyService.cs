@@ -3,16 +3,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using PdfGenerator.Components.Royalty;
 using PdfGenerator.Contracts;
+using PdfGenerator.Contracts.Royalty;
+using PdfGenerator.Models.Royalty;
 using PdfGenerator.Queries;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 using QuestPDF.Previewer;
 using System.Diagnostics;
-using PdfGenerator.Models;
 
 namespace PdfGenerator.Services;
 
-public class RoyaltyService : IDocService
+public class RoyaltyService : IRoyaltyDocService, IPdfService
 {
     private readonly ILogger<RoyaltyService> _logger;
     private readonly ISender _sender;
@@ -25,8 +26,10 @@ public class RoyaltyService : IDocService
         _config = config;
     }
 
-    public async Task GenerateDocAsync(DocFilter filter)
+    public async Task GenerateRoyaltyDocAsync(RoyaltyFilter filter)
     {
+        _logger.LogInformation("Generating oyalty document for {AccountNumber} and {Year}", filter.AccountNumber, filter.Year);
+
         var model = await _sender.Send(new GetRoyaltyQuery(filter));
 
         var fontSize = _config.GetValue<int>("Pdf:FontSize");

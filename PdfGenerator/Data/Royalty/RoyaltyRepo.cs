@@ -1,10 +1,11 @@
 ﻿using Dapper;
 using PdfGenerator.Contracts;
-using PdfGenerator.Models;
+using PdfGenerator.Contracts.Royalty;
+using PdfGenerator.Models.Royalty;
 using PdfGenerator.Queries;
 using System.Data;
 
-namespace PdfGenerator.Data;
+namespace PdfGenerator.Data.Royalty;
 
 public class RoyaltyRepo : IRoyaltyRepo
 {

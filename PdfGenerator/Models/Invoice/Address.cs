@@ -1,4 +1,4 @@
-﻿namespace PdfGenerator.Sample_Models;
+﻿namespace PdfGenerator.Models.Invoice;
 
 public class Address
 {

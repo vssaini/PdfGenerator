@@ -1,6 +1,6 @@
-﻿using PdfGenerator.Sample_Models;
+﻿using PdfGenerator.Models.Invoice;
 
-namespace PdfGenerator.Contracts;
+namespace PdfGenerator.Contracts.Invoice;
 
 public interface IInvoiceDocDataSource
 {

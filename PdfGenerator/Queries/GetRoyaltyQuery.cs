@@ -1,6 +1,6 @@
 ﻿using MediatR;
-using PdfGenerator.Models;
+using PdfGenerator.Models.Royalty;
 
 namespace PdfGenerator.Queries;
 
-public sealed record GetRoyaltyQuery(DocFilter Filter) : IRequest<RoyaltyModel>;
+public sealed record GetRoyaltyQuery(RoyaltyFilter Filter) : IRequest<RoyaltyModel>;
