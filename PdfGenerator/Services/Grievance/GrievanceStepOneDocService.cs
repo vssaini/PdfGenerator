@@ -40,7 +40,7 @@ public class GrievanceStepOneDocService : IGrievanceDocService
         if (showInPreviewer)
             await document.ShowInPreviewerAsync();
         else
-            GeneratePdf(document, "Grievance_Letter_Step1_NEW");
+            GeneratePdf(document, "Grievance_Letter_Step1_NEW.pdf");
     }
 
     public void GeneratePdf(IDocument document, string filePath)
