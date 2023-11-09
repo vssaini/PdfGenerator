@@ -7,8 +7,8 @@ public class GrievanceLetterStepOneResponse
     public string Remedy { get; set; }
     public string Employer { get; set; }
     public string StepOne { get; set; }
-    public string C_FullName { get; set; }
-    public string C_CSZ { get; set; }
+    public string _FullName { get; set; }
+    public string _CSZ { get; set; }
     public string Contact { get; set; }
     public string ContactTitle { get; set; }
     public string Assigned { get; set; }

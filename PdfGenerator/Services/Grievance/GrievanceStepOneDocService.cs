@@ -32,7 +32,9 @@ public class GrievanceStepOneDocService : IGrievanceDocService
         var model = await _sender.Send(new GetGrievanceStepOneQuery(filter));
 
         var fontSize = _config.GetValue<int>("Pdf:FontSize");
-        var document = new GrievanceStepOneDocument(model, fontSize);
+        var fontFamily = _config.GetValue<string>("Pdf:FontFamily");
+
+        var document = new GrievanceStepOneDocument(model, fontSize, fontFamily);
 
         var showInPreviewer = _config.GetValue<bool>("Pdf:ShowInPreviewer");
         if (showInPreviewer)

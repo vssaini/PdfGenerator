@@ -6,26 +6,29 @@ namespace PdfGenerator.Components.Grievance
 {
     public class AddressComponent : IComponent
     {
-        private string Title { get; }
+        private readonly string _date;
         private Address Address { get; }
 
-        public AddressComponent(string title, Address address)
+        public AddressComponent(Address address)
         {
-            Title = title;
             Address = address;
+            _date = DateTime.Now.ToString("MMMM dd, yyyy");
         }
 
         public void Compose(IContainer container)
         {
+            var address = $"{Address.Address1}, {Address.Address2}";
+
             container.Column(column =>
             {
                 column.Spacing(2);
 
-                column.Item().BorderBottom(1).PaddingBottom(5).Text(Title).SemiBold();
+                column.Item().PaddingBottom(10).Text(_date);
 
                 column.Item().Text(Address.Name);
                 column.Item().Text(Address.Designation);
-                column.Item().Text($"{Address.Address1}, {Address.Address2}");
+                column.Item().Text(Address.Employer);
+                column.Item().Text(address.TrimEnd(','));
                 column.Item().Text(Address.CountryWithPinCode);
             });
         }

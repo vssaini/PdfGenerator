@@ -28,11 +28,12 @@ namespace PdfGenerator.Data.Grievance
 
             var address = new Address
             {
-                Name = _grvLetStepOneResp.Contact,
+                Name = _grvLetStepOneResp.Contact,  
                 Designation = _grvLetStepOneResp.ContactTitle,
                 Employer = _grvLetStepOneResp.Employer,
                 Address1 = _grvLetStepOneResp.Address1,
-                Address2 = _grvLetStepOneResp.Address2
+                Address2 = _grvLetStepOneResp.Address2,
+                CountryWithPinCode = _grvLetStepOneResp._CSZ
             };
 
             var body = new Body
