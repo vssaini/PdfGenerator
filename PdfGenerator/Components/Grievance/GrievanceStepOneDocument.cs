@@ -37,7 +37,7 @@ public class GrievanceStepOneDocument : IDocument
 
                 page.Header().Element(ComposeLetterHeading);
                 page.Content().Element(ComposeContent);
-                page.Footer().Element(ComposeFooter);
+                page.Footer().Element(ComposeLetterFooter);
             });
     }
 
@@ -151,7 +151,7 @@ public class GrievanceStepOneDocument : IDocument
         });
     }
 
-    private void ComposeFooter(IContainer container)
+    private void ComposeLetterFooter(IContainer container)
     {
         var fontStyle = TextStyle.Default.FontSize(9).FontFamily(ArialFont);
 
