@@ -1,21 +1,21 @@
 ﻿using MediatR;
-using PdfGenerator.Contracts.Grievance;
-using PdfGenerator.Models.Grievance.LetterStepOne;
+using PdfGenerator.Contracts.Royalty;
+using PdfGenerator.Models.Royalty;
 using PdfGenerator.Queries;
 
 namespace PdfGenerator.Handlers;
 
-internal sealed class GetGrievanceStepOneQueryHandler : IRequestHandler<GetGrievanceStepOneQuery, GrievanceLetterStepOneModel>
+internal sealed class GetRoyaltyQueryHandler : IRequestHandler<GetRoyaltyQuery, RoyaltyModel>
 {
-    private readonly IGrievanceDocDataSource _grvDocDs;
+    private readonly IRoyaltyDocDataSource _royDocDs;
 
-    public GetGrievanceStepOneQueryHandler(IGrievanceDocDataSource grvDocDs)
+    public GetRoyaltyQueryHandler(IRoyaltyDocDataSource royDocDs)
     {
-        _grvDocDs = grvDocDs;
+        _royDocDs = royDocDs;
     }
 
-    public async Task<GrievanceLetterStepOneModel> Handle(GetGrievanceStepOneQuery request, CancellationToken cancellationToken)
+    public async Task<RoyaltyModel> Handle(GetRoyaltyQuery request, CancellationToken cancellationToken)
     {
-        return await _grvDocDs.GetGrievanceStepOneModelAsync(request);
+        return await _royDocDs.GetRoyaltyModelAsync(request);
     }
 }
