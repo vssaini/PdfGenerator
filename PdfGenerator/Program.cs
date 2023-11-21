@@ -7,7 +7,7 @@ using Serilog;
 var host = Startup.CreateHostBuilder();
 
 var pdfSvc = ActivatorUtilities.CreateInstance<PdfService>(host.Services);
-await pdfSvc.Run(Document.GrievanceStepOneLetter);
+await pdfSvc.Run(Document.BaDispatch);
 
 // Necessary; otherwise logs will not show in Seq
 Log.CloseAndFlush();

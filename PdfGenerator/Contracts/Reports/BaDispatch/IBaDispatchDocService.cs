@@ -4,6 +4,6 @@ namespace PdfGenerator.Contracts.Reports.BaDispatch
 {
     public interface IBaDispatchDocService
     {
-        Task<byte[]> GenerateBaDispatchReportDocAsync(BaDispatchFilter filter);
+        Task GenerateBaDispatchReportDocAsync(BaDispatchFilter filter);
     }
 }

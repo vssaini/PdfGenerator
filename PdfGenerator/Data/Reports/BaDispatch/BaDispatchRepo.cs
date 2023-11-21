@@ -9,16 +9,20 @@ namespace PdfGenerator.Data.Reports.BaDispatch
     public class BaDispatchRepo : IBaDispatchRepo
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
+        private readonly ILogService _logService;
 
-        public BaDispatchRepo(ISqlConnectionFactory sqlConnectionFactory)
+        public BaDispatchRepo(ISqlConnectionFactory sqlConnectionFactory, ILogService logService)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
+            _logService = logService;
         }
 
         public async Task<List<BaDispatchResponse>> GetBaDispatchResponsesAsync(BaDispatchFilter filter)
         {
             var baDispatchReports = GetDispatchReports(filter);
             var itemReqIds = baDispatchReports.Select(i => i.RequestId).ToList();
+
+            _logService.LogInformation("Getting BA Dispatch report sub data from database");
 
             const string sql = "SELECT * FROM dbo.vw_BADispatchReport_Sub WHERE RequestID IN @itemReqIds";
             using var connection = _sqlConnectionFactory.CreateConnection();
@@ -37,6 +41,8 @@ namespace PdfGenerator.Data.Reports.BaDispatch
 
         private List<Summary> GetDispatchReports(BaDispatchFilter filter)
         {
+            _logService.LogInformation("Getting BA Dispatch reports from database");
+
             var dParams = GetParamsForSp(filter);
             var reports = GetDispatchReportsFromDb(dParams);
 

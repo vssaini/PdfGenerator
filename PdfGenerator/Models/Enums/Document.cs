@@ -4,5 +4,6 @@ public enum Document
 {
     Invoice,
     Royalty,
-    GrievanceStepOneLetter
+    GrievanceStepOneLetter,
+    BaDispatch
 }

@@ -1,7 +1,7 @@
 ﻿using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.BaDispatch;
-using QuestPDF.Fluent;
+using QuestPDF.Previewer;
 
 namespace PdfGenerator.Services.Reports.BaDispatch
 {
@@ -16,14 +16,16 @@ namespace PdfGenerator.Services.Reports.BaDispatch
             _logService = logService;
         }
 
-        public async Task<byte[]> GenerateBaDispatchReportDocAsync(BaDispatchFilter filter)
+        public async Task GenerateBaDispatchReportDocAsync(BaDispatchFilter filter)
         {
             _logService.LogInformation("Generating BA Dispatch report document");
 
             var model = await _baDocDs.GetBaDispatchReportModelAsync(filter);
 
             var document = new BaDispatchReportDocument(model);
-            return document.GeneratePdf();
+            //return document.GeneratePdf(); // TODO: Return bytes in Web app
+
+            await document.ShowInPreviewerAsync();
         }
     }
 }

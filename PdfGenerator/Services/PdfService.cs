@@ -7,6 +7,8 @@ using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 using PdfGenerator.Models.Royalty;
 using QuestPDF.Infrastructure;
 using System.Globalization;
+using PdfGenerator.Contracts.Reports.BaDispatch;
+using PdfGenerator.Models.Reports.BaDispatch;
 
 namespace PdfGenerator.Services;
 
@@ -16,13 +18,15 @@ public class PdfService
     private readonly IInvoiceDocService _invDocService;
     private readonly IRoyaltyDocService _royDocService;
     private readonly IGrievanceDocService _grvDocService;
+    private readonly IBaDispatchDocService _baDocService;
 
-    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService)
+    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService, IBaDispatchDocService baDocService)
     {
         _logger = logger;
         _invDocService = invDocService;
         _royDocService = royDocService;
         _grvDocService = grvDocService;
+        _baDocService = baDocService;
     }
 
     public async Task Run(Document document)
@@ -68,6 +72,13 @@ public class PdfService
             case Document.GrievanceStepOneLetter:
                 var grvFilter = new GrievanceFilter(3450);
                 await _grvDocService.GenerateGrievanceStepOneDocAsync(grvFilter);
+                break;
+
+            case Document.BaDispatch:
+                var startDate = new DateTime(2023, 10, 22);
+                var endDate = new DateTime(2023, 11, 22);
+                var baDispatchFilter = new BaDispatchFilter(startDate, endDate);
+                await _baDocService.GenerateBaDispatchReportDocAsync(baDispatchFilter);
                 break;
         }
     }
