@@ -1,5 +1,5 @@
 ﻿using MediatR;
-using PdfGenerator.Models.Grievance.LetterStepOne;
+using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 
 namespace PdfGenerator.Queries;
 

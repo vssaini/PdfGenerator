@@ -2,14 +2,17 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PdfGenerator.Contracts;
-using PdfGenerator.Contracts.Grievance;
 using PdfGenerator.Contracts.Invoice;
+using PdfGenerator.Contracts.Reports.BaDispatch;
+using PdfGenerator.Contracts.Reports.Grievance;
 using PdfGenerator.Contracts.Royalty;
 using PdfGenerator.Data;
-using PdfGenerator.Data.Grievance;
+using PdfGenerator.Data.Reports.BaDispatch;
+using PdfGenerator.Data.Reports.Grievance;
 using PdfGenerator.Data.Royalty;
 using PdfGenerator.Services;
-using PdfGenerator.Services.Grievance;
+using PdfGenerator.Services.Reports.BaDispatch;
+using PdfGenerator.Services.Reports.Grievance;
 using Serilog;
 using System.Reflection;
 
@@ -60,6 +63,7 @@ internal static class Startup
                 services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 
                 services.AddSingleton<ISqlConnectionFactory>(_ => new SqlConnectionFactory(connectionString));
+                services.AddSingleton<ILogService, LogService>();
 
                 services.AddTransient<IInvoiceDocService, InvoiceService>();
                 services.AddTransient<IInvoiceDocDataSource, InvoiceDocDataSource>();
@@ -68,9 +72,13 @@ internal static class Startup
                 services.AddTransient<IRoyaltyDocDataSource, RoyaltyDocDataSource>();
                 services.AddTransient<IRoyaltyRepo, RoyaltyRepo>();
 
-                services.AddTransient<IGrievanceDocService, GrievanceStepOneDocService>();
+                services.AddTransient<IGrievanceDocService, GrievanceDocService>();
                 services.AddTransient<IGrievanceDocDataSource, GrievanceDocDataSource>();
                 services.AddTransient<IGrievanceRepo, GrievanceRepo>();
+
+                services.AddTransient<IBaDispatchDocService, BaDispatchDocService>();
+                services.AddTransient<IBaDispatchDocDataSource, BaDispatchDocDataSource>();
+                services.AddTransient<IBaDispatchRepo, BaDispatchRepo>();
             })
             .UseSerilog()
             .Build();

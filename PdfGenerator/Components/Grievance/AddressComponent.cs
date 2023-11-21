@@ -1,6 +1,6 @@
-﻿using QuestPDF.Fluent;
+﻿using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
+using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
-using Address = PdfGenerator.Models.Grievance.LetterStepOne.Address;
 
 namespace PdfGenerator.Components.Grievance
 {

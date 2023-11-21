@@ -1,4 +1,4 @@
-﻿using PdfGenerator.Models.Grievance.LetterStepOne;
+﻿using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -47,11 +47,11 @@ public class GrievanceStepOneDocument : IDocument
 
         container.PaddingVertical(20).Row(row =>
         {
-            row.ConstantItem(100).Width(70).Image(_model.Heading.CompanyLogo);
+            row.ConstantItem(100).Width(70).Image(_model.Header.CompanyLogoPath);
 
-            row.RelativeItem().AlignCenter().Text(text => text.Span(_model.Heading.Title).Style(fontStyle));
+            row.RelativeItem().AlignCenter().Text(text => text.Span(_model.Header.Title).Style(fontStyle));
 
-            row.ConstantItem(100).Width(100).AlignRight().Image(_model.Heading.LocalLogo);
+            row.ConstantItem(100).Width(100).AlignRight().Image(_model.Header.CompanyLogoPath);
         });
     }
 
@@ -59,6 +59,12 @@ public class GrievanceStepOneDocument : IDocument
     {
         container.Column(column =>
         {
+            column.Item().Element(ComposeLetterAddress);
+            column.Item().PaddingTop(10).PaddingBottom(10).Element(ComposeLetterSubject);
+            column.Item().Element(ComposeLetterBody);
+            column.Item().Element(ComposeLetterSignature);
+            column.Item().Element(ComposeLetterCarbonCopy);
+
             column.Item().Element(ComposeLetterAddress);
             column.Item().PaddingTop(10).PaddingBottom(10).Element(ComposeLetterSubject);
             column.Item().Element(ComposeLetterBody);

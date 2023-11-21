@@ -1,9 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using PdfGenerator.Contracts.Grievance;
 using PdfGenerator.Contracts.Invoice;
+using PdfGenerator.Contracts.Reports.Grievance;
 using PdfGenerator.Contracts.Royalty;
 using PdfGenerator.Models.Enums;
-using PdfGenerator.Models.Grievance.LetterStepOne;
+using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 using PdfGenerator.Models.Royalty;
 using QuestPDF.Infrastructure;
 using System.Globalization;
@@ -71,4 +71,4 @@ public class PdfService
                 break;
         }
     }
-}  
+}

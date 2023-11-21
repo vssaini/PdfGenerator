@@ -61,6 +61,24 @@ namespace PdfGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Property of IATSE Local 720.
+        /// </summary>
+        internal static string BaDispatch_PropertyMsg {
+            get {
+                return ResourceManager.GetString("BaDispatch_PropertyMsg", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Business Agent Dispatch Report By Location.
+        /// </summary>
+        internal static string BaDispatch_Title {
+            get {
+                return ResourceManager.GetString("BaDispatch_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Local 720 Executive Board.
         /// </summary>
         internal static string CcPersonOne {
