@@ -92,12 +92,12 @@ namespace PdfGenerator.Data.Reports.BaDispatch
             return subDispatchReports
                 .Where(x => x.RequestID == requestId)
                 .OrderBy(x => x.ReportTime)
-                .ThenBy(x => x.C_LastFirst)
+                .ThenBy(x => x._LastFirst)
                 .Select(sdr => new DispatchRow
                 {
-                    ReportTime = sdr.ReportTime,
+                    ReportTime = sdr.ReportAtTime.ToString("hh:mm tt"),
                     Skill = sdr.Skill,
-                    WorkerName = sdr.C_LastFirst,
+                    WorkerName = sdr._LastFirst,
                     WorkerId = sdr.WorkerID,
                     Status = new StatusDto
                     {

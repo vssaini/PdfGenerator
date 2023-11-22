@@ -5,7 +5,6 @@ public partial class usp_BADispatchReport_ByLocation_Result
     public int EmployerID { get; set; }
     public string Employer { get; set; }
     public string Location { get; set; }
-    public System.DateTime? ReportAtTime { get; set; }
     public int RequestID { get; set; }
     public string ReportToName { get; set; }
     public string ReportToPhone { get; set; }

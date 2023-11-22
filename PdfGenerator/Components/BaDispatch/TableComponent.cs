@@ -52,7 +52,7 @@ namespace PdfGenerator.Components.BaDispatch
                             .BorderColor(Colors.Black)
                             .Background(Colors.Grey.Lighten1)
                             .AlignCenter();
-                    }
+                    }  
                 });
 
                 // step 3
@@ -63,7 +63,7 @@ namespace PdfGenerator.Components.BaDispatch
                     table.Cell().Element(CellStyle).Text(slNo);
                     table.Cell().Element(CellStyle).Text(item.ReportTime);
                     table.Cell().Element(CellStyle).Text(item.Skill);
-                    table.Cell().Element(CellStyle).Text(item.WorkerName);
+                    table.Cell().Element(CellLeftStyle).Text(item.WorkerName);
                     table.Cell().Element(CellStyle).Text(item.WorkerId.ToString());
 
                     table.Cell().Element(CellStyle).Text(item.Status.Member);
@@ -75,6 +75,14 @@ namespace PdfGenerator.Components.BaDispatch
                             .Border(1)
                             .BorderColor(Colors.Black)
                             .AlignCenter();
+                    }
+
+                    IContainer CellLeftStyle(IContainer cellContainer)
+                    {
+                        return cellContainer
+                            .Border(1)
+                            .BorderColor(Colors.Black)
+                            .AlignLeft();
                     }
                 }
             });

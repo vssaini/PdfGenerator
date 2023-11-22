@@ -3,7 +3,6 @@ using PdfGenerator.Models.Reports.BaDispatch;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
-using System.Data.Common;
 
 namespace PdfGenerator.Services.Reports.BaDispatch
 {
@@ -48,7 +47,7 @@ namespace PdfGenerator.Services.Reports.BaDispatch
         private void ComposeHeader(IContainer container)
         {
             var titleStyle = TextStyle.Default
-                .FontSize(16)
+                .FontSize(18)
                 .FontFamily(ArialFont)
                 .SemiBold()
                 .Italic();
@@ -74,7 +73,7 @@ namespace PdfGenerator.Services.Reports.BaDispatch
             int counter = 0;
             container.Column(column =>
             {
-                column.Item().PaddingTop(12).Text(today).FontSize(13).SemiBold().Italic();
+                column.Item().PaddingTop(12).Text(today).FontSize(12).SemiBold().Italic();
 
                 //column.Item().Component(new ReportComponent(dispResp.Summary, dispResp.DispatchRows));
                 foreach (var dispResp in _model.BaDispatchResponses)
