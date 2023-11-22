@@ -17,9 +17,9 @@ namespace PdfGenerator.Components.BaDispatch
 
         public void Compose(IContainer container)
         {
-            container.PaddingVertical(40).Column(column =>
+            container.PaddingVertical(20).Column(column =>
             {
-                column.Spacing(10);
+                column.Spacing(5);
 
                 column.Item().Row(row => row.RelativeItem().Component(new SummaryComponent(_summary)));
                 column.Item().Row(row => row.RelativeItem().Component(new TableComponent(_rows)));

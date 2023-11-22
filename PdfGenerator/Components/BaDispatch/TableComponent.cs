@@ -26,10 +26,11 @@ namespace PdfGenerator.Components.BaDispatch
                 // step 1
                 table.ColumnsDefinition(columns =>
                 {
-                    columns.ConstantColumn(2);
-                    columns.ConstantColumn(5);
-                    columns.RelativeColumn();
-                    columns.RelativeColumn();
+                    columns.ConstantColumn(.3f,Unit.Inch);
+                    columns.ConstantColumn(.7f, Unit.Inch);
+                    columns.ConstantColumn(.7f, Unit.Inch);
+                    columns.ConstantColumn(2f, Unit.Inch);
+                    columns.ConstantColumn(.7f, Unit.Inch);
                     columns.RelativeColumn();
                     columns.RelativeColumn();
                 });
@@ -38,7 +39,7 @@ namespace PdfGenerator.Components.BaDispatch
                 table.Header(header =>
                 {
                     header.Cell().Element(CellStyle).Text("");
-                    header.Cell().Element(CellStyle).Text("Report");
+                    header.Cell().Element(CellStyle).Text("Report"); 
                     header.Cell().Element(CellStyle).Text("Skill");
                     header.Cell().Element(CellStyle).Text("Worker Name");
                     header.Cell().Element(CellStyle).Text("ID No.");
@@ -47,18 +48,19 @@ namespace PdfGenerator.Components.BaDispatch
                     IContainer CellStyle(IContainer headerContainer)
                     {
                         return headerContainer.DefaultTextStyle(x => x.SemiBold())
-                            //.AlignCenter()
                             .Border(1)
-                            .BorderColor(Colors.Black);
+                            .BorderColor(Colors.Black)
+                            .Background(Colors.Grey.Lighten1)
+                            .AlignCenter();
                     }
                 });
 
                 // step 3
                 foreach (var item in _dispatches)
                 {
-                    var slNo = _dispatches.IndexOf(item) + 1;
+                    var slNo = Convert.ToString(_dispatches.IndexOf(item) + 1);
 
-                    table.Cell().Element(CellStyle).Text(slNo.ToString());
+                    table.Cell().Element(CellStyle).Text(slNo);
                     table.Cell().Element(CellStyle).Text(item.ReportTime);
                     table.Cell().Element(CellStyle).Text(item.Skill);
                     table.Cell().Element(CellStyle).Text(item.WorkerName);
@@ -70,9 +72,9 @@ namespace PdfGenerator.Components.BaDispatch
                     IContainer CellStyle(IContainer cellContainer)
                     {
                         return cellContainer
-                            //.AlignCenter()
                             .Border(1)
-                            .BorderColor(Colors.Grey.Lighten2);
+                            .BorderColor(Colors.Black)
+                            .AlignCenter();
                     }
                 }
             });

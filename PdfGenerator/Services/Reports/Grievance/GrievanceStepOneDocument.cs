@@ -55,11 +55,11 @@ namespace PdfGenerator.Services.Reports.Grievance
 
             container.PaddingVertical(20).Row(row =>
             {
-                row.ConstantItem(100).Width(70).Image(Image.FromFile(_model.Header.CompanyLogoPath));
+                row.ConstantItem(70).Width(70).Image(Image.FromFile(_model.Header.CompanyLogoPath));
 
                 row.RelativeItem().AlignCenter().Text(text => text.Span(_model.Header.Title).Style(fontStyle));
 
-                row.ConstantItem(100).Width(100).AlignRight().Image(Image.FromFile(_model.Header.LocalLogoPath));
+                row.ConstantItem(90).Width(90).AlignRight().Image(Image.FromFile(_model.Header.LocalLogoPath));
             });
         }
 
@@ -158,6 +158,7 @@ namespace PdfGenerator.Services.Reports.Grievance
                         text.Line($"          {_model.CarbonCopy.PersonTwo}");
                         text.Line($"          {_model.CarbonCopy.PersonThree}");
 
+                        text.Line(" "); // Intentional space
                         text.Line(_model.CertifiedStatement).Style(fontStyle);
                     });
                 });

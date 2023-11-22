@@ -70,13 +70,13 @@ public class PdfService
                 break;
 
             case Document.GrievanceStepOneLetter:
-                var grvFilter = new GrievanceFilter(3450);
+                var grvFilter = new GrievanceFilter(4140);
                 await _grvDocService.GenerateGrievanceStepOneDocAsync(grvFilter);
                 break;
 
             case Document.BaDispatch:
                 var startDate = new DateTime(2023, 10, 22);
-                var endDate = new DateTime(2023, 11, 22);
+                var endDate = DateTime.Now;
                 var baDispatchFilter = new BaDispatchFilter(startDate, endDate);
                 await _baDocService.GenerateBaDispatchReportDocAsync(baDispatchFilter);
                 break;

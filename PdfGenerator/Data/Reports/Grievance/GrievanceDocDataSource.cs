@@ -58,7 +58,7 @@ namespace PdfGenerator.Data.Reports.Grievance
 
             var cc = new CarbonCopy
             {
-                PersonThree = _grvLetStepOneResp.CC
+                PersonThree = string.IsNullOrWhiteSpace(_grvLetStepOneResp.CC) ? "Laura Brassington" : _grvLetStepOneResp.CC
             };
 
             var footer = new Footer

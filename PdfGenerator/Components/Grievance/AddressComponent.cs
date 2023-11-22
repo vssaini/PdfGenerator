@@ -17,7 +17,7 @@ namespace PdfGenerator.Components.Grievance
 
         public void Compose(IContainer container)
         {
-            var address = $"{Address.Address1}, {Address.Address2}";
+            var address = $"{Address.Address1}, {Address.Address2}".Trim().TrimEnd(',');
 
             container.Column(column =>
             {
@@ -28,7 +28,7 @@ namespace PdfGenerator.Components.Grievance
                 column.Item().Text(Address.Name);
                 column.Item().Text(Address.Designation);
                 column.Item().Text(Address.Employer);
-                column.Item().Text(address.TrimEnd(','));
+                column.Item().Text(address);
                 column.Item().Text(Address.CountryWithPinCode);
             });
         }
