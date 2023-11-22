@@ -36,7 +36,6 @@ namespace PdfGenerator.Components.BaDispatch
                 .LineColor(Colors.Black);
 
             row.AutoItem()
-                //.MinimalBox()
                 .Layers(layers =>
                 {
                     layers.Layer().Canvas((canvas, size) =>
@@ -64,7 +63,7 @@ namespace PdfGenerator.Components.BaDispatch
                         .AlignMiddle()
                         .PaddingLeft(5)
                         .PaddingBottom(2)
-                        .Text(_summary.Location ?? "Allegiant Stadium Parking Lot")
+                        .Text(_summary.Location ?? "NA")
                         .FontColor(Colors.Black)
                         .FontSize(12)
                         .SemiBold()
@@ -82,7 +81,7 @@ namespace PdfGenerator.Components.BaDispatch
             var fontStyle = TextStyle.Default.FontSize(10);
 
             row.RelativeItem()
-                .AlignMiddle()
+                .AlignCenter()
                 .Column(rColumn =>
                 {
                     rColumn.Item()
@@ -142,6 +141,7 @@ namespace PdfGenerator.Components.BaDispatch
                         });
 
                     rColumn.Item()
+                        .PaddingRight(40)
                         .Text(text =>
                         {
                             text.DefaultTextStyle(fontStyle);

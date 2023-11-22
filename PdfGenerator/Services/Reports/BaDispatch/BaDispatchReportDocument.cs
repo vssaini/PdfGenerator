@@ -66,24 +66,26 @@ namespace PdfGenerator.Services.Reports.BaDispatch
 
         private void ComposeContent(IContainer container)
         {
-            //var dispResp = _model.BaDispatchResponses.FirstOrDefault();
-
             var today = DateTime.Now.ToString("dddd, MMM dd, yyyy");
 
-            int counter = 0;
+            //int counter = 0;
             container.Column(column =>
             {
-                column.Item().PaddingTop(12).Text(today).FontSize(12).SemiBold().Italic();
+                column.Item()
+                    .PaddingTop(12)
+                    .Text(today)
+                    .FontSize(12)
+                    .SemiBold()
+                    .Italic();
 
-                //column.Item().Component(new ReportComponent(dispResp.Summary, dispResp.DispatchRows));
-                foreach (var dispResp in _model.BaDispatchResponses)
+                foreach (var disResp in _model.BaDispatchResponses)
                 {
-                    column.Item().Component(new ReportComponent(dispResp.Summary, dispResp.DispatchRows));
+                    column.Item().Component(new ReportComponent(disResp.Summary, disResp.DispatchRows));
 
-                    if (counter == 2)
-                        break;
+                    //if (counter == 10)
+                    //    break;
 
-                    counter++;
+                    //counter++;
                 }
             });
         }
@@ -106,7 +108,7 @@ namespace PdfGenerator.Services.Reports.BaDispatch
                     c.Item().Text(_model.Footer.CurrentDateTime).Style(fontStyle);
                 });
 
-                row.RelativeItem().PaddingLeft(3).PaddingTop(5).Column(c =>
+                row.RelativeItem().PaddingLeft(50).PaddingTop(5).Column(c =>
                 {
                     c.Item().Text(text =>
                     {

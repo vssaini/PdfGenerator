@@ -33,6 +33,7 @@ public class PdfService
     {
         SetQuestPdfLicense();
         SetAppCulture();
+        SetQuestPdfOtherSettings();
 
         await GenerateDocumentAsync(document);
     }
@@ -54,6 +55,13 @@ public class PdfService
 
         Thread.CurrentThread.CurrentCulture = cultureInfo;
         Thread.CurrentThread.CurrentUICulture = cultureInfo;
+    }
+
+    private static void SetQuestPdfOtherSettings()
+    {
+        // Fix how many pages are generated before throwing an exception
+        // in interest of saving resources
+        QuestPDF.Settings.DocumentLayoutExceptionThreshold = 1000;
     }
 
     private async Task GenerateDocumentAsync(Document document)

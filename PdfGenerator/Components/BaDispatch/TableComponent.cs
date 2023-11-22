@@ -21,12 +21,14 @@ namespace PdfGenerator.Components.BaDispatch
 
         private void ComposeTable(IContainer container)
         {
-            container.Table(table =>
+            container
+                .PaddingHorizontal(20)
+                .Table(table =>
             {
                 // step 1
                 table.ColumnsDefinition(columns =>
                 {
-                    columns.ConstantColumn(.3f,Unit.Inch);
+                    columns.ConstantColumn(.3f, Unit.Inch);
                     columns.ConstantColumn(.7f, Unit.Inch);
                     columns.ConstantColumn(.7f, Unit.Inch);
                     columns.ConstantColumn(2f, Unit.Inch);
@@ -39,7 +41,7 @@ namespace PdfGenerator.Components.BaDispatch
                 table.Header(header =>
                 {
                     header.Cell().Element(CellStyle).Text("");
-                    header.Cell().Element(CellStyle).Text("Report"); 
+                    header.Cell().Element(CellStyle).Text("Report");
                     header.Cell().Element(CellStyle).Text("Skill");
                     header.Cell().Element(CellStyle).Text("Worker Name");
                     header.Cell().Element(CellStyle).Text("ID No.");
@@ -50,14 +52,19 @@ namespace PdfGenerator.Components.BaDispatch
                         return headerContainer.DefaultTextStyle(x => x.SemiBold())
                             .Border(1)
                             .BorderColor(Colors.Black)
-                            .Background(Colors.Grey.Lighten1)
-                            .AlignCenter();
-                    }  
+                            .Background("#EFEBE9")
+                            .MinHeight(15)
+                            .PaddingVertical(3)
+                            .AlignCenter()
+                            .AlignMiddle();
+                    }
                 });
 
                 // step 3
-                foreach (var item in _dispatches)
+                for (var i = 0; i < _dispatches.Count; i++)
                 {
+                    var item = _dispatches[i];
+
                     var slNo = Convert.ToString(_dispatches.IndexOf(item) + 1);
 
                     table.Cell().Element(CellStyle).Text(slNo);
@@ -74,6 +81,9 @@ namespace PdfGenerator.Components.BaDispatch
                         return cellContainer
                             .Border(1)
                             .BorderColor(Colors.Black)
+                            .Background(i % 2 == 0 ?  Colors.White: "#EDE7F6")
+                            .MinHeight(15)
+                            .PaddingVertical(3)
                             .AlignCenter();
                     }
 
@@ -82,6 +92,10 @@ namespace PdfGenerator.Components.BaDispatch
                         return cellContainer
                             .Border(1)
                             .BorderColor(Colors.Black)
+                            .Background(i % 2 == 0 ? Colors.White : "#EDE7F6")
+                            .MinHeight(15)
+                            .PaddingVertical(3)
+                            .PaddingLeft(5)
                             .AlignLeft();
                     }
                 }
