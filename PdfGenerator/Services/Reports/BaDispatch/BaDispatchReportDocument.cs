@@ -68,7 +68,7 @@ namespace PdfGenerator.Services.Reports.BaDispatch
         {
             var today = DateTime.Now.ToString("dddd, MMM dd, yyyy");
 
-            //int counter = 0;
+            int counter = 0;
             container.Column(column =>
             {
                 column.Item()
@@ -82,10 +82,10 @@ namespace PdfGenerator.Services.Reports.BaDispatch
                 {
                     column.Item().Component(new ReportComponent(disResp.Summary, disResp.DispatchRows));
 
-                    //if (counter == 10)
-                    //    break;
+                    if (counter == 10)
+                        break;
 
-                    //counter++;
+                    counter++;
                 }
             });
         }

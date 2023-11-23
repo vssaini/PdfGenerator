@@ -21,10 +21,12 @@ namespace PdfGenerator.Services.Reports.BaDispatch
             _logService.LogInformation("Generating BA Dispatch report document");
 
             var model = await _baDocDs.GetBaDispatchReportModelAsync(filter);
-
             var document = new BaDispatchReportDocument(model);
-            //return document.GeneratePdf(); // TODO: Return bytes in Web app
 
+            //_logService.LogInformation("Generating and showing BA Dispatch PDF");
+            //document.GeneratePdfAndShow(); // TODO: Return bytes in Web app
+
+            _logService.LogInformation("Showing BA Dispatch report PDF in Previewer");
             await document.ShowInPreviewerAsync();
         }
     }

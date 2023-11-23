@@ -133,7 +133,7 @@ namespace PdfGenerator.Services.Reports.Grievance
             {
                 row.RelativeItem().Column(column =>
                 {
-                    column.Item().PaddingTop(25).Text(text =>
+                    column.Item().Text(text =>
                     {
                         text.Line(_model.Signature.WriterName);
                         text.Line(_model.Signature.WriterDesignation);

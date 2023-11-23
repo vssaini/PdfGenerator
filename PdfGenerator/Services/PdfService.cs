@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.Logging;
 using PdfGenerator.Contracts.Invoice;
+using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Contracts.Reports.Grievance;
 using PdfGenerator.Contracts.Royalty;
 using PdfGenerator.Models.Enums;
+using PdfGenerator.Models.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 using PdfGenerator.Models.Royalty;
 using QuestPDF.Infrastructure;
 using System.Globalization;
-using PdfGenerator.Contracts.Reports.BaDispatch;
-using PdfGenerator.Models.Reports.BaDispatch;
 
 namespace PdfGenerator.Services;
 
@@ -33,7 +33,6 @@ public class PdfService
     {
         SetQuestPdfLicense();
         SetAppCulture();
-        SetQuestPdfOtherSettings();
 
         await GenerateDocumentAsync(document);
     }
@@ -55,13 +54,6 @@ public class PdfService
 
         Thread.CurrentThread.CurrentCulture = cultureInfo;
         Thread.CurrentThread.CurrentUICulture = cultureInfo;
-    }
-
-    private static void SetQuestPdfOtherSettings()
-    {
-        // Fix how many pages are generated before throwing an exception
-        // in interest of saving resources
-        QuestPDF.Settings.DocumentLayoutExceptionThreshold = 1000;
     }
 
     private async Task GenerateDocumentAsync(Document document)

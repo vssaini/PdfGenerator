@@ -82,13 +82,14 @@ namespace PdfGenerator.Components.BaDispatch
 
             row.RelativeItem()
                 .AlignCenter()
+                .PaddingLeft(30)
                 .Column(rColumn =>
                 {
                     rColumn.Item()
                         .Text(text =>
                         {
                             text.DefaultTextStyle(fontStyle);
-                            text.AlignRight();
+                            text.AlignLeft();
                             text.Span("ID").Bold();
                             text.Span("   ");
                             text.Span(_summary.RequestId.ToString());
@@ -98,7 +99,7 @@ namespace PdfGenerator.Components.BaDispatch
                         .Text(text =>
                         {
                             text.DefaultTextStyle(fontStyle);
-                            text.AlignRight();
+                            text.AlignLeft();
                             text.Span("Show").Bold();
                             text.Span("   ");
                             text.Span(_summary.Show);
@@ -112,7 +113,7 @@ namespace PdfGenerator.Components.BaDispatch
                         .Text(text =>
                         {
                             text.DefaultTextStyle(fontStyle);
-                            text.AlignRight();
+                            text.AlignCenter();
                             text.Span("Requestor").Bold();
                             text.Span("   ");
                             text.Span(_summary.Requestor);
@@ -122,7 +123,7 @@ namespace PdfGenerator.Components.BaDispatch
                         .Text(text =>
                         {
                             text.DefaultTextStyle(fontStyle);
-                            text.AlignRight();
+                            text.AlignCenter();
                             text.Span("Report To").Bold();
                             text.Span("   ");
                             text.Span(_summary.Requestor);
@@ -130,22 +131,22 @@ namespace PdfGenerator.Components.BaDispatch
                 });
 
             row.RelativeItem()
+                .PaddingRight(30)
                 .Column(rColumn =>
                 {
                     rColumn.Item()
                         .Text(text =>
                         {
                             text.DefaultTextStyle(fontStyle);
-                            text.AlignRight();
+                            text.AlignLeft();
                             text.Span("   ");
                         });
 
                     rColumn.Item()
-                        .PaddingRight(40)
                         .Text(text =>
                         {
                             text.DefaultTextStyle(fontStyle);
-                            text.AlignRight();
+                            text.AlignLeft();
                             text.Span("BA").Bold();
                             text.Span("   ");
                             text.Span(_summary.BusinessAssociate);
