@@ -10,7 +10,7 @@ namespace PdfGenerator.Services.Reports.Membership
     {
         private readonly ActiveMemberReportModel _model;
 
-        private const int DefaultFontSize = 9;
+        private const int DefaultFontSize = 12;
         private const string DefaultFont = "Arial";
 
         private const string FallbackFont = "Microsoft PhagsPa";
@@ -36,13 +36,19 @@ namespace PdfGenerator.Services.Reports.Membership
                 .FontColor(Colors.Grey.Darken4)
                 .Fallback(fallbackStyle);
 
-            const float margin = 0.25f;
+            const float marginLr = 0.25f;
+            const float marginTb = 0.00f;
 
             container
                 .Page(page =>
                 {
                     page.Size(PageSizes.A4);
-                    page.Margin(margin, Unit.Inch);
+
+                    page.MarginLeft(marginLr, Unit.Inch);
+                    page.MarginRight(marginLr, Unit.Inch);
+                    page.MarginTop(marginTb, Unit.Inch);
+                    page.MarginBottom(marginTb, Unit.Inch);
+
                     page.DefaultTextStyle(pageStyle);
 
                     page.Content().Element(ComposeContent);
@@ -56,7 +62,6 @@ namespace PdfGenerator.Services.Reports.Membership
                 foreach (var member in _model.ActiveMembers)
                 {
                     column.Item().Component(new MemberComponent(member));
-                    column.Item().PaddingBottom(30);
                 }
             });
         }

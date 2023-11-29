@@ -210,7 +210,7 @@ namespace PdfGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Las Vegas.
+        ///   Looks up a localized string similar to Las Vegas,.
         /// </summary>
         internal static string MembershipCity {
             get {

@@ -170,7 +170,7 @@ AFL-CIO, CLC</value>
     <value>David Weigant</value>
   </data>
   <data name="MembershipCity" xml:space="preserve">
-    <value>Las Vegas</value>
+    <value>Las Vegas,</value>
   </data>
   <data name="MembershipState" xml:space="preserve">
     <value>Nevada</value>

@@ -16,7 +16,7 @@ namespace PdfGenerator.Components.Membership
 
         public void Compose(IContainer container)
         {
-            container.PaddingVertical(40).Column(column =>
+            container.PaddingVertical(20).Column(column =>
             {
                 column.Item().Element(ComposeFirstLine);
                 column.Item().Element(ComposeSecondLine);
@@ -27,11 +27,11 @@ namespace PdfGenerator.Components.Membership
 
         private void ComposeFirstLine(IContainer container)
         {
-            container.Row(row =>
+            container.PaddingBottom(20).Row(row =>
             {
-                row.ConstantItem(300).Height(50).Text("");
-                row.ConstantItem(150).Height(50).Text(_member.VoterStatus);
-                row.ConstantItem(100).Height(50).Text(_member.WorkerId.ToString());
+                row.ConstantItem(300).Text("");
+                row.ConstantItem(150).Text(_member.VoterStatus);
+                row.ConstantItem(100).Text(_member.WorkerId.ToString());
             });
         }
 
@@ -39,18 +39,24 @@ namespace PdfGenerator.Components.Membership
         {
             container.Row(row =>
             {
-                row.ConstantItem(250).AlignCenter().Text(_member.Date);
-                row.ConstantItem(150).Height(50).AlignRight().Text(_member.WorkerName);
+                row.ConstantItem(150).AlignRight().Text(_member.Date);
+                row.ConstantItem(120).Text("");
+                row.RelativeItem().AlignLeft().PaddingLeft(45).Text(_member.WorkerName);
             });
         }
 
         private static void ComposeThirdLine(IContainer container)
         {
-            container.PaddingTop(-30).Row(row =>
+            container.Row(row =>
             {
-                row.RelativeItem().AlignRight().Text(Resources.MembershipCardIssuer);
-                row.RelativeItem().PaddingLeft(20).Text(Resources.MembershipCity);
-                row.RelativeItem().AlignLeft().Text(Resources.MembershipState);
+                row.RelativeItem().AlignRight().PaddingRight(98).Text(text =>
+                    {
+                        text.Span(Resources.MembershipCardIssuer);
+                        text.Span("    ");
+                        text.Span(Resources.MembershipCity);
+                        text.Span("    ");
+                        text.Span(Resources.MembershipState);
+                    });
             });
         }
 
@@ -58,8 +64,9 @@ namespace PdfGenerator.Components.Membership
         {
             container.Row(row =>
             {
-                row.ConstantItem(250).AlignCenter().Text(Resources.MembershipCardPresident);
-                row.ConstantItem(150).Height(50).AlignRight().Text(Resources.MembershipCardSecretary);
+                row.ConstantItem(110).AlignRight().Text("");
+                row.RelativeItem().AlignRight().Text(Resources.MembershipCardPresident);
+                row.RelativeItem().AlignLeft().PaddingLeft(50).Text(Resources.MembershipCardSecretary);
             });
         }
     }
