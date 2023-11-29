@@ -15,6 +15,9 @@ using PdfGenerator.Services.Reports.BaDispatch;
 using PdfGenerator.Services.Reports.Grievance;
 using Serilog;
 using System.Reflection;
+using PdfGenerator.Contracts.Membership;
+using PdfGenerator.Data.Membership;
+using PdfGenerator.Services.Reports.Membership;
 
 namespace PdfGenerator;
 
@@ -79,6 +82,10 @@ internal static class Startup
                 services.AddTransient<IBaDispatchDocService, BaDispatchDocService>();
                 services.AddTransient<IBaDispatchDocDataSource, BaDispatchDocDataSource>();
                 services.AddTransient<IBaDispatchRepo, BaDispatchRepo>();
+
+                services.AddTransient<IActiveMemberDocService, ActiveMemberDocService>();
+                services.AddTransient<IActiveMemberDocDataSource, ActiveMemberDocDataSource>();
+                services.AddTransient<IActiveMemberRepo, ActiveMemberRepo>();
             })
             .UseSerilog()
             .Build();

@@ -112,7 +112,6 @@ namespace PdfGenerator.Components.BaDispatch
                         .Text(text =>
                         {
                             text.DefaultTextStyle(fontStyle);
-                            //text.AlignCenter();
                             text.Span("Requestor").Bold();
                             text.Span("   ");
                             text.Span(_summary.Requestor);
@@ -122,7 +121,6 @@ namespace PdfGenerator.Components.BaDispatch
                         .Text(text =>
                         {
                             text.DefaultTextStyle(fontStyle);
-                            //text.AlignCenter();
                             text.Span("Report To").Bold();
                             text.Span("   ");
                             text.Span(_summary.Requestor);

@@ -5,5 +5,6 @@ public enum Document
     Invoice,
     Royalty,
     GrievanceStepOneLetter,
-    BaDispatch
+    BaDispatch,
+    ActiveMember
 }

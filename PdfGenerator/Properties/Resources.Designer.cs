@@ -183,6 +183,51 @@ namespace PdfGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 720.
+        /// </summary>
+        internal static string MembershipCardIssuer {
+            get {
+                return ResourceManager.GetString("MembershipCardIssuer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Phil Jaynes.
+        /// </summary>
+        internal static string MembershipCardPresident {
+            get {
+                return ResourceManager.GetString("MembershipCardPresident", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to David Weigant.
+        /// </summary>
+        internal static string MembershipCardSecretary {
+            get {
+                return ResourceManager.GetString("MembershipCardSecretary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Las Vegas.
+        /// </summary>
+        internal static string MembershipCity {
+            get {
+                return ResourceManager.GetString("MembershipCity", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Nevada.
+        /// </summary>
+        internal static string MembershipState {
+            get {
+                return ResourceManager.GetString("MembershipState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Telephone (702) 873-3450.
         /// </summary>
         internal static string Telephone {

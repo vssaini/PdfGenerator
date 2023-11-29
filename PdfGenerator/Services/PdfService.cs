@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using PdfGenerator.Contracts.Invoice;
+using PdfGenerator.Contracts.Membership;
 using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Contracts.Reports.Grievance;
 using PdfGenerator.Contracts.Royalty;
@@ -19,14 +20,16 @@ public class PdfService
     private readonly IRoyaltyDocService _royDocService;
     private readonly IGrievanceDocService _grvDocService;
     private readonly IBaDispatchDocService _baDocService;
+    private readonly IActiveMemberDocService _amDocService;
 
-    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService, IBaDispatchDocService baDocService)
+    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService, IBaDispatchDocService baDocService, IActiveMemberDocService amDocService)
     {
         _logger = logger;
         _invDocService = invDocService;
         _royDocService = royDocService;
         _grvDocService = grvDocService;
         _baDocService = baDocService;
+        _amDocService = amDocService;
     }
 
     public async Task Run(Document document)
@@ -79,6 +82,14 @@ public class PdfService
                 var endDate = DateTime.Now;
                 var baDispatchFilter = new BaDispatchFilter(startDate, endDate);
                 await _baDocService.GenerateBaDispatchReportDocAsync(baDispatchFilter);
+                break;
+
+            case Document.ActiveMember:
+                await _amDocService.GenerateActiveMemberDocAsync();
+                break;
+
+            default:
+                Console.WriteLine("Invalid document type");
                 break;
         }
     }

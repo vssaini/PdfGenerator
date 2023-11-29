@@ -160,6 +160,21 @@ AFL-CIO, CLC</value>
   <data name="LocalLogo" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\LocalLogo.png;System.Byte[], mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </data>
+  <data name="MembershipCardIssuer" xml:space="preserve">
+    <value>720</value>
+  </data>
+  <data name="MembershipCardPresident" xml:space="preserve">
+    <value>Phil Jaynes</value>
+  </data>
+  <data name="MembershipCardSecretary" xml:space="preserve">
+    <value>David Weigant</value>
+  </data>
+  <data name="MembershipCity" xml:space="preserve">
+    <value>Las Vegas</value>
+  </data>
+  <data name="MembershipState" xml:space="preserve">
+    <value>Nevada</value>
+  </data>
   <data name="Telephone" xml:space="preserve">
     <value>Telephone (702) 873-3450</value>
   </data>
