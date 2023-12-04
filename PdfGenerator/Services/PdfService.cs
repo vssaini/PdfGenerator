@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.Logging;
 using PdfGenerator.Contracts.Invoice;
-using PdfGenerator.Contracts.Membership;
 using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Contracts.Reports.Grievance;
+using PdfGenerator.Contracts.Reports.Membership;
 using PdfGenerator.Contracts.Royalty;
 using PdfGenerator.Models.Enums;
 using PdfGenerator.Models.Reports.BaDispatch;
@@ -10,6 +10,7 @@ using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 using PdfGenerator.Models.Royalty;
 using QuestPDF.Infrastructure;
 using System.Globalization;
+using PdfGenerator.Contracts.Reports.Request;
 
 namespace PdfGenerator.Services;
 
@@ -21,8 +22,9 @@ public class PdfService
     private readonly IGrievanceDocService _grvDocService;
     private readonly IBaDispatchDocService _baDocService;
     private readonly IActiveMemberDocService _amDocService;
+    private readonly IDispatchWorkerListDocService _dwlDocService;
 
-    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService, IBaDispatchDocService baDocService, IActiveMemberDocService amDocService)
+    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService, IBaDispatchDocService baDocService, IActiveMemberDocService amDocService, IDispatchWorkerListDocService dwlDocService)
     {
         _logger = logger;
         _invDocService = invDocService;
@@ -30,6 +32,7 @@ public class PdfService
         _grvDocService = grvDocService;
         _baDocService = baDocService;
         _amDocService = amDocService;
+        _dwlDocService = dwlDocService;
     }
 
     public async Task Run(Document document)
@@ -86,6 +89,10 @@ public class PdfService
 
             case Document.ActiveMember:
                 await _amDocService.GenerateActiveMemberDocAsync();
+                break;
+
+            case Document.RequestDispatchWorkerList:
+                await _dwlDocService.GenerateDispatchWorkerListDocAsync(279288);
                 break;
 
             default:

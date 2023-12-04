@@ -1,4 +1,4 @@
-﻿using PdfGenerator.Models.Membership;
+﻿using PdfGenerator.Models.Reports.Membership;
 using PdfGenerator.Properties;
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;

@@ -6,5 +6,6 @@ public enum Document
     Royalty,
     GrievanceStepOneLetter,
     BaDispatch,
-    ActiveMember
+    ActiveMember,
+    RequestDispatchWorkerList
 }

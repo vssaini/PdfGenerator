@@ -1,7 +1,7 @@
-﻿using PdfGenerator.Contracts.Membership;
-using PdfGenerator.Models.Membership;
+﻿using PdfGenerator.Contracts.Reports.Membership;
+using PdfGenerator.Models.Reports.Membership;
 
-namespace PdfGenerator.Data.Membership
+namespace PdfGenerator.Data.Reports.Membership
 {
     public sealed class ActiveMemberDocDataSource : IActiveMemberDocDataSource
     {

@@ -1,21 +1,21 @@
 ﻿using PdfGenerator.Components.Membership;
-using PdfGenerator.Models.Reports.Membership;
+using PdfGenerator.Models.Reports.Request;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace PdfGenerator.Services.Reports.Membership
+namespace PdfGenerator.Services.Reports.Request
 {
-    public class ActiveMemberDocument : IDocument
+    public class DispatchWorkerListDocument : IDocument
     {
-        private readonly ActiveMemberReportModel _model;
+        private readonly RequestWorkerListReportVm _model;
 
         private const int DefaultFontSize = 12;
         private const string DefaultFont = "Arial";
 
         private const string FallbackFont = "Microsoft PhagsPa";
 
-        public ActiveMemberDocument(ActiveMemberReportModel model)
+        public DispatchWorkerListDocument(RequestWorkerListReportVm model)
         {
             _model = model;
         }
@@ -57,13 +57,13 @@ namespace PdfGenerator.Services.Reports.Membership
 
         private void ComposeContent(IContainer container)
         {
-            container.Column(column =>
-            {
-                foreach (var member in _model.ActiveMembers)
-                {
-                    column.Item().Component(new MemberComponent(member));
-                }
-            });
+            //container.Column(column =>
+            //{
+            //    foreach (var member in _model.ActiveMembers)
+            //    {
+            //        column.Item().Component(new MemberComponent(member));
+            //    }
+            //});
         }
     }
 }

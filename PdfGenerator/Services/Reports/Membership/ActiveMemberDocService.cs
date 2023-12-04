@@ -1,5 +1,5 @@
 ﻿using PdfGenerator.Contracts;
-using PdfGenerator.Contracts.Membership;
+using PdfGenerator.Contracts.Reports.Membership;
 using QuestPDF.Previewer;
 
 namespace PdfGenerator.Services.Reports.Membership

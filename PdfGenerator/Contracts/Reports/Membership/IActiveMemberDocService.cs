@@ -1,4 +1,4 @@
-﻿namespace PdfGenerator.Contracts.Membership
+﻿namespace PdfGenerator.Contracts.Reports.Membership
 {
     public interface IActiveMemberDocService
     {

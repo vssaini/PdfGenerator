@@ -1,4 +1,4 @@
-﻿namespace PdfGenerator.Models.Membership
+﻿namespace PdfGenerator.Models.Reports.Membership
 {
     public class ActiveMember
     {

@@ -1,6 +1,6 @@
-﻿using PdfGenerator.Models.Membership;
+﻿using PdfGenerator.Models.Reports.Membership;
 
-namespace PdfGenerator.Contracts.Membership
+namespace PdfGenerator.Contracts.Reports.Membership
 {
     public interface IActiveMemberRepo
     {

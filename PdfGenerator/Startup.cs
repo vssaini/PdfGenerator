@@ -5,20 +5,22 @@ using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Invoice;
 using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Contracts.Reports.Grievance;
+using PdfGenerator.Contracts.Reports.Membership;
+using PdfGenerator.Contracts.Reports.Request;
 using PdfGenerator.Contracts.Royalty;
 using PdfGenerator.Data;
 using PdfGenerator.Data.Reports.BaDispatch;
 using PdfGenerator.Data.Reports.Grievance;
+using PdfGenerator.Data.Reports.Membership;
+using PdfGenerator.Data.Reports.Request;
 using PdfGenerator.Data.Royalty;
 using PdfGenerator.Services;
 using PdfGenerator.Services.Reports.BaDispatch;
 using PdfGenerator.Services.Reports.Grievance;
+using PdfGenerator.Services.Reports.Membership;
+using PdfGenerator.Services.Reports.Request;
 using Serilog;
 using System.Reflection;
-using PdfGenerator.Contracts.Membership;
-using PdfGenerator.Data.Membership;
-using PdfGenerator.Services.Reports.Membership;
-
 namespace PdfGenerator;
 
 internal static class Startup
@@ -86,6 +88,11 @@ internal static class Startup
                 services.AddTransient<IActiveMemberDocService, ActiveMemberDocService>();
                 services.AddTransient<IActiveMemberDocDataSource, ActiveMemberDocDataSource>();
                 services.AddTransient<IActiveMemberRepo, ActiveMemberRepo>();
+
+                services.AddTransient<IDispatchWorkerListDocService, DispatchWorkerListDocService>();
+                services.AddTransient<IDispatchWorkerListDocDataSource, DispatchWorkerListDocDataSource>();
+                services.AddTransient<IDispatchWorkerListRepo, DispatchWorkerListRepo>();
+
             })
             .UseSerilog()
             .Build();
