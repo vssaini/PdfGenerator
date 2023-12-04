@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using MoreLinq;
 using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.BaDispatch;
@@ -22,11 +23,7 @@ namespace PdfGenerator.Data.Reports.BaDispatch
             var baDispatchReports = GetDispatchReports(filter);
             var itemReqIds = baDispatchReports.Select(i => i.RequestId).ToList();
 
-            _logService.LogInformation("Getting BA Dispatch report sub data from database");
-
-            const string sql = "SELECT * FROM dbo.vw_BADispatchReport_Sub WHERE RequestID IN @itemReqIds";
-            using var connection = _sqlConnectionFactory.CreateConnection();
-            var subDispatchReports = await connection.QueryAsync<vw_BADispatchReport_Sub>(sql, new { itemReqIds });
+            var subDispatchReports = await GetSubDispatchReportsAsync(itemReqIds);
 
             var baDispatchResponses = baDispatchReports
                 .Select(item => new BaDispatchResponse
@@ -85,6 +82,27 @@ namespace PdfGenerator.Data.Reports.BaDispatch
             var reports = gr.Read<usp_BADispatchReport_ByLocation_Result>().ToList();
 
             return reports;
+        }
+
+        private async Task<List<vw_BADispatchReport_Sub>> GetSubDispatchReportsAsync(IEnumerable<int> itemReqIds)
+        {
+            _logService.LogInformation("Getting BA Dispatch report sub data from database");
+
+            var subDispatchReports = new List<vw_BADispatchReport_Sub>();
+
+            var itemReqIdsBatch = itemReqIds.Batch(2000).ToList();
+            _logService.LogInformation($"Total {itemReqIdsBatch.Count} batches of RequestIds");
+
+            foreach (var batchReqIds in itemReqIdsBatch)
+            {
+                const string sql = "SELECT * FROM dbo.vw_BADispatchReport_Sub WHERE RequestID IN @batchReqIds";
+                using var connection = _sqlConnectionFactory.CreateConnection();
+                var sdReports = await connection.QueryAsync<vw_BADispatchReport_Sub>(sql, new { batchReqIds });
+
+                subDispatchReports.AddRange(sdReports);
+            }
+
+            return subDispatchReports;
         }
 
         private static List<DispatchRow> GetDispatchRows(int requestId, IEnumerable<vw_BADispatchReport_Sub> subDispatchReports)
