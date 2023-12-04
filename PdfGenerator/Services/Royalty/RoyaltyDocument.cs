@@ -5,7 +5,7 @@ using QuestPDF.Infrastructure;
 using System.Globalization;
 using System.Text.Json.Serialization;
 
-namespace PdfGenerator.Components.Royalty
+namespace PdfGenerator.Services.Royalty
 {
     public sealed class RoyaltyDocument : IDocument
     {

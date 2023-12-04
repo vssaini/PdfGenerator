@@ -117,9 +117,6 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="BaDispatch_PropertyMsg" xml:space="preserve">
-    <value>Property of IATSE Local 720</value>
-  </data>
   <data name="BaDispatch_Title" xml:space="preserve">
     <value>Business Agent Dispatch Report By Location</value>
   </data>
@@ -148,6 +145,12 @@
   <data name="ComplementaryClose" xml:space="preserve">
     <value>Sincerely,</value>
   </data>
+  <data name="DispatchWorkerList_Comment" xml:space="preserve">
+    <value>* The referent has not completed the proper training for the requested skill. The required training for this skill is established through the
+NRA IATSE Local 720 Training Trust manager and the Trustees based on the requirements given them by the employers signatory to
+IATSE Local 720. Some of this training involves safety aspects of the skill that will help reduce the possibility of on the job injuries. The
+training for this skill is available and it is recommended that you instruct the referent to obtain the training.</value>
+  </data>
   <data name="Fax" xml:space="preserve">
     <value>FAX (702) 873-2120</value>
   </data>
@@ -174,6 +177,9 @@ AFL-CIO, CLC</value>
   </data>
   <data name="MembershipState" xml:space="preserve">
     <value>Nevada</value>
+  </data>
+  <data name="PropertyMsg" xml:space="preserve">
+    <value>Property of IATSE Local 720</value>
   </data>
   <data name="Telephone" xml:space="preserve">
     <value>Telephone (702) 873-3450</value>

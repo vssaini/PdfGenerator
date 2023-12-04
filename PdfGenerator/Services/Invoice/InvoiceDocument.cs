@@ -1,9 +1,10 @@
-﻿using PdfGenerator.Models.Invoice;
+﻿using PdfGenerator.Components.Invoice;
+using PdfGenerator.Models.Invoice;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace PdfGenerator.Components.Invoice
+namespace PdfGenerator.Services.Invoice
 {
     public class InvoiceDocument : IDocument
     {
@@ -121,10 +122,12 @@ namespace PdfGenerator.Components.Invoice
                 // step 3
                 foreach (var item in _model.Items)
                 {
-                    table.Cell().Element(CellStyle).Text(_model.Items.IndexOf(item) + 1);
+                    var slNo = _model.Items.IndexOf(item) + 1;
+
+                    table.Cell().Element(CellStyle).Text(slNo.ToString());
                     table.Cell().Element(CellStyle).Text(item.Name);
                     table.Cell().Element(CellStyle).AlignRight().Text($"{item.Price}$");
-                    table.Cell().Element(CellStyle).AlignRight().Text(item.Quantity);
+                    table.Cell().Element(CellStyle).AlignRight().Text(item.Quantity.ToString());
                     table.Cell().Element(CellStyle).AlignRight().Text($"{item.Price * item.Quantity}$");
 
                     static IContainer CellStyle(IContainer container)

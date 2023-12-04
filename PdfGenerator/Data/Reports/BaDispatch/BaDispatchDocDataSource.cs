@@ -33,7 +33,7 @@ namespace PdfGenerator.Data.Reports.BaDispatch
             var footer = new Footer
             {
                 CurrentUserName = "Michael Stancliff",
-                PropertyMessage = Resources.BaDispatch_PropertyMsg,
+                PropertyMessage = Resources.PropertyMsg,
                 CurrentDateTime = DateTime.Now.ToString("dddd, MMM dd, yyyy hh:mm tt")
             };
 

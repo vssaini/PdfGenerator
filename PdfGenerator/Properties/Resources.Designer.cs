@@ -61,15 +61,6 @@ namespace PdfGenerator.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Property of IATSE Local 720.
-        /// </summary>
-        internal static string BaDispatch_PropertyMsg {
-            get {
-                return ResourceManager.GetString("BaDispatch_PropertyMsg", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Business Agent Dispatch Report By Location.
         /// </summary>
         internal static string BaDispatch_Title {
@@ -152,6 +143,18 @@ namespace PdfGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to * The referent has not completed the proper training for the requested skill. The required training for this skill is established through the
+        ///NRA IATSE Local 720 Training Trust manager and the Trustees based on the requirements given them by the employers signatory to
+        ///IATSE Local 720. Some of this training involves safety aspects of the skill that will help reduce the possibility of on the job injuries. The
+        ///training for this skill is available and it is recommended that you instruct the referent to obtai [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string DispatchWorkerList_Comment {
+            get {
+                return ResourceManager.GetString("DispatchWorkerList_Comment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FAX (702) 873-2120.
         /// </summary>
         internal static string Fax {
@@ -224,6 +227,15 @@ namespace PdfGenerator.Properties {
         internal static string MembershipState {
             get {
                 return ResourceManager.GetString("MembershipState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Property of IATSE Local 720.
+        /// </summary>
+        internal static string PropertyMsg {
+            get {
+                return ResourceManager.GetString("PropertyMsg", resourceCulture);
             }
         }
         
