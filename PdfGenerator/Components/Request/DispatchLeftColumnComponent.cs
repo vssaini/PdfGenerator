@@ -35,7 +35,7 @@ namespace PdfGenerator.Components.Request
                 // step 1
                 table.ColumnsDefinition(columns =>
                 {
-                    columns.ConstantColumn(110);
+                    columns.ConstantColumn(80);
                     columns.RelativeColumn();
                 });
 

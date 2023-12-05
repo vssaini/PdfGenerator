@@ -35,7 +35,7 @@ namespace PdfGenerator.Components.Request
                 // step 1
                 table.ColumnsDefinition(columns =>
                 {
-                    columns.ConstantColumn(120);
+                    columns.ConstantColumn(90);
                     columns.RelativeColumn();
                 });
 
@@ -50,10 +50,10 @@ namespace PdfGenerator.Components.Request
                 table.Cell().Element(RightCellStyle).Text(Convert.ToString(_dispatchSummary.WorkersDispatched));
 
                 table.Cell().Element(LeftCellStyle).Text("Facility");
-                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.LocationSub);
+                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.Location);
 
                 table.Cell().Element(LeftCellStyle).Text("Location");
-                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.Location);
+                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.Booth);
 
                 table.Cell().Element(LeftCellStyle).Text("Show");
                 table.Cell().Element(RightCellStyle).Text(_dispatchSummary.Show);
