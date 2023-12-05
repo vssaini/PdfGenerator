@@ -72,95 +72,36 @@ namespace PdfGenerator.Services.Reports.Request
             {
                 column.Spacing(5);
 
-                column.Item().Row(row =>
+                column.Item().PaddingBottom(10).Row(row =>
                 {
                     row.RelativeItem().Component(new DispatchLeftColumnComponent(_model.DispatchSummary));
                     row.ConstantItem(50);
                     row.RelativeItem().Component(new DispatchRightColumnComponent(_model.DispatchSummary));
                 });
 
-                column.Item().Element(ComposeWorkersTable);
+                ComposeTables(column);
                 column.Item().PaddingTop(10).Element(ComposeComments);
             });
         }
 
-        private void ComposeWorkersTable(IContainer container)
+        private void ComposeTables(ColumnDescriptor column)
         {
-            // Ref - https://colorpicker.fr/
+            var workersGrp = _model.Workers
+                .GroupBy(w => w.OriginalSkil)
+                .Select(g => new
+                {
+                    OriginalSkill = g.Key,
+                    Workers = g.ToList()
+                })
+                .ToList();
 
-            var fontStyle = TextStyle.Default
-                .FontSize(DefaultFontSize)
-                .FontFamily(DefaultFont)
-                .SemiBold();
-
-            container.Table(table =>
+            for (var i = 0; i < workersGrp.Count; i++)
             {
-                // step 1
-                table.ColumnsDefinition(columns =>
-                {
-                    columns.ConstantColumn(0.3f, Unit.Inch);
-                    columns.ConstantColumn(0.8f, Unit.Inch);
-                    columns.ConstantColumn(2.3f, Unit.Inch);
-                    columns.ConstantColumn(0.6f, Unit.Inch);
-                    columns.ConstantColumn(1.4f, Unit.Inch);
-                    columns.RelativeColumn();
-                });
+                var isLastRecord = i == workersGrp.Count - 1;
 
-                // step 2
-                table.Header(header =>
-                {
-                    header.Cell()
-                        .ColumnSpan(6)
-                        .Element(CellStyle)
-                        .Text(t =>
-                        {
-                            t.DefaultTextStyle(fontStyle);
-                            t.Span("General, Ground Rigger (SRGG)");
-                            t.AlignCenter();
-
-                        }); //item.OriginalSkill
-
-                    static IContainer CellStyle(IContainer headerContainer)
-                    {
-                        return headerContainer
-                            .DefaultTextStyle(x => x.SemiBold().FontSize(10))
-                            .BorderBottom(6)
-                            .BorderColor(Colors.Black)
-                            .Background("#ECECEC")
-                            .MinHeight(10)
-                            .PaddingVertical(4)
-                            .AlignMiddle()
-                            .AlignLeft()
-                            .PaddingLeft(5);
-                    }
-                });
-
-
-                // step 3
-                for (var i = 0; i < _model.Workers.Count; i++)
-                {
-                    var item = _model.Workers[i];
-
-                    var slNo = _model.Workers.IndexOf(item) + 1;
-
-                    table.Cell().Element(CellStyle).AlignCenter().Text(slNo.ToString());
-                    table.Cell().Element(CellStyle).AlignCenter().Text(item.ReportTime);
-                    table.Cell().Element(CellStyle).PaddingLeft(5).Text(item.WorkerName);
-                    table.Cell().Element(CellStyle).Text(item.DispatchSkill);
-                    table.Cell().Element(CellStyle).Text(item.Number);
-                    table.Cell().Element(CellStyle).Text(item.EmailPersonal);
-
-                    IContainer CellStyle(IContainer cellContainer)
-                    {
-                        return cellContainer
-                            .BorderBottom(1)
-                            .BorderColor(Colors.Grey.Lighten2)
-                            .Background(i % 2 == 0 ? Colors.White : "#EFF2F7")
-                            .PaddingVertical(3)
-                            .DefaultTextStyle(t => t.FontSize(9));
-                    }
-                }
-            });
+                var item = workersGrp[i];
+                column.Item().Row(row => row.RelativeItem().Component(new DispatchTableComponent(item.OriginalSkill, item.Workers, isLastRecord)));
+            }
         }
 
         private static void ComposeComments(IContainer container)
