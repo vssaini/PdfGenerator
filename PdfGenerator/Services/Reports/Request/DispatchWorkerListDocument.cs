@@ -86,6 +86,8 @@ namespace PdfGenerator.Services.Reports.Request
 
         private void ComposeWorkersTable(IContainer container)
         {
+            // Ref - https://colorpicker.fr/
+
             var fontStyle = TextStyle.Default
                 .FontSize(DefaultFontSize)
                 .FontFamily(DefaultFont)
@@ -114,20 +116,22 @@ namespace PdfGenerator.Services.Reports.Request
                         {
                             t.DefaultTextStyle(fontStyle);
                             t.Span("General, Ground Rigger (SRGG)");
+                            t.AlignCenter();
 
                         }); //item.OriginalSkill
 
-                    static IContainer CellStyle(IContainer container)
+                    static IContainer CellStyle(IContainer headerContainer)
                     {
-                        return container
+                        return headerContainer
                             .DefaultTextStyle(x => x.SemiBold().FontSize(10))
-                            .PaddingVertical(5)
-                            .BorderBottom(2)
-                            .MinHeight(25)
-                            //.AlignCenter()
-                            //.AlignMiddle()
-                            .Background(Colors.Grey.Lighten4)
-                            .BorderColor(Colors.Black);
+                            .BorderBottom(6)
+                            .BorderColor(Colors.Black)
+                            .Background("#ECECEC")
+                            .MinHeight(10)
+                            .PaddingVertical(4)
+                            .AlignMiddle()
+                            .AlignLeft()
+                            .PaddingLeft(5);
                     }
                 });
 
@@ -139,8 +143,8 @@ namespace PdfGenerator.Services.Reports.Request
 
                     var slNo = _model.Workers.IndexOf(item) + 1;
 
-                    table.Cell().Element(CellStyle).Text(slNo.ToString());
-                    table.Cell().Element(CellStyle).Text(item.ReportTime);
+                    table.Cell().Element(CellStyle).AlignCenter().Text(slNo.ToString());
+                    table.Cell().Element(CellStyle).AlignCenter().Text(item.ReportTime);
                     table.Cell().Element(CellStyle).PaddingLeft(5).Text(item.WorkerName);
                     table.Cell().Element(CellStyle).Text(item.DispatchSkill);
                     table.Cell().Element(CellStyle).Text(item.Number);
@@ -151,9 +155,8 @@ namespace PdfGenerator.Services.Reports.Request
                         return cellContainer
                             .BorderBottom(1)
                             .BorderColor(Colors.Grey.Lighten2)
-                            .Background(i % 2 == 0 ? Colors.White : "#EDE7F6")
-                            //.MinHeight(15)
-                            .PaddingVertical(5)
+                            .Background(i % 2 == 0 ? Colors.White : "#EFF2F7")
+                            .PaddingVertical(3)
                             .DefaultTextStyle(t => t.FontSize(9));
                     }
                 }
