@@ -26,9 +26,7 @@ namespace PdfGenerator.Components.Request
         {
             var fontStyle = TextStyle.Default
                 .FontSize(9)
-                .FontFamily("Arial")
-                .SemiBold();
-
+                .FontFamily("Arial");
 
             container
                 .DefaultTextStyle(fontStyle)

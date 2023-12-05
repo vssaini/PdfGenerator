@@ -115,8 +115,7 @@ namespace PdfGenerator.Services.Reports.Request
                             t.DefaultTextStyle(fontStyle);
                             t.Span("General, Ground Rigger (SRGG)");
 
-                        })
-                        ; //item.OriginalSkill
+                        }); //item.OriginalSkill
 
                     static IContainer CellStyle(IContainer container)
                     {
@@ -132,9 +131,12 @@ namespace PdfGenerator.Services.Reports.Request
                     }
                 });
 
+
                 // step 3
-                foreach (var item in _model.Workers)
+                for (var i = 0; i < _model.Workers.Count; i++)
                 {
+                    var item = _model.Workers[i];
+
                     var slNo = _model.Workers.IndexOf(item) + 1;
 
                     table.Cell().Element(CellStyle).Text(slNo.ToString());
@@ -144,9 +146,15 @@ namespace PdfGenerator.Services.Reports.Request
                     table.Cell().Element(CellStyle).Text(item.Number);
                     table.Cell().Element(CellStyle).Text(item.EmailPersonal);
 
-                    static IContainer CellStyle(IContainer container)
+                    IContainer CellStyle(IContainer cellContainer)
                     {
-                        return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5).DefaultTextStyle(t => t.FontSize(9));
+                        return cellContainer
+                            .BorderBottom(1)
+                            .BorderColor(Colors.Grey.Lighten2)
+                            .Background(i % 2 == 0 ? Colors.White : "#EDE7F6")
+                            //.MinHeight(15)
+                            .PaddingVertical(5)
+                            .DefaultTextStyle(t => t.FontSize(9));
                     }
                 }
             });
