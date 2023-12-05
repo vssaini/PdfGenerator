@@ -11,7 +11,7 @@ namespace PdfGenerator.Services.Reports.Request
     {
         private readonly DispatchWorkerListReportModel _model;
 
-        private const int DefaultFontSize = 12;
+        private const int DefaultFontSize = 11;
         private const string DefaultFont = "Arial";
 
         private const string FallbackFont = "Microsoft PhagsPa";
@@ -87,7 +87,7 @@ namespace PdfGenerator.Services.Reports.Request
         private void ComposeWorkersTable(IContainer container)
         {
             var fontStyle = TextStyle.Default
-                .FontSize(12)
+                .FontSize(DefaultFontSize)
                 .FontFamily(DefaultFont)
                 .SemiBold();
 
@@ -115,7 +115,8 @@ namespace PdfGenerator.Services.Reports.Request
                             t.DefaultTextStyle(fontStyle);
                             t.Span("General, Ground Rigger (SRGG)");
 
-                        }); //item.OriginalSkill
+                        })
+                        ; //item.OriginalSkill
 
                     static IContainer CellStyle(IContainer container)
                     {
@@ -154,19 +155,17 @@ namespace PdfGenerator.Services.Reports.Request
         private static void ComposeComments(IContainer container)
         {
             var fontStyle = TextStyle.Default
-                .FontSize(13)
+                .FontSize(10)
                 .FontFamily(DefaultFont)
                 .Italic();
 
-            container
-                .ScaleToFit()
-                .Column(column =>
+            container.Column(column =>
             {
-                column.Spacing(5);
+                column.Spacing(3);
                 column.Item().Text(t =>
                 {
                     t.DefaultTextStyle(fontStyle);
-                    t.Span(Resources.DispatchWorkerList_Comment);
+                    t.Element().Text(Resources.DispatchWorkerList_Comment);
                 });
             });
         }
