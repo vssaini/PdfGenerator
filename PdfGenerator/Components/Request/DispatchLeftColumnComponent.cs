@@ -24,7 +24,15 @@ namespace PdfGenerator.Components.Request
 
         private void ComposeTable(IContainer container)
         {
-            container.Table(table =>
+            var fontStyle = TextStyle.Default
+                .FontSize(9)
+                .FontFamily("Arial")
+                .SemiBold();
+
+
+            container
+                .DefaultTextStyle(fontStyle)
+                .Table(table =>
             {
                 // step 1
                 table.ColumnsDefinition(columns =>
@@ -56,12 +64,12 @@ namespace PdfGenerator.Components.Request
 
                 static IContainer LeftCellStyle(IContainer container)
                 {
-                    return container.AlignRight().PaddingRight(10).PaddingVertical(5);
+                    return container.AlignRight().PaddingRight(10).PaddingVertical(2);
                 }
 
                 static IContainer RightCellStyle(IContainer container)
                 {
-                    return container.AlignLeft().PaddingVertical(5);
+                    return container.AlignLeft().PaddingVertical(2);
                 }
             });
         }

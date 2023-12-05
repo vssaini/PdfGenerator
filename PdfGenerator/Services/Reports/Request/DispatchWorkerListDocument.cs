@@ -11,7 +11,7 @@ namespace PdfGenerator.Services.Reports.Request
     {
         private readonly DispatchWorkerListReportModel _model;
 
-        private const int DefaultFontSize = 11;
+        private const int DefaultFontSize = 10;
         private const string DefaultFont = "Arial";
 
         private const string FallbackFont = "Microsoft PhagsPa";
@@ -55,14 +55,14 @@ namespace PdfGenerator.Services.Reports.Request
         private void ComposeHeader(IContainer container)
         {
             var titleStyle = TextStyle.Default
-                .FontSize(18)
+                .FontSize(16)
                 .FontFamily(DefaultFont)
                 .SemiBold();
 
             container.Column(column =>
             {
                 column.Item().AlignCenter().Text(_model.Header.Title).Style(titleStyle);
-                column.Item().PaddingVertical(5).LineHorizontal(3).LineColor(Colors.Black);
+                column.Item().PaddingVertical(5).LineHorizontal(2).LineColor(Colors.Black);
             });
         }
 
@@ -80,7 +80,7 @@ namespace PdfGenerator.Services.Reports.Request
                 });
 
                 column.Item().Element(ComposeWorkersTable);
-                column.Item().PaddingTop(25).Element(ComposeComments);
+                column.Item().PaddingTop(10).Element(ComposeComments);
             });
         }
 
@@ -121,7 +121,7 @@ namespace PdfGenerator.Services.Reports.Request
                     static IContainer CellStyle(IContainer container)
                     {
                         return container
-                            .DefaultTextStyle(x => x.SemiBold())
+                            .DefaultTextStyle(x => x.SemiBold().FontSize(10))
                             .PaddingVertical(5)
                             .BorderBottom(2)
                             .MinHeight(25)
@@ -146,7 +146,7 @@ namespace PdfGenerator.Services.Reports.Request
 
                     static IContainer CellStyle(IContainer container)
                     {
-                        return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5);
+                        return container.BorderBottom(1).BorderColor(Colors.Grey.Lighten2).PaddingVertical(5).DefaultTextStyle(t => t.FontSize(9));
                     }
                 }
             });
@@ -155,13 +155,12 @@ namespace PdfGenerator.Services.Reports.Request
         private static void ComposeComments(IContainer container)
         {
             var fontStyle = TextStyle.Default
-                .FontSize(10)
+                .FontSize(9)
                 .FontFamily(DefaultFont)
                 .Italic();
 
             container.Column(column =>
             {
-                column.Spacing(3);
                 column.Item().Text(t =>
                 {
                     t.DefaultTextStyle(fontStyle);
