@@ -32,13 +32,14 @@ namespace PdfGenerator.Data.Reports.Request
                 CurrentDateTime = DateTime.Now.ToString("dddd, MMM dd, yyyy hh:mm tt")
             };
 
-            var workerListModel = await _dwlRepo.GetDispatchWorkerAsync(requestId);
+            var wlReportVm = await _dwlRepo.GetDispatchWorkerAsync(requestId);
 
             return new DispatchWorkerListReportModel
             {
                 Header = header,
                 Footer = footer,
-                WorkerListModel = workerListModel
+                DispatchSummary = wlReportVm.RequestHeader,
+                Workers = wlReportVm.Workers
             };
         }
     }

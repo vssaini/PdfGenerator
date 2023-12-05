@@ -74,55 +74,74 @@ namespace PdfGenerator.Services.Reports.Request
 
                 column.Item().Row(row =>
                 {
-                    row.RelativeItem().Component(new DispatchDetailComponent());
+                    row.RelativeItem().Component(new DispatchLeftColumnComponent(_model.DispatchSummary));
                     row.ConstantItem(50);
-                    row.RelativeItem().Component(new DispatchDetailComponent());
+                    row.RelativeItem().Component(new DispatchRightColumnComponent(_model.DispatchSummary));
                 });
 
-                column.Item().Element(ComposeTable);
+                column.Item().Element(ComposeWorkersTable);
                 column.Item().PaddingTop(25).Element(ComposeComments);
             });
         }
 
-        private void ComposeTable(IContainer container)
+        private void ComposeWorkersTable(IContainer container)
         {
+            var fontStyle = TextStyle.Default
+                .FontSize(12)
+                .FontFamily(DefaultFont)
+                .SemiBold();
+
             container.Table(table =>
             {
                 // step 1
                 table.ColumnsDefinition(columns =>
                 {
-                    columns.RelativeColumn();
-                    columns.RelativeColumn();
-                    columns.RelativeColumn();
-                    columns.RelativeColumn();
+                    columns.ConstantColumn(0.3f, Unit.Inch);
+                    columns.ConstantColumn(0.8f, Unit.Inch);
+                    columns.ConstantColumn(2.3f, Unit.Inch);
+                    columns.ConstantColumn(0.6f, Unit.Inch);
+                    columns.ConstantColumn(1.4f, Unit.Inch);
                     columns.RelativeColumn();
                 });
 
                 // step 2
                 table.Header(header =>
                 {
-                    header.Cell().Element(CellStyle).Text("#");
-                    header.Cell().Element(CellStyle).Text("Product");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Unit price");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Quantity");
-                    header.Cell().Element(CellStyle).AlignRight().Text("Total");
+                    header.Cell()
+                        .ColumnSpan(6)
+                        .Element(CellStyle)
+                        .Text(t =>
+                        {
+                            t.DefaultTextStyle(fontStyle);
+                            t.Span("General, Ground Rigger (SRGG)");
+
+                        }); //item.OriginalSkill
 
                     static IContainer CellStyle(IContainer container)
                     {
-                        return container.DefaultTextStyle(x => x.SemiBold()).PaddingVertical(5).BorderBottom(1).BorderColor(Colors.Black);
+                        return container
+                            .DefaultTextStyle(x => x.SemiBold())
+                            .PaddingVertical(5)
+                            .BorderBottom(2)
+                            .MinHeight(25)
+                            //.AlignCenter()
+                            //.AlignMiddle()
+                            .Background(Colors.Grey.Lighten4)
+                            .BorderColor(Colors.Black);
                     }
                 });
 
                 // step 3
-                foreach (var item in _model.WorkerListModel.Workers)
+                foreach (var item in _model.Workers)
                 {
-                    var slNo = _model.WorkerListModel.Workers.IndexOf(item) + 1;
+                    var slNo = _model.Workers.IndexOf(item) + 1;
 
                     table.Cell().Element(CellStyle).Text(slNo.ToString());
                     table.Cell().Element(CellStyle).Text(item.ReportTime);
-                    table.Cell().Element(CellStyle).AlignRight().Text(item.WorkerName);
-                    table.Cell().Element(CellStyle).AlignRight().Text(item.DispatchSkill);
-                    table.Cell().Element(CellStyle).AlignRight().Text(item.PhoneType);
+                    table.Cell().Element(CellStyle).PaddingLeft(5).Text(item.WorkerName);
+                    table.Cell().Element(CellStyle).Text(item.DispatchSkill);
+                    table.Cell().Element(CellStyle).Text(item.Number);
+                    table.Cell().Element(CellStyle).Text(item.EmailPersonal);
 
                     static IContainer CellStyle(IContainer container)
                     {
@@ -130,16 +149,25 @@ namespace PdfGenerator.Services.Reports.Request
                     }
                 }
             });
-
         }
 
-        private void ComposeComments(IContainer container)
+        private static void ComposeComments(IContainer container)
         {
-            container.Background(Colors.Grey.Lighten3).Padding(10).Column(column =>
+            var fontStyle = TextStyle.Default
+                .FontSize(13)
+                .FontFamily(DefaultFont)
+                .Italic();
+
+            container
+                .ScaleToFit()
+                .Column(column =>
             {
                 column.Spacing(5);
-                column.Item().Text("Comments").FontSize(14);
-                column.Item().Text(Resources.DispatchWorkerList_Comment);
+                column.Item().Text(t =>
+                {
+                    t.DefaultTextStyle(fontStyle);
+                    t.Span(Resources.DispatchWorkerList_Comment);
+                });
             });
         }
 
