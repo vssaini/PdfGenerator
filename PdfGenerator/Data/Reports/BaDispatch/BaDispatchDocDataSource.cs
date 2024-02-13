@@ -2,8 +2,8 @@
 using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.BaDispatch;
 using PdfGenerator.Properties;
-using Footer = PdfGenerator.Models.Reports.BaDispatch.Footer;
-using Header = PdfGenerator.Models.Reports.BaDispatch.Header;
+using Footer = PdfGenerator.Models.Reports.Common.Footer;
+using Header = PdfGenerator.Models.Reports.Common.Header;
 
 namespace PdfGenerator.Data.Reports.BaDispatch
 {

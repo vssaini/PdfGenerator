@@ -1,5 +1,4 @@
-﻿using Azure.Core;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace PdfGenerator.Models.Reports.Request;
 

@@ -1,4 +1,4 @@
-﻿namespace PdfGenerator.Models.Reports.BaDispatch
+﻿namespace PdfGenerator.Models.Reports.Common
 {
     public class Header
     {

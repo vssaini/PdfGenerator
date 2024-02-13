@@ -7,5 +7,6 @@ public enum Document
     GrievanceStepOneLetter,
     BaDispatch,
     ActiveMember,
-    RequestDispatchWorkerList
+    RequestDispatchWorkerList,
+    EBoardDispatchSummary
 }

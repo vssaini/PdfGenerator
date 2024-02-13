@@ -1,6 +1,6 @@
 ﻿namespace PdfGenerator.Models.Reports.BaDispatch;
 
-public partial class usp_BADispatchReport_ByLocation_Result
+public class usp_BADispatchReport_ByLocation_Result
 {
     public int EmployerID { get; set; }
     public string Employer { get; set; }

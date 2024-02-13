@@ -1,4 +1,6 @@
-﻿namespace PdfGenerator.Models.Reports.BaDispatch
+﻿using PdfGenerator.Models.Reports.Common;
+
+namespace PdfGenerator.Models.Reports.BaDispatch
 {
     public class BaDispatchReportModel
     {

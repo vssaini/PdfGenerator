@@ -1,16 +1,18 @@
 ﻿using Microsoft.Extensions.Logging;
 using PdfGenerator.Contracts.Invoice;
 using PdfGenerator.Contracts.Reports.BaDispatch;
+using PdfGenerator.Contracts.Reports.EBoard;
 using PdfGenerator.Contracts.Reports.Grievance;
 using PdfGenerator.Contracts.Reports.Membership;
+using PdfGenerator.Contracts.Reports.Request;
 using PdfGenerator.Contracts.Royalty;
 using PdfGenerator.Models.Enums;
 using PdfGenerator.Models.Reports.BaDispatch;
+using PdfGenerator.Models.Reports.EBoard;
 using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 using PdfGenerator.Models.Royalty;
 using QuestPDF.Infrastructure;
 using System.Globalization;
-using PdfGenerator.Contracts.Reports.Request;
 
 namespace PdfGenerator.Services;
 
@@ -23,8 +25,9 @@ public class PdfService
     private readonly IBaDispatchDocService _baDocService;
     private readonly IActiveMemberDocService _amDocService;
     private readonly IDispatchWorkerListDocService _dwlDocService;
+    private readonly IDispatchSumDocService _dsDocService;
 
-    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService, IBaDispatchDocService baDocService, IActiveMemberDocService amDocService, IDispatchWorkerListDocService dwlDocService)
+    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService, IBaDispatchDocService baDocService, IActiveMemberDocService amDocService, IDispatchWorkerListDocService dwlDocService, IDispatchSumDocService dsDocService)
     {
         _logger = logger;
         _invDocService = invDocService;
@@ -33,6 +36,7 @@ public class PdfService
         _baDocService = baDocService;
         _amDocService = amDocService;
         _dwlDocService = dwlDocService;
+        _dsDocService = dsDocService;
     }
 
     public async Task Run(Document document)
@@ -93,6 +97,12 @@ public class PdfService
 
             case Document.RequestDispatchWorkerList:
                 await _dwlDocService.GenerateDispatchWorkerListDocAsync(279288);
+                break;
+
+            case Document.EBoardDispatchSummary:
+                startDate = new DateTime(2024, 02, 05);
+                var disSumFilter = new DispatchSumFilter(startDate, startDate);
+                await _dsDocService.GenerateDispatchSummaryDocAsync(disSumFilter);
                 break;
 
             default:
