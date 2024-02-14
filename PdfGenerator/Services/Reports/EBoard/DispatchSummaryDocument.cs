@@ -68,9 +68,9 @@ public class DispatchSumDocument : IDocument
     {
         container.Column(column =>
         {
-            for (var i = 0; i < _model.DispatchSumResponses.Count; i++)
+            var lastItem = _model.DispatchSumResponses.LastOrDefault();
+            foreach (var disSumResp in _model.DispatchSumResponses)
             {
-                var disSumResp = _model.DispatchSumResponses[i];
                 var date = disSumResp.Date.ToString("dddd, MMM dd, yyyy");
 
                 column.Item()
@@ -95,7 +95,7 @@ public class DispatchSumDocument : IDocument
                     .FontSize(9)
                     .Bold();
 
-                if (++i < _model.DispatchSumResponses.Count)
+                if (disSumResp != lastItem)
                     column.Item().PageBreak();
             }
         });
