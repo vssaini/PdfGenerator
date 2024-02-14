@@ -24,11 +24,12 @@ public class DispatchSumRepo : IDispatchSumRepo
         var disSummaries = await GetDispatchSummariesAsync(dParams);
 
         var disSumResponses = disSummaries
-            .GroupBy(r => r.Employer)
+            .OrderBy(x => x.ReportAtTime)
+            .GroupBy(r => r.ReportAtTime)
             .Select(g => new DispatchSumResponse
             {
-                Employer = g.Key,
-                SummaryRows = GetDispatchSummaryRows(g)
+                Date = g.Key ?? DateTime.MinValue,
+                DispatchSumEmpRows = GetDispatchSummaryEmployerRows(g)
             })
             .ToList();
 
@@ -59,12 +60,22 @@ public class DispatchSumRepo : IDispatchSumRepo
         return disSumResults.ToList();
     }
 
-    private static List<DispatchSumRow> GetDispatchSummaryRows(IEnumerable<usp_EBoard_DispatchSummary_Result> dsGrp)
+    private static List<DispatchSumEmpRow> GetDispatchSummaryEmployerRows(IEnumerable<usp_EBoard_DispatchSummary_Result> grp)
     {
-        return dsGrp
-            .OrderBy(x => x.ReportAtTime)
-            .ThenBy(x => x.Employer)
-            .ThenBy(x => x.Location)
+        return grp
+            .OrderBy(x => x.Employer)
+            .GroupBy(x => x.Employer)
+            .Select(g => new DispatchSumEmpRow
+            {
+                Employer = g.Key,
+                SummaryRows = GetDispatchSummaryRows(g)
+            })
+            .ToList();
+    }
+
+    private static List<DispatchSumRow> GetDispatchSummaryRows(IEnumerable<usp_EBoard_DispatchSummary_Result> grp)
+    {
+        return grp
             .Select(x => new DispatchSumRow
             {
                 Id = x.RequestID,

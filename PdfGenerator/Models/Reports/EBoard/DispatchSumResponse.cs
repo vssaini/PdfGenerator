@@ -2,6 +2,6 @@
 
 public class DispatchSumResponse
 {
-    public string Employer { get; set; }
-    public List<DispatchSumRow> SummaryRows { get; set; }
+    public DateTime Date { get; set; }
+    public List<DispatchSumEmpRow> DispatchSumEmpRows { get; set; }
 }
