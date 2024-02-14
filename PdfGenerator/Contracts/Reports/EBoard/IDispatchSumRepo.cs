@@ -4,5 +4,5 @@ namespace PdfGenerator.Contracts.Reports.EBoard;
 
 public interface IDispatchSumRepo
 {
-    Task<usp_EBoard_DispatchSummary_Result> GetDispatchSummaryAsync(DispatchSumFilter filter);
+    Task<List<DispatchSumResponse>> GetDispatchSummaryResponsesAsync(DispatchSumFilter filter);
 }

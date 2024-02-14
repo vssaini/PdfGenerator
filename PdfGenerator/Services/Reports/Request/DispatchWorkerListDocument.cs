@@ -116,7 +116,7 @@ namespace PdfGenerator.Services.Reports.Request
                 column.Item().Text(t =>
                 {
                     t.DefaultTextStyle(fontStyle);
-                    t.Element().Text(Resources.DispatchWorkerList_Comment);
+                    t.Element().Text(Resources.DispatchWorkerListComment);
                 });
             });
         }

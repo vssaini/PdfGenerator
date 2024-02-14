@@ -63,9 +63,9 @@ namespace PdfGenerator.Properties {
         /// <summary>
         ///   Looks up a localized string similar to Business Agent Dispatch Report By Location.
         /// </summary>
-        internal static string BaDispatch_Title {
+        internal static string BaDispatchTitle {
             get {
-                return ResourceManager.GetString("BaDispatch_Title", resourceCulture);
+                return ResourceManager.GetString("BaDispatchTitle", resourceCulture);
             }
         }
         
@@ -145,9 +145,18 @@ namespace PdfGenerator.Properties {
         /// <summary>
         ///   Looks up a localized string similar to * The referent has not completed the proper training for the requested skill. The required training for this skill is established through the NRA IATSE Local 720 Training Trust manager and the Trustees based on the requirements given them by the employers signatory to IATSE Local 720. Some of this training involves safety aspects of the skill that will help reduce the possibility of on the job injuries. The training for this skill is available and it is recommended that you instruct the referent to obtain t [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string DispatchWorkerList_Comment {
+        internal static string DispatchWorkerListComment {
             get {
-                return ResourceManager.GetString("DispatchWorkerList_Comment", resourceCulture);
+                return ResourceManager.GetString("DispatchWorkerListComment", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Executive Board Dispatch Summary Report.
+        /// </summary>
+        internal static string EbDispatchTitle {
+            get {
+                return ResourceManager.GetString("EbDispatchTitle", resourceCulture);
             }
         }
         

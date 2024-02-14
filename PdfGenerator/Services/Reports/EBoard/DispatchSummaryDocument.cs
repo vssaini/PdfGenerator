@@ -1,4 +1,4 @@
-﻿using PdfGenerator.Components.BaDispatch;
+﻿using PdfGenerator.Components.EBoard;
 using PdfGenerator.Models.Reports.EBoard;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -68,24 +68,18 @@ public class DispatchSumDocument : IDocument
     {
         var today = DateTime.Now.ToString("dddd, MMM dd, yyyy");
 
-        int counter = 0;
         container.Column(column =>
         {
             column.Item()
                 .PaddingTop(12)
+                .PaddingLeft(25)
                 .Text(today)
                 .FontSize(12)
-                .SemiBold()
-                .Italic();
+                .SemiBold();
 
             foreach (var disResp in _model.DispatchSumResponses)
             {
-                //column.Item().Component(new ReportComponent(disResp.Summary, disResp.DispatchRows));
-
-                //if (counter == 10)
-                //    break;
-
-                counter++;
+                column.Item().Component(new ReportComponent(disResp.Employer, disResp.SummaryRows));
             }
         });
     }

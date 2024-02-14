@@ -3,5 +3,5 @@
 public class DispatchSumResponse
 {
     public string Employer { get; set; }
-    //public List<Summary> Summaries { get; set; }
+    public List<DispatchSumRow> SummaryRows { get; set; }
 }

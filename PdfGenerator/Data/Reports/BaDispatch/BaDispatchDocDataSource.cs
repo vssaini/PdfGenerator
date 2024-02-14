@@ -26,7 +26,7 @@ namespace PdfGenerator.Data.Reports.BaDispatch
 
             var header = new Header
             {
-                Title = Resources.BaDispatch_Title,
+                Title = Resources.BaDispatchTitle,
                 DateRange = $"Between {filter.StartDate:MM/dd/yyyy} AND {filter.EndDate:MM/dd/yyyy}"
             };
 

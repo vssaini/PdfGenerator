@@ -18,12 +18,21 @@ public class DispatchSumRepo : IDispatchSumRepo
         _logger = logger;
     }
 
-    public async Task<usp_EBoard_DispatchSummary_Result> GetDispatchSummaryAsync(DispatchSumFilter filter)
+    public async Task<List<DispatchSumResponse>> GetDispatchSummaryResponsesAsync(DispatchSumFilter filter)
     {
         var dParams = GetParamsForSp(filter);
-        var disSumResp = await GetDispatchSummaryAsync(dParams);
+        var disSummaries = await GetDispatchSummariesAsync(dParams);
 
-        return disSumResp;
+        var disSumResponses = disSummaries
+            .GroupBy(r => r.Employer)
+            .Select(g => new DispatchSumResponse
+            {
+                Employer = g.Key,
+                SummaryRows = GetDispatchSummaryRows(g)
+            })
+            .ToList();
+
+        return disSumResponses;
     }
 
     private static DynamicParameters GetParamsForSp(DispatchSumFilter filter)
@@ -35,7 +44,7 @@ public class DispatchSumRepo : IDispatchSumRepo
         return dParams;
     }
 
-    private async Task<usp_EBoard_DispatchSummary_Result> GetDispatchSummaryAsync(SqlMapper.IDynamicParameters dParams)
+    private async Task<List<usp_EBoard_DispatchSummary_Result>> GetDispatchSummariesAsync(SqlMapper.IDynamicParameters dParams)
     {
         const string spName = "dbo.usp_EBoard_DispatchSummary";
         _logger.LogInformation("Executing SP {SpName} to get dispatch summary data.", spName);
@@ -45,8 +54,26 @@ public class DispatchSumRepo : IDispatchSumRepo
         using var connection = _sqlConnectionFactory.CreateConnection();
 
         await using var gr = await connection.QueryMultipleAsync(command);
-        var disSumResp = gr.Read<usp_EBoard_DispatchSummary_Result>().FirstOrDefault();
+        var disSumResp = gr.Read<usp_EBoard_DispatchSummary_Result>();
 
-        return disSumResp;
+        return disSumResp.ToList();
+    }
+
+    private static List<DispatchSumRow> GetDispatchSummaryRows(IEnumerable<usp_EBoard_DispatchSummary_Result> dsGrp)
+    {
+        return dsGrp
+            .OrderBy(x => x.ReportAtTime)
+            .ThenBy(x => x.Employer)
+            .ThenBy(x => x.Location)
+            .Select((x, index) => new DispatchSumRow
+            {
+                SlNo = index,
+                Id = x.RequestID,
+                Facility = x.Location,
+                Location = x.LocationSub,
+                ShowName = x.ShowName,
+                DispatchCount = x.Dispatches ?? 0
+            })
+            .ToList();
     }
 }

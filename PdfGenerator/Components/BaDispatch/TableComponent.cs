@@ -81,7 +81,7 @@ namespace PdfGenerator.Components.BaDispatch
                         return cellContainer
                             .Border(1)
                             .BorderColor(Colors.Black)
-                            .Background(i % 2 == 0 ?  Colors.White: "#EDE7F6")
+                            .Background(i % 2 == 0 ? Colors.White : "#EDE7F6")
                             .MinHeight(15)
                             .PaddingVertical(3)
                             .AlignCenter();
