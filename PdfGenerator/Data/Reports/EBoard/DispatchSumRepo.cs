@@ -54,9 +54,9 @@ public class DispatchSumRepo : IDispatchSumRepo
         using var connection = _sqlConnectionFactory.CreateConnection();
 
         await using var gr = await connection.QueryMultipleAsync(command);
-        var disSumResp = gr.Read<usp_EBoard_DispatchSummary_Result>();
+        var disSumResults = gr.Read<usp_EBoard_DispatchSummary_Result>();
 
-        return disSumResp.ToList();
+        return disSumResults.ToList();
     }
 
     private static List<DispatchSumRow> GetDispatchSummaryRows(IEnumerable<usp_EBoard_DispatchSummary_Result> dsGrp)
@@ -65,9 +65,8 @@ public class DispatchSumRepo : IDispatchSumRepo
             .OrderBy(x => x.ReportAtTime)
             .ThenBy(x => x.Employer)
             .ThenBy(x => x.Location)
-            .Select((x, index) => new DispatchSumRow
+            .Select(x => new DispatchSumRow
             {
-                SlNo = index,
                 Id = x.RequestID,
                 Facility = x.Location,
                 Location = x.LocationSub,

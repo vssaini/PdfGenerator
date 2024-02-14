@@ -101,7 +101,7 @@ public class PdfService
 
             case Document.EBoardDispatchSummary:
                 startDate = new DateTime(2024, 02, 05);
-                endDate = new DateTime(2024, 02, 06);
+                endDate = new DateTime(2024, 02, 05);
                 var disSumFilter = new DispatchSumFilter(startDate, endDate);
                 await _dsDocService.GenerateDispatchSummaryDocAsync(disSumFilter);
                 break;

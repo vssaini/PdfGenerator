@@ -2,7 +2,6 @@
 
 public class DispatchSumRow
 {
-    public int SlNo { get; set; }
     public int Id { get; set; }
     public string Facility { get; set; }
     public string Location { get; set; }

@@ -23,6 +23,10 @@ namespace PdfGenerator.Components.EBoard
 
         private void ComposeTable(IContainer container)
         {
+            const string headerBgColor = "#EFEBE9";
+            const string cellBgColor = "#EDE7F6";
+            const string footerBgColor = "#F5F5F5";
+
             container
                 .PaddingHorizontal(20)
                 .Table(table =>
@@ -51,7 +55,7 @@ namespace PdfGenerator.Components.EBoard
 
                     IContainer CaptionStyle(IContainer headerContainer)
                     {
-                        return headerContainer.DefaultTextStyle(x => 
+                        return headerContainer.DefaultTextStyle(x =>
                                 x.Bold().FontSize(10))
                             .Border(1)
                             .BorderColor(Colors.Black)
@@ -67,7 +71,7 @@ namespace PdfGenerator.Components.EBoard
                         return headerContainer.DefaultTextStyle(x => x.SemiBold())
                             .Border(1)
                             .BorderColor(Colors.Black)
-                            .Background("#EFEBE9")
+                            .Background(headerBgColor)
                             .MinHeight(15)
                             .PaddingVertical(3)
                             .AlignCenter()
@@ -79,7 +83,7 @@ namespace PdfGenerator.Components.EBoard
                         return headerContainer.DefaultTextStyle(x => x.SemiBold())
                             .Border(1)
                             .BorderColor(Colors.Black)
-                            .Background("#EFEBE9")
+                            .Background(headerBgColor)
                             .MinHeight(15)
                             .PaddingVertical(3)
                             .PaddingLeft(5)
@@ -107,7 +111,7 @@ namespace PdfGenerator.Components.EBoard
                         return cellContainer
                             .Border(1)
                             .BorderColor(Colors.Black)
-                            .Background(i % 2 == 0 ? Colors.White : "#EDE7F6")
+                            .Background(i % 2 == 0 ? Colors.White : cellBgColor)
                             .MinHeight(15)
                             .PaddingVertical(3)
                             .AlignCenter();
@@ -118,13 +122,48 @@ namespace PdfGenerator.Components.EBoard
                         return cellContainer
                             .Border(1)
                             .BorderColor(Colors.Black)
-                            .Background(i % 2 == 0 ? Colors.White : "#EDE7F6")
+                            .Background(i % 2 == 0 ? Colors.White : cellBgColor)
                             .MinHeight(15)
                             .PaddingVertical(3)
                             .PaddingLeft(5)
                             .AlignLeft();
                     }
                 }
+
+                // step 4
+                //table.Footer(footer =>
+                //{
+                //    var footerTxt = $"Total Dispatches {_employerName}";
+                //    var totalDispatches = _disSumRows.Sum(x => x.DispatchCount);
+
+                //    footer.Cell().ColumnSpan(5).Element(FooterRightStyle).Text(footerTxt);
+                //    footer.Cell().Element(FooterStyle).Text(totalDispatches.ToString());
+
+                //    IContainer FooterRightStyle(IContainer footerContainer)
+                //    {
+                //        return footerContainer.DefaultTextStyle(x => x.SemiBold())
+                //            .Border(1)
+                //            .BorderColor(Colors.Black)
+                //            .Background(footerBgColor)
+                //            .MinHeight(15)
+                //            .PaddingVertical(3)
+                //            .PaddingRight(5)
+                //            .AlignRight()
+                //            .AlignMiddle();
+                //    }
+
+                //    IContainer FooterStyle(IContainer footerContainer)
+                //    {
+                //        return footerContainer.DefaultTextStyle(x => x.SemiBold())
+                //            .Border(1)
+                //            .BorderColor(Colors.Black)
+                //            .Background(footerBgColor)
+                //            .MinHeight(15)
+                //            .PaddingVertical(3)
+                //            .AlignCenter()
+                //            .AlignMiddle();
+                //    }
+                //});
             });
         }
     }
