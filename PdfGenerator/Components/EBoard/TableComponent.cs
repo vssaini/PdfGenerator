@@ -25,8 +25,7 @@ namespace PdfGenerator.Components.EBoard
         {
             const string headerBgColor = "#EFEBE9";
             const string cellBgColor = "#EDE7F6";
-            const string footerBgColor = "#F5F5F5";
-
+            
             container
                 .PaddingHorizontal(20)
                 .Table(table =>
@@ -129,41 +128,6 @@ namespace PdfGenerator.Components.EBoard
                             .AlignLeft();
                     }
                 }
-
-                // step 4
-                //table.Footer(footer =>
-                //{
-                //    var footerTxt = $"Total Dispatches {_employerName}";
-                //    var totalDispatches = _disSumRows.Sum(x => x.DispatchCount);
-
-                //    footer.Cell().ColumnSpan(5).Element(FooterRightStyle).Text(footerTxt);
-                //    footer.Cell().Element(FooterStyle).Text(totalDispatches.ToString());
-
-                //    IContainer FooterRightStyle(IContainer footerContainer)
-                //    {
-                //        return footerContainer.DefaultTextStyle(x => x.SemiBold())
-                //            .Border(1)
-                //            .BorderColor(Colors.Black)
-                //            .Background(footerBgColor)
-                //            .MinHeight(15)
-                //            .PaddingVertical(3)
-                //            .PaddingRight(5)
-                //            .AlignRight()
-                //            .AlignMiddle();
-                //    }
-
-                //    IContainer FooterStyle(IContainer footerContainer)
-                //    {
-                //        return footerContainer.DefaultTextStyle(x => x.SemiBold())
-                //            .Border(1)
-                //            .BorderColor(Colors.Black)
-                //            .Background(footerBgColor)
-                //            .MinHeight(15)
-                //            .PaddingVertical(3)
-                //            .AlignCenter()
-                //            .AlignMiddle();
-                //    }
-                //});
             });
         }
     }

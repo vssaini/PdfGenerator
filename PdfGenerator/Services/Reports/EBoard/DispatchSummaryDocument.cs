@@ -71,34 +71,55 @@ public class DispatchSumDocument : IDocument
             var lastItem = _model.DispatchSumResponses.LastOrDefault();
             foreach (var disSumResp in _model.DispatchSumResponses)
             {
-                var date = disSumResp.Date.ToString("dddd, MMM dd, yyyy");
-
-                column.Item()
-                    .PaddingTop(12)
-                    .PaddingLeft(25)
-                    .Text(date)
-                    .FontSize(12)
-                    .SemiBold();
-
-                foreach (var empRow in disSumResp.DispatchSumEmpRows)
-                {
-                    column.Item().Component(new ReportComponent(empRow.Employer, empRow.SummaryRows));
-                }
-
-                var totalDispatchesOnDate = disSumResp.DispatchSumEmpRows
-                    .Sum(e => e.SummaryRows.Sum(x => x.DispatchCount));
-
-                column.Item()
-                    .PaddingTop(3)
-                    .PaddingLeft(75)
-                    .Text($"{date} - {totalDispatchesOnDate}")
-                    .FontSize(9)
-                    .Bold();
+                ComposePagesDateWise(disSumResp, column);
+                ComposeEmployerWiseDispatchTable(disSumResp, column);
 
                 if (disSumResp != lastItem)
                     column.Item().PageBreak();
             }
         });
+    }
+
+    private static void ComposePagesDateWise(DispatchSumResponse disSumResp, ColumnDescriptor column)
+    {
+        // Header date
+        var date = disSumResp.Date.ToString("dddd, MMM dd, yyyy");
+        column.Item()
+            .PaddingTop(12)
+            .PaddingLeft(25)
+            .Text(date)
+            .FontSize(12)
+            .SemiBold();
+
+        // Summary rows
+        foreach (var empRow in disSumResp.DispatchSumEmpRows)
+        {
+            column.Item().Component(new ReportComponent(empRow.Employer, empRow.SummaryRows));
+        }
+
+        // Footer total
+        var totalDispatchesOnDate = disSumResp.DispatchSumEmpRows
+            .Sum(e => e.SummaryRows.Sum(x => x.DispatchCount));
+        column.Item()
+            .PaddingTop(3)
+            .PaddingLeft(75)
+            .Text($"{date} - {totalDispatchesOnDate}")
+            .FontSize(9)
+            .Bold();
+    }
+
+    private static void ComposeEmployerWiseDispatchTable(DispatchSumResponse disSumResp, ColumnDescriptor column)
+
+    {
+        var employerDispatches = disSumResp.DispatchSumEmpRows
+            .Select(r => new EmployerDispatch
+            {
+                EmployerName = r.Employer,
+                TotalDispatch = r.SummaryRows.Sum(s => s.DispatchCount)
+            })
+            .ToList();
+
+        column.Item().Component(new SummaryTableComponent(employerDispatches));
     }
 
     private void ComposeFooter(IContainer container)
