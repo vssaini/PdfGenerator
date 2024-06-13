@@ -22,7 +22,7 @@ namespace PdfGenerator.Components.EBoard
                 column.Spacing(5);
 
                 column.Item().Row(row => row.RelativeItem().Component(new TableComponent(_employerName, _disSumRows)));
-                column.Item().Row(row => row.RelativeItem().Component(new FooterComponent(_employerName, _disSumRows)));
+                column.Item().Row(row => row.RelativeItem().Component(new TableFooterComponent(_employerName, _disSumRows)));
             });
         }
     }

@@ -5,12 +5,12 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.EBoard;
 
-public class FooterComponent : IComponent
+public class TableFooterComponent : IComponent
 {
     private readonly string _employerName;
     private readonly List<DispatchSumRow> _disSumRows;
 
-    public FooterComponent(string employerName, List<DispatchSumRow> disSumRows)
+    public TableFooterComponent(string employerName, List<DispatchSumRow> disSumRows)
     {
         _employerName = employerName;
         _disSumRows = disSumRows;

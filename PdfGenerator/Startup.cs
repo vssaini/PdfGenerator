@@ -102,7 +102,6 @@ internal static class Startup
                 services.AddTransient<IDispatchSumDocService, DispatchSumDocService>();
                 services.AddTransient<IDispatchSumDocDataSource, DispatchSumDocDataSource>();
                 services.AddTransient<IDispatchSumRepo, DispatchSumRepo>();
-
             })
             .UseSerilog()
             .Build();
