@@ -24,7 +24,7 @@ namespace PdfGenerator.Services.Reports.BaDispatch
             var document = new BaDispatchReportDocument(model);
 
             //_logService.LogInformation("Generating and showing BA Dispatch PDF");
-            //document.GeneratePdfAndShow(); // TODO: Return bytes in Web app
+            //document.GeneratePdfAndShow();
 
             _logService.LogInformation("Showing BA Dispatch report PDF in Previewer");
             await document.ShowInPreviewerAsync();

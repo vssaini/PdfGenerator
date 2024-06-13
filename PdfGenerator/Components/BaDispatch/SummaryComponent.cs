@@ -1,4 +1,5 @@
-﻿using PdfGenerator.Models.Reports.BaDispatch;
+﻿using PdfGenerator.Extensions;
+using PdfGenerator.Models.Reports.BaDispatch;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
@@ -38,7 +39,7 @@ namespace PdfGenerator.Components.BaDispatch
             row.AutoItem()
                 .Layers(layers =>
                 {
-                    layers.Layer().Canvas((canvas, size) =>
+                    layers.Layer().SkiaSharpCanvas((canvas, size) =>
                     {
                         DrawRectangle(Colors.Black, true);
 
