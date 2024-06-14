@@ -8,5 +8,6 @@ public enum Document
     BaDispatch,
     ActiveMember,
     RequestDispatchWorkerList,
-    EBoardDispatchSummary
+    EBoardDispatchSummary,
+    EmployerDispatch
 }

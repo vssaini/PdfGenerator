@@ -1,9 +1,9 @@
-﻿using PdfGenerator.Models.Reports.BaDispatch;
+﻿using PdfGenerator.Models.Reports.Common;
 
 namespace PdfGenerator.Contracts.Reports.BaDispatch
 {
     public interface IBaDispatchDocService
     {
-        Task GenerateBaDispatchReportDocAsync(BaDispatchFilter filter);
+        Task GenerateBaDispatchReportDocAsync(DispatchFilter filter);
     }
 }

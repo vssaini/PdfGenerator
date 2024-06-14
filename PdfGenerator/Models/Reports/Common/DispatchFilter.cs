@@ -1,13 +1,13 @@
-﻿namespace PdfGenerator.Models.Reports.BaDispatch
+﻿namespace PdfGenerator.Models.Reports.Common
 {
-    public class BaDispatchFilter
+    public class DispatchFilter
     {
         public int? EmployerId { get; set; }
 
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
 
-        public BaDispatchFilter(DateTime startDate, DateTime endDate, int? employerId = null)
+        public DispatchFilter(DateTime startDate, DateTime endDate, int? employerId = null)
         {
             EmployerId = employerId;
             StartDate = startDate;

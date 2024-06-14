@@ -2,13 +2,13 @@
 using PdfGenerator.Contracts.Invoice;
 using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Contracts.Reports.EBoard;
+using PdfGenerator.Contracts.Reports.EmpDispatch;
 using PdfGenerator.Contracts.Reports.Grievance;
 using PdfGenerator.Contracts.Reports.Membership;
 using PdfGenerator.Contracts.Reports.Request;
 using PdfGenerator.Contracts.Royalty;
 using PdfGenerator.Models.Enums;
-using PdfGenerator.Models.Reports.BaDispatch;
-using PdfGenerator.Models.Reports.EBoard;
+using PdfGenerator.Models.Reports.Common;
 using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 using PdfGenerator.Models.Royalty;
 using QuestPDF.Infrastructure;
@@ -26,8 +26,9 @@ public class PdfService
     private readonly IActiveMemberDocService _amDocService;
     private readonly IDispatchWorkerListDocService _dwlDocService;
     private readonly IDispatchSumDocService _dsDocService;
+    private readonly IEmpDispatchDocService _empDocService;
 
-    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService, IBaDispatchDocService baDocService, IActiveMemberDocService amDocService, IDispatchWorkerListDocService dwlDocService, IDispatchSumDocService dsDocService)
+    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService, IBaDispatchDocService baDocService, IActiveMemberDocService amDocService, IDispatchWorkerListDocService dwlDocService, IDispatchSumDocService dsDocService, IEmpDispatchDocService empDocService)
     {
         _logger = logger;
         _invDocService = invDocService;
@@ -37,6 +38,7 @@ public class PdfService
         _amDocService = amDocService;
         _dwlDocService = dwlDocService;
         _dsDocService = dsDocService;
+        _empDocService = empDocService;
     }
 
     public async Task Run(Document document)
@@ -87,8 +89,8 @@ public class PdfService
             case Document.BaDispatch:
                 var startDate = new DateTime(2023, 10, 22);
                 var endDate = DateTime.Now;
-                var baDispatchFilter = new BaDispatchFilter(startDate, endDate);
-                await _baDocService.GenerateBaDispatchReportDocAsync(baDispatchFilter);
+                var dispatchFilter = new DispatchFilter(startDate, endDate);
+                await _baDocService.GenerateBaDispatchReportDocAsync(dispatchFilter);
                 break;
 
             case Document.ActiveMember:
@@ -102,8 +104,15 @@ public class PdfService
             case Document.EBoardDispatchSummary:
                 startDate = new DateTime(2024, 02, 05);
                 endDate = new DateTime(2024, 02, 07);
-                var disSumFilter = new DispatchSumFilter(startDate, endDate);
-                await _dsDocService.GenerateDispatchSummaryDocAsync(disSumFilter);
+                dispatchFilter = new DispatchFilter(startDate, endDate);
+                await _dsDocService.GenerateDispatchSummaryDocAsync(dispatchFilter);
+                break;
+
+            case Document.EmployerDispatch:
+                startDate = new DateTime(2024, 05, 14);
+                endDate = DateTime.Now;
+                dispatchFilter = new DispatchFilter(startDate, endDate);
+                await _empDocService.GenerateEmpDispatchReportDocAsync(dispatchFilter);
                 break;
 
             default:

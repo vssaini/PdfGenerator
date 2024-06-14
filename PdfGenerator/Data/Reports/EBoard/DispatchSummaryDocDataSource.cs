@@ -18,7 +18,7 @@ public class DispatchSumDocDataSource : IDispatchSumDocDataSource
         _logger = logger;
     }
 
-    public async Task<DispatchSumModel> GetDispatchSummaryModelAsync(DispatchSumFilter filter)
+    public async Task<DispatchSumModel> GetDispatchSummaryModelAsync(DispatchFilter filter)
     {
         _disSumResponses = await _dsRepo.GetDispatchSummaryResponsesAsync(filter);
 

@@ -1,33 +1,34 @@
 ﻿using Dapper;
 using MoreLinq;
 using PdfGenerator.Contracts;
-using PdfGenerator.Contracts.Reports.BaDispatch;
+using PdfGenerator.Contracts.Reports.EmpDispatch;
 using PdfGenerator.Models.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.Common;
+using PdfGenerator.Models.Reports.EmpDispatch;
 using System.Data;
 
-namespace PdfGenerator.Data.Reports.BaDispatch
+namespace PdfGenerator.Data.Reports.EmpDispatch
 {
-    public class BaDispatchRepo : IBaDispatchRepo
+    public class EmpDispatchRepo : IEmpDispatchRepo
     {
         private readonly ISqlConnectionFactory _sqlConnectionFactory;
         private readonly ILogService _logService;
 
-        public BaDispatchRepo(ISqlConnectionFactory sqlConnectionFactory, ILogService logService)
+        public EmpDispatchRepo(ISqlConnectionFactory sqlConnectionFactory, ILogService logService)
         {
             _sqlConnectionFactory = sqlConnectionFactory;
             _logService = logService;
         }
 
-        public async Task<List<BaDispatchResponse>> GetBaDispatchResponsesAsync(DispatchFilter filter)
+        public async Task<List<EmpDispatchResponse>> GetEmpDispatchResponsesAsync(DispatchFilter filter)
         {
-            var baDispatchReports = GetDispatchReports(filter);
-            var itemReqIds = baDispatchReports.Select(i => i.RequestId).ToList();
+            var dispatchReports = GetDispatchReports(filter);
+            var itemReqIds = dispatchReports.Select(i => i.RequestId).ToList();
 
             var subDispatchReports = await GetSubDispatchReportsAsync(itemReqIds);
 
-            var baDispatchResponses = baDispatchReports
-                .Select(item => new BaDispatchResponse
+            var baDispatchResponses = dispatchReports
+                .Select(item => new EmpDispatchResponse
                 {
                     Summary = item,
                     DispatchRows = GetDispatchRows(item.RequestId, subDispatchReports)
@@ -39,7 +40,7 @@ namespace PdfGenerator.Data.Reports.BaDispatch
 
         private List<Summary> GetDispatchReports(DispatchFilter filter)
         {
-            _logService.LogInformation("Getting BA Dispatch reports from database");
+            _logService.LogInformation("Getting Employer Dispatch reports from database");
 
             var dParams = GetParamsForSp(filter);
             var reports = GetDispatchReportsFromDb(dParams);

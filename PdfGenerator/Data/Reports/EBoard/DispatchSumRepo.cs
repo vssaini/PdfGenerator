@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Logging;
 using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.EBoard;
+using PdfGenerator.Models.Reports.Common;
 using PdfGenerator.Models.Reports.EBoard;
 using System.Data;
 
@@ -18,7 +19,7 @@ public class DispatchSumRepo : IDispatchSumRepo
         _logger = logger;
     }
 
-    public async Task<List<DispatchSumResponse>> GetDispatchSummaryResponsesAsync(DispatchSumFilter filter)
+    public async Task<List<DispatchSumResponse>> GetDispatchSummaryResponsesAsync(DispatchFilter filter)
     {
         var dParams = GetParamsForSp(filter);
         var disSummaries = await GetDispatchSummariesAsync(dParams);
@@ -36,7 +37,7 @@ public class DispatchSumRepo : IDispatchSumRepo
         return disSumResponses;
     }
 
-    private static DynamicParameters GetParamsForSp(DispatchSumFilter filter)
+    private static DynamicParameters GetParamsForSp(DispatchFilter filter)
     {
         var dParams = new DynamicParameters();
         dParams.Add("@StartDate", filter.StartDate);

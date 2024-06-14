@@ -1,6 +1,6 @@
 ﻿using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.EBoard;
-using PdfGenerator.Models.Reports.EBoard;
+using PdfGenerator.Models.Reports.Common;
 using QuestPDF.Previewer;
 
 namespace PdfGenerator.Services.Reports.EBoard;
@@ -16,7 +16,7 @@ public class DispatchSumDocService : IDispatchSumDocService
         _logService = logService;
     }
 
-    public async Task GenerateDispatchSummaryDocAsync(DispatchSumFilter filter)
+    public async Task GenerateDispatchSummaryDocAsync(DispatchFilter filter)
     {
         _logService.LogInformation("Generating dispatch summary document");
 

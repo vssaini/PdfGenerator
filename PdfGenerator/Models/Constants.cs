@@ -2,6 +2,8 @@
 
 public class Constants
 {
+    public const string Username = "Michael Stancliff";
+
     public class DateFormat
     {
         public const string TwelveHourTime = "hh:mm tt";

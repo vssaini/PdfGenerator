@@ -1,30 +1,31 @@
 ﻿using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.BaDispatch;
-using PdfGenerator.Models;
+using PdfGenerator.Contracts.Reports.EmpDispatch;
 using PdfGenerator.Models.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.Common;
+using PdfGenerator.Models.Reports.EmpDispatch;
 using PdfGenerator.Properties;
 using Footer = PdfGenerator.Models.Reports.Common.Footer;
 using Header = PdfGenerator.Models.Reports.Common.Header;
 
-namespace PdfGenerator.Data.Reports.BaDispatch
+namespace PdfGenerator.Data.Reports.EmpDispatch
 {
-    public sealed class BaDispatchDocDataSource : IBaDispatchDocDataSource
+    public sealed class EmpDispatchDocDataSource : IEmpDispatchDocDataSource
     {
-        private readonly IBaDispatchRepo _baRepo;
+        private readonly IEmpDispatchRepo _empRepo;
         private readonly ILogService _logService;
 
-        public BaDispatchDocDataSource(IBaDispatchRepo baRepo, ILogService logService)
+        public EmpDispatchDocDataSource(IEmpDispatchRepo empRepo, ILogService logService)
         {
-            _baRepo = baRepo;
+            _empRepo = empRepo;
             _logService = logService;
         }
 
-        public async Task<BaDispatchReportModel> GetBaDispatchReportModelAsync(DispatchFilter filter)
+        public async Task<EmpDispatchReportModel> GetEmpDispatchReportModelAsync(DispatchFilter filter)
         {
-            var baDispatchResponses = await _baRepo.GetBaDispatchResponsesAsync(filter);
+            var empDispatchResponses = await _empRepo.GetEmpDispatchResponsesAsync(filter);
 
-            _logService.LogInformation("Generating BA Dispatch report model");
+            _logService.LogInformation($"Generating Employer Dispatch report model");
 
             var header = new Header
             {
@@ -34,16 +35,16 @@ namespace PdfGenerator.Data.Reports.BaDispatch
 
             var footer = new Footer
             {
-                CurrentUserName = Constants.Username,
+                CurrentUserName = "Michael Stancliff",
                 PropertyMessage = Resources.PropertyMsg,
                 CurrentDateTime = DateTime.Now.ToString("dddd, MMM dd, yyyy hh:mm tt")
             };
 
-            return new BaDispatchReportModel
+            return new EmpDispatchReportModel
             {
                 Header = header,
                 Footer = footer,
-                BaDispatchResponses = baDispatchResponses
+                EmpDispatchResponses = empDispatchResponses
             };
         }
     }

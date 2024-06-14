@@ -45,7 +45,6 @@
 
   <ItemGroup>
     <Folder Include="Models\Enums\" />
-    <Folder Include="Models\Reports\EmpDispatch\" />
   </ItemGroup>
 
   <ItemGroup>

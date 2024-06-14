@@ -1,6 +1,6 @@
 ﻿using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.BaDispatch;
-using PdfGenerator.Models.Reports.BaDispatch;
+using PdfGenerator.Models.Reports.Common;
 using QuestPDF.Previewer;
 
 namespace PdfGenerator.Services.Reports.BaDispatch
@@ -16,7 +16,7 @@ namespace PdfGenerator.Services.Reports.BaDispatch
             _logService = logService;
         }
 
-        public async Task GenerateBaDispatchReportDocAsync(BaDispatchFilter filter)
+        public async Task GenerateBaDispatchReportDocAsync(DispatchFilter filter)
         {
             _logService.LogInformation("Generating BA Dispatch report document");
 
