@@ -161,6 +161,15 @@ namespace PdfGenerator.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Employer Dispatch History By Report Date.
+        /// </summary>
+        internal static string EmpDispatchTitle {
+            get {
+                return ResourceManager.GetString("EmpDispatchTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to FAX (702) 873-2120.
         /// </summary>
         internal static string Fax {

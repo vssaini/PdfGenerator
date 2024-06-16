@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using PdfGenerator.Contracts.Reports.EBoard;
+using PdfGenerator.Models;
 using PdfGenerator.Models.Reports.Common;
 using PdfGenerator.Models.Reports.EBoard;
 using PdfGenerator.Properties;
@@ -32,7 +33,7 @@ public class DispatchSumDocDataSource : IDispatchSumDocDataSource
 
         var footer = new Footer
         {
-            CurrentUserName = "Michael Stancliff",
+            CurrentUserName = Constants.Username,
             PropertyMessage = Resources.PropertyMsg,
             CurrentDateTime = DateTime.Now.ToString("dddd, MMM dd, yyyy hh:mm tt")
         };

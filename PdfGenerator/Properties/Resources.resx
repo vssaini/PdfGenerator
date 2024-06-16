@@ -151,6 +151,9 @@
   <data name="EbDispatchTitle" xml:space="preserve">
     <value>Executive Board Dispatch Summary Report</value>
   </data>
+  <data name="EmpDispatchTitle" xml:space="preserve">
+    <value>Employer Dispatch History By Report Date</value>
+  </data>
   <data name="Fax" xml:space="preserve">
     <value>FAX (702) 873-2120</value>
   </data>

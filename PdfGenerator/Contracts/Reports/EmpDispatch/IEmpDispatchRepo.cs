@@ -5,6 +5,6 @@ namespace PdfGenerator.Contracts.Reports.EmpDispatch
 {
     public interface IEmpDispatchRepo
     {
-        Task<List<EmpDispatchResponse>> GetEmpDispatchResponsesAsync(DispatchFilter filter);
+        Task<EmpDispatchResponse> GetEmpDispatchResponseAsync(DispatchFilter filter);
     }
 }

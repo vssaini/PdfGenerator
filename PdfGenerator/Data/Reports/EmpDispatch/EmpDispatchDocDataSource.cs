@@ -1,7 +1,6 @@
 ﻿using PdfGenerator.Contracts;
-using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Contracts.Reports.EmpDispatch;
-using PdfGenerator.Models.Reports.BaDispatch;
+using PdfGenerator.Models;
 using PdfGenerator.Models.Reports.Common;
 using PdfGenerator.Models.Reports.EmpDispatch;
 using PdfGenerator.Properties;
@@ -23,19 +22,19 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
 
         public async Task<EmpDispatchReportModel> GetEmpDispatchReportModelAsync(DispatchFilter filter)
         {
-            var empDispatchResponses = await _empRepo.GetEmpDispatchResponsesAsync(filter);
+            var empDispatchResponse = await _empRepo.GetEmpDispatchResponseAsync(filter);
 
-            _logService.LogInformation($"Generating Employer Dispatch report model");
+            _logService.LogInformation("Generating Employer Dispatch report model");
 
             var header = new Header
             {
-                Title = Resources.BaDispatchTitle,
+                Title = Resources.EmpDispatchTitle,
                 DateRange = $"Between {filter.StartDate:MM/dd/yyyy} AND {filter.EndDate:MM/dd/yyyy}"
             };
 
             var footer = new Footer
             {
-                CurrentUserName = "Michael Stancliff",
+                CurrentUserName = Constants.Username,
                 PropertyMessage = Resources.PropertyMsg,
                 CurrentDateTime = DateTime.Now.ToString("dddd, MMM dd, yyyy hh:mm tt")
             };
@@ -44,7 +43,7 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
             {
                 Header = header,
                 Footer = footer,
-                EmpDispatchResponses = empDispatchResponses
+                EmpDispatchResponse = empDispatchResponse
             };
         }
     }

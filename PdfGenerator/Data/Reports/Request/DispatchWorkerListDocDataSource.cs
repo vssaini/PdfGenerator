@@ -1,5 +1,6 @@
 ﻿using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.Request;
+using PdfGenerator.Models;
 using PdfGenerator.Models.Reports.Request;
 using PdfGenerator.Properties;
 
@@ -27,7 +28,7 @@ namespace PdfGenerator.Data.Reports.Request
 
             var footer = new Footer
             {
-                CurrentUserName = "Michael Stancliff",
+                CurrentUserName = Constants.Username,
                 PropertyMessage = Resources.PropertyMsg,
                 CurrentDateTime = DateTime.Now.ToString("dddd, MMM dd, yyyy hh:mm tt")
             };

@@ -4,10 +4,21 @@ using PdfGenerator.Models.Enums;
 using PdfGenerator.Services;
 using Serilog;
 
-var host = Startup.CreateHostBuilder();
+try
+{
+    var host = Startup.CreateHostBuilder();
 
-var pdfSvc = ActivatorUtilities.CreateInstance<PdfService>(host.Services);
-await pdfSvc.Run(Document.EmployerDispatch);
-
-// Necessary; otherwise logs will not show in Seq
-Log.CloseAndFlush();
+    var pdfSvc = ActivatorUtilities.CreateInstance<PdfService>(host.Services);
+    await pdfSvc.Run(Document.EmployerDispatch);
+}
+catch (Exception ex)
+{
+    Console.ForegroundColor = ConsoleColor.Red;
+    Log.Fatal(ex, "An unhandled exception occurred");
+    Console.ResetColor();
+}
+finally
+{
+    // Necessary; otherwise logs will not show in Seq
+    Log.CloseAndFlush();
+}

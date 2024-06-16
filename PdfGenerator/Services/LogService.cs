@@ -1,4 +1,5 @@
 ﻿using PdfGenerator.Contracts;
+using PdfGenerator.Models;
 using Serilog;
 using Serilog.Context;
 
@@ -13,7 +14,7 @@ namespace PdfGenerator.Services
         public LogService()
         {
             _logger = Log.Logger;
-            _currentUserName = "Vikram Singh Saini";
+            _currentUserName = Constants.Username;
         }
 
         public void LogVerbose(string messageTemplate, params object[] propertyValues)

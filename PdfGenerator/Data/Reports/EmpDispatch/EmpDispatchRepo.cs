@@ -1,8 +1,6 @@
 ﻿using Dapper;
-using MoreLinq;
 using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.EmpDispatch;
-using PdfGenerator.Models.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.Common;
 using PdfGenerator.Models.Reports.EmpDispatch;
 using System.Data;
@@ -20,48 +18,20 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
             _logService = logService;
         }
 
-        public async Task<List<EmpDispatchResponse>> GetEmpDispatchResponsesAsync(DispatchFilter filter)
+        public async Task<EmpDispatchResponse> GetEmpDispatchResponseAsync(DispatchFilter filter)
         {
-            var dispatchReports = GetDispatchReports(filter);
-            var itemReqIds = dispatchReports.Select(i => i.RequestId).ToList();
-
-            var subDispatchReports = await GetSubDispatchReportsAsync(itemReqIds);
-
-            var baDispatchResponses = dispatchReports
-                .Select(item => new EmpDispatchResponse
-                {
-                    Summary = item,
-                    DispatchRows = GetDispatchRows(item.RequestId, subDispatchReports)
-                })
-                .ToList();
-
-            return baDispatchResponses;
+            var dispatchReports = await GetDispatchReportsAsync(filter);
+            return new EmpDispatchResponse { EmpDispatchHistories = dispatchReports };
         }
 
-        private List<Summary> GetDispatchReports(DispatchFilter filter)
+        private async Task<List<EmpDispatchHistory>> GetDispatchReportsAsync(DispatchFilter filter)
         {
             _logService.LogInformation("Getting Employer Dispatch reports from database");
 
             var dParams = GetParamsForSp(filter);
-            var reports = GetDispatchReportsFromDb(dParams);
+            var reports = await GetDispatchHistoriesFromDbAsync(dParams);
 
-            var baDispatchReports = reports
-                .Select(item => new Summary
-                {
-                    Location = item.Location,
-                    Employer = item.Employer,
-
-                    RequestId = item.RequestID,
-                    Show = item.Show,
-
-                    Requestor = item.Requestor,
-                    ReportTo = $"{item.ReportToName} {item.ReportToPhone}",
-
-                    BusinessAssociate = item.BA
-                })
-                .ToList();
-
-            return baDispatchReports;
+            return GetEmpDispatchHistories(reports);
         }
 
         private static DynamicParameters GetParamsForSp(DispatchFilter filter)
@@ -73,59 +43,61 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
             return dParams;
         }
 
-        private IEnumerable<usp_BADispatchReport_ByLocation_Result> GetDispatchReportsFromDb(SqlMapper.IDynamicParameters dParams)
+        private async Task<IEnumerable<usp_EmployerDispatchHistory_ByReportDate_Result>> GetDispatchHistoriesFromDbAsync(SqlMapper.IDynamicParameters dParams)
         {
-            const string spName = "dbo.usp_BADispatchReport_ByLocation";
+            const string spName = "dbo.usp_EmployerDispatchHistory_ByReportDate";
             var command = new CommandDefinition(spName, dParams, commandType: CommandType.StoredProcedure);
 
             using var connection = _sqlConnectionFactory.CreateConnection();
 
-            using var gr = connection.QueryMultiple(command);
-            var reports = gr.Read<usp_BADispatchReport_ByLocation_Result>().ToList();
+            await using var gr = await connection.QueryMultipleAsync(command);
+            var reports = gr.Read<usp_EmployerDispatchHistory_ByReportDate_Result>().ToList();
 
-            return reports;
+            return reports.Take(100);
         }
 
-        private async Task<List<vw_BADispatchReport_Sub>> GetSubDispatchReportsAsync(IEnumerable<int> itemReqIds)
+        private static List<EmpDispatchHistory> GetEmpDispatchHistories(IEnumerable<usp_EmployerDispatchHistory_ByReportDate_Result> dispatchHistories)
         {
-            _logService.LogInformation("Getting BA Dispatch report sub data from database");
-
-            var subDispatchReports = new List<vw_BADispatchReport_Sub>();
-
-            var itemReqIdsBatch = itemReqIds.Batch(2000).ToList();
-            _logService.LogInformation($"Total {itemReqIdsBatch.Count} batches of RequestIds");
-
-            foreach (var batchReqIds in itemReqIdsBatch)
-            {
-                const string sql = "SELECT * FROM dbo.vw_BADispatchReport_Sub WHERE RequestID IN @batchReqIds";
-                using var connection = _sqlConnectionFactory.CreateConnection();
-                var sdReports = await connection.QueryAsync<vw_BADispatchReport_Sub>(sql, new { batchReqIds });
-
-                subDispatchReports.AddRange(sdReports);
-            }
-
-            return subDispatchReports;
-        }
-
-        private static List<DispatchRow> GetDispatchRows(int requestId, IEnumerable<vw_BADispatchReport_Sub> subDispatchReports)
-        {
-            return subDispatchReports
-                .Where(x => x.RequestID == requestId)
-                .OrderBy(x => x.ReportTime)
-                .ThenBy(x => x._LastFirst)
-                .Select(sdr => new DispatchRow
+            var empDisHistories = dispatchHistories
+                .GroupBy(dh => dh.Employer)
+                .Select(empGroup => new EmpDispatchHistory
                 {
-                    ReportTime = sdr.ReportAtTime.ToString("hh:mm tt"),
-                    Skill = sdr.Skill,
-                    WorkerName = sdr._LastFirst,
-                    WorkerId = sdr.WorkerID,
-                    Status = new StatusDto
-                    {
-                        Member = sdr.WorkerStatus,
-                        Lor = sdr.CallByName ? "LOR" : ""
-                    }
+                    EmployerName = empGroup.Key,
+                    Locations = empGroup
+                        .GroupBy(dh => dh.Location)
+                        .Select(locGroup => new EmpDispatchLocation
+                        {
+                            LocationName = locGroup.Key,
+                            Shows = locGroup
+                                .GroupBy(dh => dh.ShowName)
+                                .Select(showGroup => new EmpDispatchShow
+                                {
+                                    ShowName = showGroup.Key,
+                                    SkillHistories = showGroup
+                                        .GroupBy(dh => dh.Skill)
+                                        .Select(skillGroup => new EmpDispatchSkill
+                                        {
+                                            SkillName = skillGroup.Key,
+                                            DispatchHistories = skillGroup
+                                                .Select(x => new DispatchRow
+                                                {
+                                                    ReportDate = x.ReportAtTime.HasValue ? x.ReportAtTime.Value.ToShortDateString() : "NA",
+                                                    ReportTime = x.ReportAtTime.HasValue ? x.ReportAtTime.Value.ToShortTimeString() : "NA",
+                                                    WorkerId = x.WorkerID,
+                                                    WorkerName = x.WorkerName
+                                                })
+                                                .OrderBy(x => x.WorkerName)
+                                                .ToList()
+                                        })
+                                        .ToList()
+                                })
+                                .ToList()
+                        })
+                        .ToList()
                 })
                 .ToList();
+
+            return empDisHistories;
         }
     }
 }

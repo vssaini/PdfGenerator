@@ -1,4 +1,4 @@
-﻿using PdfGenerator.Components.BaDispatch;
+﻿using PdfGenerator.Components.EmpDispatch;
 using PdfGenerator.Models.Reports.EmpDispatch;
 using QuestPDF.Fluent;
 using QuestPDF.Helpers;
@@ -68,25 +68,9 @@ namespace PdfGenerator.Services.Reports.EmpDispatch
         {
             var today = DateTime.Now.ToString("dddd, MMM dd, yyyy");
 
-            int counter = 0;
             container.Column(column =>
             {
-                column.Item()
-                    .PaddingTop(12)
-                    .Text(today)
-                    .FontSize(12)
-                    .SemiBold()
-                    .Italic();
-
-                foreach (var disResp in _model.EmpDispatchResponses)
-                {
-                    column.Item().Component(new ReportComponent(disResp.Summary, disResp.DispatchRows));
-
-                    if (counter == 10)
-                        break;
-
-                    counter++;
-                }
+                column.Item().Component(new ReportComponent(_model.EmpDispatchResponse.EmpDispatchHistories));
             });
         }
 
