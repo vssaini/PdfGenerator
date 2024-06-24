@@ -22,40 +22,18 @@ namespace PdfGenerator.Components.EmpDispatch
             {
                 column.Spacing(5);
 
-                foreach (var edh in _rows)
+                for (var i = 0; i < _rows.Count; i++)
                 {
-                    // EMPLOYER
+                    var edh = _rows[i];
+
+                    if (i > 0)
+                    {
+                        column.Item().Row(r => r.ConstantItem(20).PaddingTop(10));
+                    }
+
                     column.Item().Row(r => ComposeEmployer(r, edh.EmployerName));
 
-                    foreach (var loc in edh.Locations)
-                    {
-                        // LOCATION
-                        column.Item()
-                            .PaddingLeft(30)
-                            .PaddingVertical(8)
-                            .Text(loc.LocationName)
-                            .FontSize(12)
-                            .SemiBold()
-                            .Italic();
-
-                        foreach (var show in loc.Shows)
-                        {
-                            // SHOW
-                            column.Item()
-                                .PaddingLeft(30)
-                                .PaddingVertical(8)
-                                .Text(show.ShowName)
-                                .FontSize(12)
-                                .SemiBold()
-                                .Underline();
-
-                            foreach (var skill in show.SkillHistories)
-                            {
-                                // SKILL TABLE
-                                column.Item().Component(new SkillTableComponent(skill));
-                            }
-                        }
-                    }
+                    ComposeEmployerLocations(edh, column, edh.EmployerName);
                 }
             });
         }
@@ -109,6 +87,57 @@ namespace PdfGenerator.Components.EmpDispatch
                 .PaddingVertical(padVertical)
                 .LineHorizontal(lineSize)
                 .LineColor(Colors.Black);
+        }
+
+        private static void ComposeEmployerLocations(EmpDispatchHistory edh, ColumnDescriptor column, string locationName)
+        {
+            foreach (var loc in edh.Locations)
+            {
+                column.Item()
+                    .PaddingLeft(15)
+                    .PaddingVertical(8)
+                    .Text(locationName)
+                    .FontSize(12)
+                    .SemiBold()
+                    .Italic();
+
+                ComposeLocationShows(loc, column);
+            }
+        }
+
+        private static void ComposeLocationShows(EmpDispatchLocation loc, ColumnDescriptor column)
+        {
+            foreach (var show in loc.Shows)
+            {
+                ComposeShow(column, show.ShowName);
+
+                foreach (var skill in show.SkillHistories)
+                {
+                    // SKILL TABLE
+                    column.Item().Component(new SkillTableComponent(skill));
+                }
+            }
+        }
+
+        private static void ComposeShow(ColumnDescriptor column, string showName)
+        {
+            // SHOW
+            column.Item()
+                .PaddingLeft(20)
+                .PaddingVertical(0)
+                .Text($"Show Name: {showName}")
+                .FontSize(12)
+                .SemiBold();
+
+            column.Item()
+                .Width(6, Unit.Inch)
+                .PaddingVertical(-5)
+                .PaddingLeft(20)
+                .LineHorizontal(1)
+                .LineColor(Colors.Black);
+
+            column.Item()
+                .PaddingVertical(1);
         }
     }
 }

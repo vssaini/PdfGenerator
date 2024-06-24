@@ -53,7 +53,7 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
             await using var gr = await connection.QueryMultipleAsync(command);
             var reports = gr.Read<usp_EmployerDispatchHistory_ByReportDate_Result>().ToList();
 
-            return reports.Take(100);
+            return reports.Take(50); //TODO: Remove this line after testing
         }
 
         private static List<EmpDispatchHistory> GetEmpDispatchHistories(IEnumerable<usp_EmployerDispatchHistory_ByReportDate_Result> dispatchHistories)

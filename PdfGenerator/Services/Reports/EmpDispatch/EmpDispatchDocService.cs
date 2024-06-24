@@ -1,6 +1,7 @@
 ﻿using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.EmpDispatch;
 using PdfGenerator.Models.Reports.Common;
+using QuestPDF.Fluent;
 using QuestPDF.Previewer;
 
 namespace PdfGenerator.Services.Reports.EmpDispatch
