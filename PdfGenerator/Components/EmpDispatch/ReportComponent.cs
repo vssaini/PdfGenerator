@@ -24,16 +24,15 @@ namespace PdfGenerator.Components.EmpDispatch
 
                 for (var i = 0; i < _rows.Count; i++)
                 {
-                    var edh = _rows[i];
-
                     if (i > 0)
                     {
                         column.Item().Row(r => r.ConstantItem(20).PaddingTop(10));
                     }
 
+                    var edh = _rows[i];
                     column.Item().Row(r => ComposeEmployer(r, edh.EmployerName));
 
-                    ComposeEmployerLocations(edh, column, edh.EmployerName);
+                    ComposeEmployerLocations(edh, column);
                 }
             });
         }
@@ -89,14 +88,14 @@ namespace PdfGenerator.Components.EmpDispatch
                 .LineColor(Colors.Black);
         }
 
-        private static void ComposeEmployerLocations(EmpDispatchHistory edh, ColumnDescriptor column, string locationName)
+        private static void ComposeEmployerLocations(EmpDispatchHistory edh, ColumnDescriptor column)
         {
             foreach (var loc in edh.Locations)
             {
                 column.Item()
                     .PaddingLeft(15)
                     .PaddingVertical(8)
-                    .Text(locationName)
+                    .Text(loc.LocationName)
                     .FontSize(12)
                     .SemiBold()
                     .Italic();

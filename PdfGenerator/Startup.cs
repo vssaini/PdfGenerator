@@ -24,10 +24,12 @@ internal static class Startup
     {
         var builder = new ConfigurationBuilder();
 
-        builder.SetBasePath(Directory.GetCurrentDirectory())
+        builder
+            .SetBasePath(Directory.GetCurrentDirectory())
             .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
             .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production"}.json", optional: true)
-            .AddEnvironmentVariables();
+            .AddEnvironmentVariables()
+            .AddUserSecrets<Program>();
 
         return builder;
     }

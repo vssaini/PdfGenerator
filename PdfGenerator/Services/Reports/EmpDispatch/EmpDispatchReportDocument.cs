@@ -66,8 +66,6 @@ namespace PdfGenerator.Services.Reports.EmpDispatch
 
         private void ComposeContent(IContainer container)
         {
-            var today = DateTime.Now.ToString("dddd, MMM dd, yyyy");
-
             container.Column(column =>
             {
                 column.Item().Component(new ReportComponent(_model.EmpDispatchResponse.EmpDispatchHistories));

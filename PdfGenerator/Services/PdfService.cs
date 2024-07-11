@@ -13,6 +13,7 @@ using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 using PdfGenerator.Models.Royalty;
 using QuestPDF.Infrastructure;
 using System.Globalization;
+using SerilogTimings;
 
 namespace PdfGenerator.Services;
 
@@ -46,7 +47,11 @@ public class PdfService
         SetQuestPdfLicense();
         SetAppCulture();
 
-        await GenerateDocumentAsync(document);
+        using (var op = Operation.Begin("Generating report for document {Document}", document))
+        {
+            await GenerateDocumentAsync(document);
+            op.Complete();
+        }
     }
 
     private void SetQuestPdfLicense()
@@ -109,8 +114,8 @@ public class PdfService
                 break;
 
             case Document.EmployerDispatch:
-                startDate = new DateTime(2024, 05, 14);
-                endDate = DateTime.Now;
+                startDate = new DateTime(2024, 07, 01);
+                endDate = new DateTime(2024, 07, 10);
                 dispatchFilter = new DispatchFilter(startDate, endDate);
                 await _empDocService.GenerateEmpDispatchReportDocAsync(dispatchFilter);
                 break;

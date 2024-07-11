@@ -53,27 +53,31 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
             await using var gr = await connection.QueryMultipleAsync(command);
             var reports = gr.Read<usp_EmployerDispatchHistory_ByReportDate_Result>().ToList();
 
-            return reports.Take(50); //TODO: Remove this line after testing
+            return reports;
         }
 
         private static List<EmpDispatchHistory> GetEmpDispatchHistories(IEnumerable<usp_EmployerDispatchHistory_ByReportDate_Result> dispatchHistories)
         {
             var empDisHistories = dispatchHistories
+                .OrderBy(dh => dh.Employer)
                 .GroupBy(dh => dh.Employer)
                 .Select(empGroup => new EmpDispatchHistory
                 {
                     EmployerName = empGroup.Key,
                     Locations = empGroup
+                        .OrderBy(dh => dh.Location)
                         .GroupBy(dh => dh.Location)
                         .Select(locGroup => new EmpDispatchLocation
                         {
                             LocationName = locGroup.Key,
                             Shows = locGroup
+                                .OrderBy(dh => dh.ShowName)
                                 .GroupBy(dh => dh.ShowName)
                                 .Select(showGroup => new EmpDispatchShow
                                 {
                                     ShowName = showGroup.Key,
                                     SkillHistories = showGroup
+                                        .OrderBy(dh => dh.Skill)
                                         .GroupBy(dh => dh.Skill)
                                         .Select(skillGroup => new EmpDispatchSkill
                                         {

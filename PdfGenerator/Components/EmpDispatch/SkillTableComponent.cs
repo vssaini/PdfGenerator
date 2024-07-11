@@ -22,6 +22,7 @@ namespace PdfGenerator.Components.EmpDispatch
         private void ComposeTable(IContainer container)
         {
             container
+                .PaddingLeft(30)
                 .PaddingHorizontal(20)
                 .PaddingVertical(5)
                 .Table(table =>
