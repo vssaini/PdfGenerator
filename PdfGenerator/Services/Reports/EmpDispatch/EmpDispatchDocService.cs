@@ -1,6 +1,7 @@
 ﻿using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.EmpDispatch;
 using PdfGenerator.Models.Reports.Common;
+using QuestPDF.Fluent;
 using QuestPDF.Previewer;
 
 namespace PdfGenerator.Services.Reports.EmpDispatch
@@ -23,11 +24,11 @@ namespace PdfGenerator.Services.Reports.EmpDispatch
             var model = await _empDocDs.GetEmpDispatchReportModelAsync(filter);
             var document = new EmpDispatchReportDocument(model);
 
-            //_logService.LogInformation("Generating and showing Employer Dispatch PDF");
-            //document.GeneratePdfAndShow();
+            _logService.LogInformation("Generating and showing Employer Dispatch PDF");
+            document.GeneratePdfAndShow();
 
-            _logService.LogInformation("Showing Employer Dispatch report PDF in Previewer");
-            await document.ShowInPreviewerAsync();
+            //_logService.LogInformation("Showing Employer Dispatch report PDF in Previewer");
+            //await document.ShowInPreviewerAsync();
         }
     }
 }

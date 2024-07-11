@@ -83,6 +83,8 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
                                         {
                                             SkillName = skillGroup.Key,
                                             DispatchHistories = skillGroup
+                                                .OrderBy(dh => dh.ReportAtTime)
+                                                .ThenBy(dh => dh.WorkerName)
                                                 .Select(x => new DispatchRow
                                                 {
                                                     ReportDate = x.ReportAtTime.HasValue ? x.ReportAtTime.Value.ToShortDateString() : "NA",
@@ -90,7 +92,6 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
                                                     WorkerId = x.WorkerID,
                                                     WorkerName = x.WorkerName
                                                 })
-                                                .OrderBy(x => x.WorkerName)
                                                 .ToList()
                                         })
                                         .ToList()
