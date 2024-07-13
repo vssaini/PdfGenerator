@@ -116,7 +116,7 @@ public class PdfService
             case Document.EmployerDispatch:
                 startDate = new DateTime(2024, 07, 01);
                 endDate = new DateTime(2024, 07, 10);
-                dispatchFilter = new DispatchFilter(startDate, endDate);
+                dispatchFilter = new DispatchFilter(startDate, endDate, false);
                 await _empDocService.GenerateEmpDispatchReportDocAsync(dispatchFilter);
                 break;
 

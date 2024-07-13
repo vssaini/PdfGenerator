@@ -1,7 +1,7 @@
 ﻿using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.EBoard;
 using PdfGenerator.Models.Reports.Common;
-using QuestPDF.Previewer;
+using PdfGenerator.Services.Helpers;
 
 namespace PdfGenerator.Services.Reports.EBoard;
 
@@ -23,8 +23,6 @@ public class DispatchSumDocService : IDispatchSumDocService
         var model = await _dsDocDs.GetDispatchSummaryModelAsync(filter);
         var document = new DispatchSumDocument(model);
 
-        //document.GeneratePdf(); // TODO: Return bytes in Web app
-
-        await document.ShowInPreviewerAsync();
+        await PdfInvoker.ShowOrPreviewPdfAsync(filter, _logService, document);
     }
 }

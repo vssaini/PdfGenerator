@@ -19,7 +19,16 @@ namespace PdfGenerator.Services.Reports.BaDispatch
             _model = model;
         }
 
-        public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
+        public DocumentMetadata GetMetadata()
+        {
+            return new DocumentMetadata
+            {
+                Title = _model.Header.Title,
+                Author = _model.Footer.CurrentUserName,
+                Subject = $"{_model.Header.Title} {_model.Header.DateRange}"
+            };
+        }
+
         public DocumentSettings GetSettings() => DocumentSettings.Default;
 
         public void Compose(IDocumentContainer container)

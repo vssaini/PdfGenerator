@@ -33,7 +33,11 @@ namespace PdfGenerator.Components.EmpDispatch
                     column.Item().Row(r => ComposeEmployer(r, edh.EmployerName));
 
                     ComposeEmployerLocations(edh, column);
+
+                    column.Item().Row(r => ComposeEmployerTotalDispatched(r, edh));
                 }
+
+                column.Item().Row(r => ComposeTotalDispatched(r, _rows));
             });
         }
 
@@ -87,7 +91,7 @@ namespace PdfGenerator.Components.EmpDispatch
                 .LineHorizontal(lineSize)
                 .LineColor(Colors.Black);
         }
-
+        
         private static void ComposeEmployerLocations(EmpDispatchHistory edh, ColumnDescriptor column)
         {
             foreach (var loc in edh.Locations)
@@ -137,6 +141,36 @@ namespace PdfGenerator.Components.EmpDispatch
 
             column.Item()
                 .PaddingVertical(1);
+        }
+
+        private static void ComposeEmployerTotalDispatched(RowDescriptor row, EmpDispatchHistory edh)
+        {
+            row.RelativeItem()
+                .PaddingLeft(15)
+                .PaddingVertical(8)
+                .Text($"Total Dispatched for {edh.EmployerName}: {edh.TotalDispatched}")
+                .FontSize(12)
+                .Bold();
+        }
+
+        private static void ComposeTotalDispatched(RowDescriptor row, IReadOnlyCollection<EmpDispatchHistory> rows)
+        {
+            int uniqueEmployerCount = rows
+                .Select(e => e.EmployerName)
+                .Distinct()
+                .Count();
+
+            if (uniqueEmployerCount == 1)
+                return;
+
+            var totalDispatched = rows.Sum(r => r.TotalDispatched);
+
+            row.RelativeItem()
+                .PaddingLeft(15)
+                .PaddingVertical(8)
+                .Text($"Total Dispatched for {uniqueEmployerCount} employers: {totalDispatched}")
+                .FontSize(13)
+                .Bold();
         }
     }
 }

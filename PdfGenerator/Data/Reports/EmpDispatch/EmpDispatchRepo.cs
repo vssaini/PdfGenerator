@@ -64,6 +64,7 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
                 .Select(empGroup => new EmpDispatchHistory
                 {
                     EmployerName = empGroup.Key,
+                    TotalDispatched = empGroup.Count(),
                     Locations = empGroup
                         .OrderBy(dh => dh.Location)
                         .GroupBy(dh => dh.Location)

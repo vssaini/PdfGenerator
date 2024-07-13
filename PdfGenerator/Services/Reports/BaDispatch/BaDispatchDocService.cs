@@ -1,7 +1,7 @@
 ﻿using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.Common;
-using QuestPDF.Previewer;
+using PdfGenerator.Services.Helpers;
 
 namespace PdfGenerator.Services.Reports.BaDispatch
 {
@@ -23,11 +23,7 @@ namespace PdfGenerator.Services.Reports.BaDispatch
             var model = await _baDocDs.GetBaDispatchReportModelAsync(filter);
             var document = new BaDispatchReportDocument(model);
 
-            //_logService.LogInformation("Generating and showing BA Dispatch PDF");
-            //document.GeneratePdfAndShow();
-
-            _logService.LogInformation("Showing BA Dispatch report PDF in Previewer");
-            await document.ShowInPreviewerAsync();
+            await PdfInvoker.ShowOrPreviewPdfAsync(filter, _logService, document);
         }
     }
 }

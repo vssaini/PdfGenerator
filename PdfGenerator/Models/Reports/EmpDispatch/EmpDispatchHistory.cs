@@ -3,6 +3,7 @@
 public class EmpDispatchHistory
 {
     public string EmployerName { get; set; }
+    public int TotalDispatched { get; set; }
     public List<EmpDispatchLocation> Locations { get; set; }
 }
 
