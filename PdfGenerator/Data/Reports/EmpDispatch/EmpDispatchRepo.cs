@@ -39,6 +39,7 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
             var dParams = new DynamicParameters();
             dParams.Add("@StartDate", filter.StartDate);
             dParams.Add("@EndDate", filter.EndDate);
+            dParams.Add("@IsPreview", filter.IsPreview);
 
             return dParams;
         }
