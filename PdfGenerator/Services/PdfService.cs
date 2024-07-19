@@ -107,9 +107,9 @@ public class PdfService
                 break;
 
             case Document.EBoardDispatchSummary:
-                startDate = new DateTime(2024, 02, 05);
-                endDate = new DateTime(2024, 02, 07);
-                dispatchFilter = new DispatchFilter(startDate, endDate);
+                startDate = new DateTime(2024, 07, 12);
+                endDate = new DateTime(2024, 07, 19);
+                dispatchFilter = new DispatchFilter(startDate, endDate, showPdfPreview: false);
                 await _dsDocService.GenerateDispatchSummaryDocAsync(dispatchFilter);
                 break;
 

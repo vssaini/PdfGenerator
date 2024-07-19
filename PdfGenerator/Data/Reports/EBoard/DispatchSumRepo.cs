@@ -64,13 +64,13 @@ public class DispatchSumRepo : IDispatchSumRepo
     private static List<DispatchSumEmpRow> GetDispatchSummaryEmployerRows(IEnumerable<usp_EBoard_DispatchSummary_Result> grp)
     {
         return grp
-            .OrderBy(x => x.Employer)
             .GroupBy(x => x.Employer)
             .Select(g => new DispatchSumEmpRow
             {
                 Employer = g.Key,
                 SummaryRows = GetDispatchSummaryRows(g)
             })
+            .OrderBy(x => x.Employer)
             .ToList();
     }
 
@@ -85,6 +85,8 @@ public class DispatchSumRepo : IDispatchSumRepo
                 ShowName = x.ShowName,
                 DispatchCount = x.Dispatches ?? 0
             })
+            .OrderBy(x => x.Location)
+            .ThenBy(x => x.ShowName)
             .ToList();
     }
 }

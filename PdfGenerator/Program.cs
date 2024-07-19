@@ -9,7 +9,7 @@ try
     var host = Startup.CreateHostBuilder();
 
     var pdfSvc = ActivatorUtilities.CreateInstance<PdfService>(host.Services);
-    await pdfSvc.Run(Document.EmployerDispatch);
+    await pdfSvc.Run(Document.EBoardDispatchSummary);
 }
 catch (Exception ex)
 {
