@@ -6,6 +6,6 @@ namespace PdfGenerator.Models.Reports.EmpDispatch
     {
         public Header Header { get; set; }
         public Footer Footer { get; set; }
-        public EmpDispatchResponse EmpDispatchResponse { get; set; }
+        public List<EmpDispatchResponse> EmpDispatchResponses { get; set; }
     }
 }

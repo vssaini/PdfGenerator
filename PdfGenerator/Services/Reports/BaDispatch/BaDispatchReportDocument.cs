@@ -77,7 +77,6 @@ namespace PdfGenerator.Services.Reports.BaDispatch
         {
             var today = DateTime.Now.ToString("dddd, MMM dd, yyyy");
 
-            int counter = 0;
             container.Column(column =>
             {
                 column.Item()
@@ -87,15 +86,7 @@ namespace PdfGenerator.Services.Reports.BaDispatch
                     .SemiBold()
                     .Italic();
 
-                foreach (var disResp in _model.BaDispatchResponses)
-                {
-                    column.Item().Component(new ReportComponent(disResp.Summary, disResp.DispatchRows));
-
-                    if (counter == 10)
-                        break;
-
-                    counter++;
-                }
+                column.Item().Component(new ReportComponent(_model.BaDispatchResponses));
             });
         }
 

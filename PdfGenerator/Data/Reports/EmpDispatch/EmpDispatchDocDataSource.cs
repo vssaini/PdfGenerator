@@ -22,7 +22,7 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
 
         public async Task<EmpDispatchReportModel> GetEmpDispatchReportModelAsync(DispatchFilter filter)
         {
-            var empDispatchResponse = await _empRepo.GetEmpDispatchResponseAsync(filter);
+            var empDispatchResponses = await _empRepo.GetEmpDispatchResponsesAsync(filter);
 
             _logService.LogInformation("Generating Employer Dispatch report model");
 
@@ -43,7 +43,7 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
             {
                 Header = header,
                 Footer = footer,
-                EmpDispatchResponse = empDispatchResponse
+                EmpDispatchResponses = empDispatchResponses
             };
         }
     }

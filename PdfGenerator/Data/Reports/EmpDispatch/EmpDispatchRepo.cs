@@ -17,21 +17,15 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
             _sqlConnectionFactory = sqlConnectionFactory;
             _logService = logService;
         }
-
-        public async Task<EmpDispatchResponse> GetEmpDispatchResponseAsync(DispatchFilter filter)
-        {
-            var dispatchReports = await GetDispatchReportsAsync(filter);
-            return new EmpDispatchResponse { EmpDispatchHistories = dispatchReports };
-        }
-
-        private async Task<List<EmpDispatchHistory>> GetDispatchReportsAsync(DispatchFilter filter)
+        
+        public async Task<List<EmpDispatchResponse>> GetEmpDispatchResponsesAsync(DispatchFilter filter)
         {
             _logService.LogInformation("Getting Employer Dispatch reports from database");
 
             var dParams = GetParamsForSp(filter);
             var reports = await GetDispatchHistoriesFromDbAsync(dParams);
 
-            return GetEmpDispatchHistories(reports);
+            return GetEmpDispatchResponses(reports);
         }
 
         private static DynamicParameters GetParamsForSp(DispatchFilter filter)
@@ -57,12 +51,12 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
             return reports;
         }
 
-        private static List<EmpDispatchHistory> GetEmpDispatchHistories(IEnumerable<usp_EmployerDispatchHistory_ByReportDate_Result> dispatchHistories)
+        private static List<EmpDispatchResponse> GetEmpDispatchResponses(IEnumerable<usp_EmployerDispatchHistory_ByReportDate_Result> dispatchHistories)
         {
             var empDisHistories = dispatchHistories
                 .OrderBy(dh => dh.Employer)
                 .GroupBy(dh => dh.Employer)
-                .Select(empGroup => new EmpDispatchHistory
+                .Select(empGroup => new EmpDispatchResponse
                 {
                     EmployerName = empGroup.Key,
                     TotalDispatched = empGroup.Count(),
@@ -84,7 +78,7 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
                                         .Select(skillGroup => new EmpDispatchSkill
                                         {
                                             SkillName = skillGroup.Key,
-                                            DispatchHistories = skillGroup
+                                            DispatchRows = skillGroup
                                                 .OrderBy(dh => dh.ReportAtTime)
                                                 .ThenBy(dh => dh.WorkerName)
                                                 .Select(x => new DispatchRow

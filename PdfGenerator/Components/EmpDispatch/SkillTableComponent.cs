@@ -74,11 +74,11 @@ namespace PdfGenerator.Components.EmpDispatch
                 });
 
                 // step 3
-                for (var i = 0; i < _skill.DispatchHistories.Count; i++)
+                for (var i = 0; i < _skill.DispatchRows.Count; i++)
                 {
-                    var item = _skill.DispatchHistories[i];
+                    var item = _skill.DispatchRows[i];
 
-                    var slNo = Convert.ToString(_skill.DispatchHistories.IndexOf(item) + 1);
+                    var slNo = Convert.ToString(_skill.DispatchRows.IndexOf(item) + 1);
 
                     table.Cell().Element(CellStyle).Text(slNo);
                     table.Cell().Element(CellStyle).Text(item.ReportDate);

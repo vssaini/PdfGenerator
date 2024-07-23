@@ -5,6 +5,7 @@ using PdfGenerator.Contracts.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.Common;
 using System.Data;
+using DispatchRow = PdfGenerator.Models.Reports.BaDispatch.DispatchRow;
 
 namespace PdfGenerator.Data.Reports.BaDispatch
 {
@@ -21,46 +22,63 @@ namespace PdfGenerator.Data.Reports.BaDispatch
 
         public async Task<List<BaDispatchResponse>> GetBaDispatchResponsesAsync(DispatchFilter filter)
         {
-            var baDispatchReports = GetDispatchReports(filter);
-            var itemReqIds = baDispatchReports.Select(i => i.RequestId).ToList();
+            var reports = GetDispatchReportsFromDb(filter);
 
-            var subDispatchReports = await GetSubDispatchReportsAsync(itemReqIds);
+            var itemReqIds = reports.Select(i => i.RequestID);
+            var subDispatchReports = await GetSubDispatchReportsFromDbAsync(itemReqIds);
 
-            var baDispatchResponses = baDispatchReports
-                .Select(item => new BaDispatchResponse
+            var baDispatchResponses = reports
+                .OrderBy(dr => dr.Location)
+                .GroupBy(dr => dr.Location)
+                .Select(locationGroup => new BaDispatchResponse
                 {
-                    Summary = item,
-                    DispatchRows = GetDispatchRows(item.RequestId, subDispatchReports)
+                    LocationName = locationGroup.Key,
+                    Employers = locationGroup
+                        .OrderBy(dr => dr.Employer)
+                        .GroupBy(dr => dr.Employer)
+                        .Select(employerGroup => new Employer
+                        {
+                            EmployerName = employerGroup.Key,
+                            Shows = employerGroup
+                                .OrderBy(x => x.Show)
+                                .GroupBy(dr => dr.Show)
+                                .Select(showGroup => new Show
+                                {
+                                    Summary = new Summary
+                                    {
+                                        RequestId = showGroup.First().RequestID,
+                                        Show = showGroup.First().Show,
+                                        Requestor = showGroup.First().Requestor,
+                                        ReportTo = $"{showGroup.First().ReportToName} {showGroup.First().ReportToPhone}",
+                                        BusinessAssociate = showGroup.First().BA
+                                    },
+                                    DispatchRows = GetDispatchRows(showGroup.First().RequestID, subDispatchReports)
+                                })
+                                .ToList()
+                        })
+                        .ToList()
                 })
                 .ToList();
 
             return baDispatchResponses;
         }
 
-        private List<Summary> GetDispatchReports(DispatchFilter filter)
+        private List<usp_BADispatchReport_ByLocation_Result> GetDispatchReportsFromDb(DispatchFilter filter)
         {
             _logService.LogInformation("Getting BA Dispatch reports from database");
 
             var dParams = GetParamsForSp(filter);
-            var reports = GetDispatchReportsFromDb(dParams);
 
-            var baDispatchReports = reports
-                .Select(item => new Summary
-                {
-                    Location = item.Location,
-                    Employer = item.Employer,
+            const string spName = "dbo.usp_BADispatchReport_ByLocation";
+            var command = new CommandDefinition(spName, dParams, commandType: CommandType.StoredProcedure);
 
-                    RequestId = item.RequestID,
-                    Show = item.Show,
+            using var connection = _sqlConnectionFactory.CreateConnection();
 
-                    Requestor = item.Requestor,
-                    ReportTo = $"{item.ReportToName} {item.ReportToPhone}",
+            using var gr = connection.QueryMultiple(command);
+            var reports = gr.Read<usp_BADispatchReport_ByLocation_Result>().ToList();
 
-                    BusinessAssociate = item.BA
-                })
-                .ToList();
-
-            return baDispatchReports;
+            reports.ForEach(r => r.Show = r.Show?.Trim());
+            return reports;
         }
 
         private static DynamicParameters GetParamsForSp(DispatchFilter filter)
@@ -72,20 +90,7 @@ namespace PdfGenerator.Data.Reports.BaDispatch
             return dParams;
         }
 
-        private IEnumerable<usp_BADispatchReport_ByLocation_Result> GetDispatchReportsFromDb(SqlMapper.IDynamicParameters dParams)
-        {
-            const string spName = "dbo.usp_BADispatchReport_ByLocation";
-            var command = new CommandDefinition(spName, dParams, commandType: CommandType.StoredProcedure);
-
-            using var connection = _sqlConnectionFactory.CreateConnection();
-
-            using var gr = connection.QueryMultiple(command);
-            var reports = gr.Read<usp_BADispatchReport_ByLocation_Result>().ToList();
-
-            return reports;
-        }
-
-        private async Task<List<vw_BADispatchReport_Sub>> GetSubDispatchReportsAsync(IEnumerable<int> itemReqIds)
+        private async Task<List<vw_BADispatchReport_Sub>> GetSubDispatchReportsFromDbAsync(IEnumerable<int> itemReqIds)
         {
             _logService.LogInformation("Getting BA Dispatch report sub data from database");
 
@@ -110,7 +115,7 @@ namespace PdfGenerator.Data.Reports.BaDispatch
         {
             return subDispatchReports
                 .Where(x => x.RequestID == requestId)
-                .OrderBy(x => x.ReportTime)
+                .OrderBy(x => x.ReportAtTime)
                 .ThenBy(x => x._LastFirst)
                 .Select(sdr => new DispatchRow
                 {

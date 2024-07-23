@@ -9,9 +9,9 @@ namespace PdfGenerator.Components.EmpDispatch
 {
     public class ReportComponent : IComponent
     {
-        private readonly List<EmpDispatchHistory> _rows;
+        private readonly List<EmpDispatchResponse> _rows;
 
-        public ReportComponent(List<EmpDispatchHistory> rows)
+        public ReportComponent(List<EmpDispatchResponse> rows)
         {
             _rows = rows;
         }
@@ -92,7 +92,7 @@ namespace PdfGenerator.Components.EmpDispatch
                 .LineColor(Colors.Black);
         }
         
-        private static void ComposeEmployerLocations(EmpDispatchHistory edh, ColumnDescriptor column)
+        private static void ComposeEmployerLocations(EmpDispatchResponse edh, ColumnDescriptor column)
         {
             foreach (var loc in edh.Locations)
             {
@@ -143,7 +143,7 @@ namespace PdfGenerator.Components.EmpDispatch
                 .PaddingVertical(1);
         }
 
-        private static void ComposeEmployerTotalDispatched(RowDescriptor row, EmpDispatchHistory edh)
+        private static void ComposeEmployerTotalDispatched(RowDescriptor row, EmpDispatchResponse edh)
         {
             row.RelativeItem()
                 .PaddingLeft(15)
@@ -153,7 +153,7 @@ namespace PdfGenerator.Components.EmpDispatch
                 .Bold();
         }
 
-        private static void ComposeTotalDispatched(RowDescriptor row, IReadOnlyCollection<EmpDispatchHistory> rows)
+        private static void ComposeTotalDispatched(RowDescriptor row, IReadOnlyCollection<EmpDispatchResponse> rows)
         {
             int uniqueEmployerCount = rows
                 .Select(e => e.EmployerName)

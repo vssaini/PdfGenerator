@@ -23,6 +23,7 @@ namespace PdfGenerator.Components.BaDispatch
         {
             container
                 .PaddingHorizontal(20)
+                .PaddingBottom(13)
                 .Table(table =>
             {
                 // step 1

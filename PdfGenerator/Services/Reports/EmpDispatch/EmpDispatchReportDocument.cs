@@ -77,7 +77,7 @@ namespace PdfGenerator.Services.Reports.EmpDispatch
         {
             container.Column(column =>
             {
-                column.Item().Component(new ReportComponent(_model.EmpDispatchResponse.EmpDispatchHistories));
+                column.Item().Component(new ReportComponent(_model.EmpDispatchResponses));
             });
         }
 
