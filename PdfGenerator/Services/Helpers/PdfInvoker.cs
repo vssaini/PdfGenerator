@@ -8,7 +8,7 @@ namespace PdfGenerator.Services.Helpers;
 
 public class PdfInvoker
 {
-    public static async Task ShowOrPreviewPdfAsync(PdfFilter filter, ILogService logService, IDocument document)
+    public static async Task HandlePdfDisplayAsync(PdfFilter filter, ILogService logService, IDocument document)
     {
         var metadata = document.GetMetadata();
 

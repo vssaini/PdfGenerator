@@ -14,6 +14,6 @@ public class DispatchSumDocService(IDispatchSumDocDataSource dsDocDs, ILogServic
         var model = await dsDocDs.GetDispatchSummaryModelAsync(filter);
         var document = new DispatchSumDocument(model);
 
-        await PdfInvoker.ShowOrPreviewPdfAsync(filter, logService, document);
+        await PdfInvoker.HandlePdfDisplayAsync(filter, logService, document);
     }
 }

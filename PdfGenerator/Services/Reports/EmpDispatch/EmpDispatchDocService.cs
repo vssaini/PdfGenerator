@@ -15,6 +15,6 @@ public class EmpDispatchDocService(IEmpDispatchDocDataSource empDocDs, ILogServi
         var model = await empDocDs.GetEmpDispatchReportModelAsync(filter);
         var document = new EmpDispatchReportDocument(model);
 
-        await PdfInvoker.ShowOrPreviewPdfAsync(filter, logService, document);
+        await PdfInvoker.HandlePdfDisplayAsync(filter, logService, document);
     }
 }

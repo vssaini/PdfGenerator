@@ -32,7 +32,7 @@ public class PdfService(
     {
         SetQuestPdfLicense();
         SetAppCulture();
-        EnableQuestPdfDebugging(false);
+        EnableQuestPdfDebugging(true);
 
         using var op = Operation.Begin("Generating report for document {Document}", document);
         await GenerateDocumentAsync(document);

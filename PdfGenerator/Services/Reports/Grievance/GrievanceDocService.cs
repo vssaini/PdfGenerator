@@ -14,6 +14,6 @@ public class GrievanceDocService(IGrievanceDocDataSource grvDocDs, ILogService l
         var model = await grvDocDs.GetGrievanceStepOneModelAsync(filter);
 
         var document = new GrievanceStepOneDocument(model);
-        await PdfInvoker.ShowOrPreviewPdfAsync(filter, logService, document);
+        await PdfInvoker.HandlePdfDisplayAsync(filter, logService, document);
     }
 }

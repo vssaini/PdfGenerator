@@ -14,6 +14,6 @@ public class BaDispatchDocService(IBaDispatchDocDataSource baDocDs, ILogService 
         var model = await baDocDs.GetBaDispatchReportModelAsync(filter);
         var document = new BaDispatchReportDocument(model);
 
-        await PdfInvoker.ShowOrPreviewPdfAsync(filter, logService, document);
+        await PdfInvoker.HandlePdfDisplayAsync(filter, logService, document);
     }
 }
