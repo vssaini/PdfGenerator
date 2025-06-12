@@ -4,15 +4,8 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.BaDispatch
 {
-    internal class SummaryComponent : IComponent
+    internal class SummaryComponent(Summary summary) : IComponent
     {
-        private readonly Summary _summary;
-
-        public SummaryComponent(Summary summary)
-        {
-            _summary = summary;
-        }
-
         public void Compose(IContainer container)
         {
             container.Column(column =>
@@ -36,7 +29,7 @@ namespace PdfGenerator.Components.BaDispatch
                             text.DefaultTextStyle(fontStyle);
                             text.Span("ID").Bold();
                             text.Span("   ");
-                            text.Span(_summary.RequestId.ToString());
+                            text.Span(summary.RequestId.ToString());
                         });
 
                     rColumn.Item()
@@ -45,7 +38,7 @@ namespace PdfGenerator.Components.BaDispatch
                             text.DefaultTextStyle(fontStyle);
                             text.Span("Show").Bold();
                             text.Span("   ");
-                            text.Span(_summary.Show);
+                            text.Span(summary.Show);
                         });
                 });
 
@@ -59,7 +52,7 @@ namespace PdfGenerator.Components.BaDispatch
                             text.DefaultTextStyle(fontStyle);
                             text.Span("Requestor").Bold();
                             text.Span("   ");
-                            text.Span(_summary.Requestor);
+                            text.Span(summary.Requestor);
                         });
 
                     rColumn.Item()
@@ -68,7 +61,7 @@ namespace PdfGenerator.Components.BaDispatch
                             text.DefaultTextStyle(fontStyle);
                             text.Span("Report To").Bold();
                             text.Span("    ");
-                            text.Span(_summary.Requestor);
+                            text.Span(summary.Requestor);
                         });
                 });
 
@@ -92,7 +85,7 @@ namespace PdfGenerator.Components.BaDispatch
                             text.AlignLeft();
                             text.Span("BA").Bold();
                             text.Span("   ");
-                            text.Span(_summary.BusinessAssociate ?? "NA");
+                            text.Span(summary.BusinessAssociate ?? "NA");
                         });
                 });
         }

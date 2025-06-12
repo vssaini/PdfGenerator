@@ -5,15 +5,8 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.BaDispatch
 {
-    internal class TableComponent : IComponent
+    internal class TableComponent(List<DispatchRow> dispatches) : IComponent
     {
-        private readonly List<DispatchRow> _dispatches;
-
-        public TableComponent(List<DispatchRow> dispatches)
-        {
-            _dispatches = dispatches;
-        }
-
         public void Compose(IContainer container)
         {
             container.Element(ComposeTable);
@@ -62,11 +55,11 @@ namespace PdfGenerator.Components.BaDispatch
                 });
 
                 // step 3
-                for (var i = 0; i < _dispatches.Count; i++)
+                for (var i = 0; i < dispatches.Count; i++)
                 {
-                    var item = _dispatches[i];
+                    var item = dispatches[i];
 
-                    var slNo = Convert.ToString(_dispatches.IndexOf(item) + 1);
+                    var slNo = Convert.ToString(dispatches.IndexOf(item) + 1);
 
                     table.Cell().Element(CellStyle).Text(slNo);
                     table.Cell().Element(CellStyle).Text(item.ReportTime);

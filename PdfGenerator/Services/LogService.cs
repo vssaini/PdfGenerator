@@ -7,15 +7,9 @@ namespace PdfGenerator.Services
 {
     public class LogService : ILogService
     {
-        private readonly ILogger _logger;
+        private readonly ILogger _logger = Log.Logger;
         private const string PropertyName = "UserName";
-        private readonly string _currentUserName;
-
-        public LogService()
-        {
-            _logger = Log.Logger;
-            _currentUserName = Constants.Username;
-        }
+        private readonly string _currentUserName = Constants.Username;
 
         public void LogVerbose(string messageTemplate, params object[] propertyValues)
         {

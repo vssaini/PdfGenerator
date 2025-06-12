@@ -4,18 +4,11 @@ using PdfGenerator.Contracts;
 
 namespace PdfGenerator.Data;
 
-internal sealed class SqlConnectionFactory : ISqlConnectionFactory
+internal sealed class SqlConnectionFactory(string connectionString) : ISqlConnectionFactory
 {
-    private readonly string _connectionString;
-
-    public SqlConnectionFactory(string connectionString)
-    {
-        _connectionString = connectionString;
-    }
-
     public IDbConnection CreateConnection()
     {
-        var connection = new SqlConnection(_connectionString);
+        var connection = new SqlConnection(connectionString);
         connection.Open();
 
         return connection;

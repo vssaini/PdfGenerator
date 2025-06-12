@@ -5,24 +5,15 @@ using PdfGenerator.Services.Helpers;
 
 namespace PdfGenerator.Services.Reports.EBoard;
 
-public class DispatchSumDocService : IDispatchSumDocService
+public class DispatchSumDocService(IDispatchSumDocDataSource dsDocDs, ILogService logService) : IDispatchSumDocService
 {
-    private readonly IDispatchSumDocDataSource _dsDocDs;
-    private readonly ILogService _logService;
-
-    public DispatchSumDocService(IDispatchSumDocDataSource dsDocDs, ILogService logService)
-    {
-        _dsDocDs = dsDocDs;
-        _logService = logService;
-    }
-
     public async Task GenerateDispatchSummaryDocAsync(DispatchFilter filter)
     {
-        _logService.LogInformation("Generating dispatch summary document");
+        logService.LogInformation("Generating dispatch summary document");
 
-        var model = await _dsDocDs.GetDispatchSummaryModelAsync(filter);
+        var model = await dsDocDs.GetDispatchSummaryModelAsync(filter);
         var document = new DispatchSumDocument(model);
 
-        await PdfInvoker.ShowOrPreviewPdfAsync(filter, _logService, document);
+        await PdfInvoker.ShowOrPreviewPdfAsync(filter, logService, document);
     }
 }

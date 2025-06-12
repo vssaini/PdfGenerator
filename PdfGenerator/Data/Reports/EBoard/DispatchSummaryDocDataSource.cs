@@ -7,23 +7,16 @@ using PdfGenerator.Properties;
 
 namespace PdfGenerator.Data.Reports.EBoard;
 
-public class DispatchSumDocDataSource : IDispatchSumDocDataSource
+public class DispatchSumDocDataSource(IDispatchSumRepo dsRepo, ILogger<DispatchSumDocDataSource> logger)
+    : IDispatchSumDocDataSource
 {
-    private readonly IDispatchSumRepo _dsRepo;
-    private readonly ILogger<DispatchSumDocDataSource> _logger;
     private List<DispatchSumResponse> _disSumResponses;
-
-    public DispatchSumDocDataSource(IDispatchSumRepo dsRepo, ILogger<DispatchSumDocDataSource> logger)
-    {
-        _dsRepo = dsRepo;
-        _logger = logger;
-    }
 
     public async Task<DispatchSumModel> GetDispatchSummaryModelAsync(DispatchFilter filter)
     {
-        _disSumResponses = await _dsRepo.GetDispatchSummaryResponsesAsync(filter);
+        _disSumResponses = await dsRepo.GetDispatchSummaryResponsesAsync(filter);
 
-        _logger.LogInformation("Generating dispatch summary model for date range {StartDate} - {EndDate}", filter.StartDate, filter.EndDate);
+        logger.LogInformation("Generating dispatch summary model for date range {StartDate} - {EndDate}", filter.StartDate, filter.EndDate);
 
         var header = new Header
         {

@@ -7,18 +7,11 @@ using System.Data;
 
 namespace PdfGenerator.Data.Royalty;
 
-public class RoyaltyRepo : IRoyaltyRepo
+public class RoyaltyRepo(ISqlConnectionFactory sqlConnectionFactory) : IRoyaltyRepo
 {
-    private readonly ISqlConnectionFactory _sqlConnectionFactory;
-
-    public RoyaltyRepo(ISqlConnectionFactory sqlConnectionFactory)
-    {
-        _sqlConnectionFactory = sqlConnectionFactory;
-    }
-
     public async Task<List<RoyaltyResponse>> GetRoyaltiesAsync(GetRoyaltyQuery query)
     {
-        using var connection = _sqlConnectionFactory.CreateConnection();
+        using var connection = sqlConnectionFactory.CreateConnection();
 
         var dParams = GetParamsForSp(query);
         var royalties = await GetRoyaltiesAsync(dParams);
@@ -39,7 +32,7 @@ public class RoyaltyRepo : IRoyaltyRepo
         const string spName = "dbo.usp_GetRoyalties";
         var command = new CommandDefinition(spName, dParams, commandType: CommandType.StoredProcedure);
 
-        using var connection = _sqlConnectionFactory.CreateConnection();
+        using var connection = sqlConnectionFactory.CreateConnection();
 
         await using var gr = await connection.QueryMultipleAsync(command);
         var royalties = gr.Read<RoyaltyResponse>().ToList();

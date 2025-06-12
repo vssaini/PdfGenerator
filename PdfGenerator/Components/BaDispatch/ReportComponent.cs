@@ -7,22 +7,15 @@ using SkiaSharp;
 
 namespace PdfGenerator.Components.BaDispatch
 {
-    public class ReportComponent : IComponent
+    public class ReportComponent(List<BaDispatchResponse> rows) : IComponent
     {
-        private readonly List<BaDispatchResponse> _rows;
-
-        public ReportComponent(List<BaDispatchResponse> rows)
-        {
-            _rows = rows;
-        }
-
         public void Compose(IContainer container)
         {
             container.PaddingVertical(20).Column(column =>
             {
                 column.Spacing(5);
 
-                foreach (var bad in _rows)
+                foreach (var bad in rows)
                 {
                     var bad1 = bad;
                     column.Item().Row(r => ComposeLocation(r, bad1.LocationName));

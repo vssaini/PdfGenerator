@@ -8,17 +8,9 @@ using System.Data;
 
 namespace PdfGenerator.Data.Reports.EBoard;
 
-public class DispatchSumRepo : IDispatchSumRepo
+public class DispatchSumRepo(ISqlConnectionFactory sqlConnectionFactory, ILogger<DispatchSumRepo> logger)
+    : IDispatchSumRepo
 {
-    private readonly ISqlConnectionFactory _sqlConnectionFactory;
-    private readonly ILogger<DispatchSumRepo> _logger;
-
-    public DispatchSumRepo(ISqlConnectionFactory sqlConnectionFactory, ILogger<DispatchSumRepo> logger)
-    {
-        _sqlConnectionFactory = sqlConnectionFactory;
-        _logger = logger;
-    }
-
     public async Task<List<DispatchSumResponse>> GetDispatchSummaryResponsesAsync(DispatchFilter filter)
     {
         var dParams = GetParamsForSp(filter);
@@ -49,11 +41,11 @@ public class DispatchSumRepo : IDispatchSumRepo
     private async Task<List<usp_EBoard_DispatchSummary_Result>> GetDispatchSummariesAsync(SqlMapper.IDynamicParameters dParams)
     {
         const string spName = "dbo.usp_EBoard_DispatchSummary";
-        _logger.LogInformation("Executing SP {SpName} to get dispatch summary data.", spName);
+        logger.LogInformation("Executing SP {SpName} to get dispatch summary data.", spName);
 
         var command = new CommandDefinition(spName, dParams, commandType: CommandType.StoredProcedure);
 
-        using var connection = _sqlConnectionFactory.CreateConnection();
+        using var connection = sqlConnectionFactory.CreateConnection();
 
         await using var gr = await connection.QueryMultipleAsync(command);
         var disSumResults = gr.Read<usp_EBoard_DispatchSummary_Result>();

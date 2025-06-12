@@ -4,15 +4,8 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.Request
 {
-    public class DispatchRightColumnComponent : IComponent
+    public class DispatchRightColumnComponent(RequestHeaderVm dispatchSummary) : IComponent
     {
-        private readonly RequestHeaderVm _dispatchSummary;
-
-        public DispatchRightColumnComponent(RequestHeaderVm dispatchSummary)
-        {
-            _dispatchSummary = dispatchSummary;
-        }
-
         public void Compose(IContainer container)
         {
             container.Column(column =>
@@ -41,22 +34,22 @@ namespace PdfGenerator.Components.Request
 
 
                 table.Cell().Element(LeftCellStyle).Text("Request No.");
-                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.RequestID.ToString());
+                table.Cell().Element(RightCellStyle).Text(dispatchSummary.RequestID.ToString());
 
                 table.Cell().Element(LeftCellStyle).Text("Workers Requested");
-                table.Cell().Element(RightCellStyle).Text(Convert.ToString(_dispatchSummary.WorkersRequested));
+                table.Cell().Element(RightCellStyle).Text(Convert.ToString(dispatchSummary.WorkersRequested));
 
                 table.Cell().Element(LeftCellStyle).Text("Workers Assigned");
-                table.Cell().Element(RightCellStyle).Text(Convert.ToString(_dispatchSummary.WorkersDispatched));
+                table.Cell().Element(RightCellStyle).Text(Convert.ToString(dispatchSummary.WorkersDispatched));
 
                 table.Cell().Element(LeftCellStyle).Text("Facility");
-                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.Location);
+                table.Cell().Element(RightCellStyle).Text(dispatchSummary.Location);
 
                 table.Cell().Element(LeftCellStyle).Text("Location");
-                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.Booth);
+                table.Cell().Element(RightCellStyle).Text(dispatchSummary.Booth);
 
                 table.Cell().Element(LeftCellStyle).Text("Show");
-                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.Show);
+                table.Cell().Element(RightCellStyle).Text(dispatchSummary.Show);
 
                 static IContainer LeftCellStyle(IContainer container)
                 {

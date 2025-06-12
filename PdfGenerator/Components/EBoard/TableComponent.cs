@@ -5,17 +5,8 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.EBoard
 {
-    internal class TableComponent : IComponent
+    internal class TableComponent(string employerName, List<DispatchSumRow> disSumRows) : IComponent
     {
-        private readonly string _employerName;
-        private readonly List<DispatchSumRow> _disSumRows;
-
-        public TableComponent(string employerName, List<DispatchSumRow> disSumRows)
-        {
-            _employerName = employerName;
-            _disSumRows = disSumRows;
-        }
-
         public void Compose(IContainer container)
         {
             container.Element(ComposeTable);
@@ -44,7 +35,7 @@ namespace PdfGenerator.Components.EBoard
                 // step 2
                 table.Header(header =>
                 {
-                    header.Cell().ColumnSpan(6).Element(CaptionStyle).Text(_employerName);
+                    header.Cell().ColumnSpan(6).Element(CaptionStyle).Text(employerName);
                     header.Cell().Element(CellStyle).Text("");
                     header.Cell().Element(CellStyle).Text("ID");
                     header.Cell().Element(CellLeftStyle).Text("Facility");
@@ -92,11 +83,11 @@ namespace PdfGenerator.Components.EBoard
                 });
 
                 // step 3
-                for (var i = 0; i < _disSumRows.Count; i++)
+                for (var i = 0; i < disSumRows.Count; i++)
                 {
-                    var item = _disSumRows[i];
+                    var item = disSumRows[i];
 
-                    var slNo = Convert.ToString(_disSumRows.IndexOf(item) + 1);
+                    var slNo = Convert.ToString(disSumRows.IndexOf(item) + 1);
 
                     table.Cell().Element(CellStyle).Text(slNo);
                     table.Cell().Element(CellStyle).Text(item.Id.ToString());

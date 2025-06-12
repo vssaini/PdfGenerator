@@ -5,15 +5,8 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.EBoard;
 
-public class SummaryTableComponent : IComponent
+public class SummaryTableComponent(List<EmployerDispatch> empDispatches) : IComponent
 {
-    private readonly List<EmployerDispatch> _empDispatches;
-
-    public SummaryTableComponent(List<EmployerDispatch> empDispatches)
-    {
-        _empDispatches = empDispatches;
-    }
-
     public void Compose(IContainer container)
     {
         container.Element(ComposeTable);
@@ -33,7 +26,7 @@ public class SummaryTableComponent : IComponent
                 columns.ConstantColumn(.4f, Unit.Inch);
             });
 
-            foreach (var item in _empDispatches)
+            foreach (var item in empDispatches)
             {
                 table.Cell().Element(CellLeftStyle).Text(item.EmployerName);
                 table.Cell().Element(CellStyle).Text(item.TotalDispatch.ToString());
@@ -63,7 +56,7 @@ public class SummaryTableComponent : IComponent
             // Table footer
             table.Footer(footer =>
             {
-                var totalDispatches = _empDispatches.Sum(e => e.TotalDispatch);
+                var totalDispatches = empDispatches.Sum(e => e.TotalDispatch);
 
                 footer.Cell().Element(FooterRightStyle).Text("Total Dispatches");
                 footer.Cell().Element(FooterStyle).Text(totalDispatches.ToString());

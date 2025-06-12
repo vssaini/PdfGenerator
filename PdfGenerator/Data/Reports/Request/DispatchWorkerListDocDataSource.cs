@@ -6,20 +6,12 @@ using PdfGenerator.Properties;
 
 namespace PdfGenerator.Data.Reports.Request
 {
-    public sealed class DispatchWorkerListDocDataSource : IDispatchWorkerListDocDataSource
+    public sealed class DispatchWorkerListDocDataSource(IDispatchWorkerListRepo dwlRepo, ILogService logService)
+        : IDispatchWorkerListDocDataSource
     {
-        private readonly IDispatchWorkerListRepo _dwlRepo;
-        private readonly ILogService _logService;
-
-        public DispatchWorkerListDocDataSource(IDispatchWorkerListRepo dwlRepo, ILogService logService)
-        {
-            _dwlRepo = dwlRepo;
-            _logService = logService;
-        }
-
         public async Task<DispatchWorkerListReportModel> GetDispatchWorkerListModelAsync(int requestId)
         {
-            _logService.LogInformation($"Generating Dispatch Worker List report model");
+            logService.LogInformation($"Generating Dispatch Worker List report model");
 
             var header = new Header
             {
@@ -33,7 +25,7 @@ namespace PdfGenerator.Data.Reports.Request
                 CurrentDateTime = DateTime.Now.ToString("dddd, MMM dd, yyyy hh:mm tt")
             };
 
-            var wlReportVm = await _dwlRepo.GetDispatchWorkerAsync(requestId);
+            var wlReportVm = await dwlRepo.GetDispatchWorkerAsync(requestId);
 
             return new DispatchWorkerListReportModel
             {

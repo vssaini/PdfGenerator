@@ -4,22 +4,14 @@ using QuestPDF.Previewer;
 
 namespace PdfGenerator.Services.Reports.Request
 {
-    public class DispatchWorkerListDocService : IDispatchWorkerListDocService
+    public class DispatchWorkerListDocService(IDispatchWorkerListDocDataSource dwlDocDs, ILogService logService)
+        : IDispatchWorkerListDocService
     {
-        private readonly ILogService _logService;
-        private readonly IDispatchWorkerListDocDataSource _dwlDocDs;
-
-        public DispatchWorkerListDocService(IDispatchWorkerListDocDataSource dwlDocDs, ILogService logService)
-        {
-            _dwlDocDs = dwlDocDs;
-            _logService = logService;
-        }
-
         public async Task GenerateDispatchWorkerListDocAsync(int requestId)
         {
-            _logService.LogInformation("Generating Dispatch Worker List report document");
+            logService.LogInformation("Generating Dispatch Worker List report document");
 
-            var model = await _dwlDocDs.GetDispatchWorkerListModelAsync(requestId);
+            var model = await dwlDocDs.GetDispatchWorkerListModelAsync(requestId);
 
             var document = new DispatchWorkerListDocument(model);
 

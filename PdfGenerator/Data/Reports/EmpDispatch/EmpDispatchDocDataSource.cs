@@ -9,22 +9,14 @@ using Header = PdfGenerator.Models.Reports.Common.Header;
 
 namespace PdfGenerator.Data.Reports.EmpDispatch
 {
-    public sealed class EmpDispatchDocDataSource : IEmpDispatchDocDataSource
+    public sealed class EmpDispatchDocDataSource(IEmpDispatchRepo empRepo, ILogService logService)
+        : IEmpDispatchDocDataSource
     {
-        private readonly IEmpDispatchRepo _empRepo;
-        private readonly ILogService _logService;
-
-        public EmpDispatchDocDataSource(IEmpDispatchRepo empRepo, ILogService logService)
-        {
-            _empRepo = empRepo;
-            _logService = logService;
-        }
-
         public async Task<EmpDispatchReportModel> GetEmpDispatchReportModelAsync(DispatchFilter filter)
         {
-            var empDispatchResponses = await _empRepo.GetEmpDispatchResponsesAsync(filter);
+            var empDispatchResponses = await empRepo.GetEmpDispatchResponsesAsync(filter);
 
-            _logService.LogInformation("Generating Employer Dispatch report model");
+            logService.LogInformation("Generating Employer Dispatch report model");
 
             var header = new Header
             {

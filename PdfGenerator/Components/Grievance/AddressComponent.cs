@@ -4,16 +4,10 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.Grievance
 {
-    public class AddressComponent : IComponent
+    public class AddressComponent(Address address) : IComponent
     {
-        private readonly string _date;
-        private Address Address { get; }
-
-        public AddressComponent(Address address)
-        {
-            Address = address;
-            _date = DateTime.Now.ToString("MMMM dd, yyyy");
-        }
+        private readonly string _date = DateTime.Now.ToString("MMMM dd, yyyy");
+        private Address Address { get; } = address;
 
         public void Compose(IContainer container)
         {

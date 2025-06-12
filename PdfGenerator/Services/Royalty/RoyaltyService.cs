@@ -12,29 +12,19 @@ using System.Diagnostics;
 
 namespace PdfGenerator.Services.Royalty;
 
-public class RoyaltyService : IRoyaltyDocService, IPdfService
+public class RoyaltyService(ILogger<RoyaltyService> logger, ISender sender, IConfiguration config)
+    : IRoyaltyDocService, IPdfService
 {
-    private readonly ILogger<RoyaltyService> _logger;
-    private readonly ISender _sender;
-    private readonly IConfiguration _config;
-
-    public RoyaltyService(ILogger<RoyaltyService> logger, ISender sender, IConfiguration config)
-    {
-        _logger = logger;
-        _sender = sender;
-        _config = config;
-    }
-
     public async Task GenerateRoyaltyDocAsync(RoyaltyFilter filter)
     {
-        _logger.LogInformation("Generating Royalty document for {AccountNumber} and {Year}", filter.AccountNumber, filter.Year);
+        logger.LogInformation("Generating Royalty document for {AccountNumber} and {Year}", filter.AccountNumber, filter.Year);
 
-        var model = await _sender.Send(new GetRoyaltyQuery(filter));
+        var model = await sender.Send(new GetRoyaltyQuery(filter));
 
-        var fontSize = _config.GetValue<int>("Pdf:FontSize");
+        var fontSize = config.GetValue<int>("Pdf:FontSize");
         var document = new RoyaltyDocument(model, fontSize);
 
-        var showInPreviewer = _config.GetValue<bool>("Pdf:ShowInPreviewer");
+        var showInPreviewer = config.GetValue<bool>("Pdf:ShowInPreviewer");
         if (showInPreviewer)
             await document.ShowInPreviewerAsync();
         else
@@ -43,10 +33,10 @@ public class RoyaltyService : IRoyaltyDocService, IPdfService
 
     public void GeneratePdf(IDocument document, string filePath)
     {
-        _logger.LogInformation("Generating PDF at {PdfFilePath}", filePath);
+        logger.LogInformation("Generating PDF at {PdfFilePath}", filePath);
         document.GeneratePdf(filePath);
 
-        _logger.LogInformation("Opening PDF at {PdfFilePath}", filePath);
+        logger.LogInformation("Opening PDF at {PdfFilePath}", filePath);
         Process.Start("explorer.exe", filePath);
     }
 }

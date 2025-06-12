@@ -4,15 +4,8 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.Request
 {
-    public class DispatchLeftColumnComponent : IComponent
+    public class DispatchLeftColumnComponent(RequestHeaderVm dispatchSummary) : IComponent
     {
-        private readonly RequestHeaderVm _dispatchSummary;
-
-        public DispatchLeftColumnComponent(RequestHeaderVm dispatchSummary)
-        {
-            _dispatchSummary = dispatchSummary;
-        }
-
         public void Compose(IContainer container)
         {
             container.Column(column =>
@@ -41,24 +34,24 @@ namespace PdfGenerator.Components.Request
 
 
                 table.Cell().Element(LeftCellStyle).Text("Employer");
-                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.Employer);
+                table.Cell().Element(RightCellStyle).Text(dispatchSummary.Employer);
 
-                var reportDate = _dispatchSummary.ReportAtTime.HasValue ? _dispatchSummary.ReportAtTime.Value.ToString("ddddd, MMMMM dd, yyyy") : "";
+                var reportDate = dispatchSummary.ReportAtTime.HasValue ? dispatchSummary.ReportAtTime.Value.ToString("ddddd, MMMMM dd, yyyy") : "";
 
                 table.Cell().Element(LeftCellStyle).Text("Report Date");
                 table.Cell().Element(RightCellStyle).Text(reportDate);
 
                 table.Cell().Element(LeftCellStyle).Text("Report To");
-                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.ReportToName);
+                table.Cell().Element(RightCellStyle).Text(dispatchSummary.ReportToName);
 
                 table.Cell().Element(LeftCellStyle).Text("Steward");
                 table.Cell().Element(RightCellStyle).Text("");
 
                 table.Cell().Element(LeftCellStyle).Text("Business Agent");
-                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.BusinessAgent);
+                table.Cell().Element(RightCellStyle).Text(dispatchSummary.BusinessAgent);
 
                 table.Cell().Element(LeftCellStyle).Text("Call No.");
-                table.Cell().Element(RightCellStyle).Text(_dispatchSummary.CallNo);
+                table.Cell().Element(RightCellStyle).Text(dispatchSummary.CallNo);
 
                 static IContainer LeftCellStyle(IContainer container)
                 {

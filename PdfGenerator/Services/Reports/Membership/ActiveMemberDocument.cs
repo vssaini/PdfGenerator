@@ -6,19 +6,12 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Services.Reports.Membership
 {
-    public class ActiveMemberDocument : IDocument
+    public class ActiveMemberDocument(ActiveMemberReportModel model) : IDocument
     {
-        private readonly ActiveMemberReportModel _model;
-
         private const int DefaultFontSize = 12;
         private const string DefaultFont = "Arial";
 
         private const string FallbackFont = "Microsoft PhagsPa";
-
-        public ActiveMemberDocument(ActiveMemberReportModel model)
-        {
-            _model = model;
-        }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
         public DocumentSettings GetSettings() => DocumentSettings.Default;
@@ -59,7 +52,7 @@ namespace PdfGenerator.Services.Reports.Membership
         {
             container.Column(column =>
             {
-                foreach (var member in _model.ActiveMembers)
+                foreach (var member in model.ActiveMembers)
                 {
                     column.Item().Component(new MemberComponent(member));
                 }

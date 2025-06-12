@@ -9,17 +9,9 @@ using DispatchRow = PdfGenerator.Models.Reports.BaDispatch.DispatchRow;
 
 namespace PdfGenerator.Data.Reports.BaDispatch
 {
-    public class BaDispatchRepo : IBaDispatchRepo
+    public class BaDispatchRepo(ISqlConnectionFactory sqlConnectionFactory, ILogService logService)
+        : IBaDispatchRepo
     {
-        private readonly ISqlConnectionFactory _sqlConnectionFactory;
-        private readonly ILogService _logService;
-
-        public BaDispatchRepo(ISqlConnectionFactory sqlConnectionFactory, ILogService logService)
-        {
-            _sqlConnectionFactory = sqlConnectionFactory;
-            _logService = logService;
-        }
-
         public async Task<List<BaDispatchResponse>> GetBaDispatchResponsesAsync(DispatchFilter filter)
         {
             var reports = GetDispatchReportsFromDb(filter);
@@ -65,14 +57,14 @@ namespace PdfGenerator.Data.Reports.BaDispatch
 
         private List<usp_BADispatchReport_ByLocation_Result> GetDispatchReportsFromDb(DispatchFilter filter)
         {
-            _logService.LogInformation("Getting BA Dispatch reports from database");
+            logService.LogInformation("Getting BA Dispatch reports from database");
 
             var dParams = GetParamsForSp(filter);
 
             const string spName = "dbo.usp_BADispatchReport_ByLocation";
             var command = new CommandDefinition(spName, dParams, commandType: CommandType.StoredProcedure);
 
-            using var connection = _sqlConnectionFactory.CreateConnection();
+            using var connection = sqlConnectionFactory.CreateConnection();
 
             using var gr = connection.QueryMultiple(command);
             var reports = gr.Read<usp_BADispatchReport_ByLocation_Result>().ToList();
@@ -92,17 +84,17 @@ namespace PdfGenerator.Data.Reports.BaDispatch
 
         private async Task<List<vw_BADispatchReport_Sub>> GetSubDispatchReportsFromDbAsync(IEnumerable<int> itemReqIds)
         {
-            _logService.LogInformation("Getting BA Dispatch report sub data from database");
+            logService.LogInformation("Getting BA Dispatch report sub data from database");
 
             var subDispatchReports = new List<vw_BADispatchReport_Sub>();
 
             var itemReqIdsBatch = itemReqIds.Batch(2000).ToList();
-            _logService.LogInformation($"Total {itemReqIdsBatch.Count} batches of RequestIds");
+            logService.LogInformation($"Total {itemReqIdsBatch.Count} batches of RequestIds");
 
             foreach (var batchReqIds in itemReqIdsBatch)
             {
                 const string sql = "SELECT * FROM dbo.vw_BADispatchReport_Sub WHERE RequestID IN @batchReqIds";
-                using var connection = _sqlConnectionFactory.CreateConnection();
+                using var connection = sqlConnectionFactory.CreateConnection();
                 var sdReports = await connection.QueryAsync<vw_BADispatchReport_Sub>(sql, new { batchReqIds });
 
                 subDispatchReports.AddRange(sdReports);

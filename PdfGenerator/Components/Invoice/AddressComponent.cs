@@ -4,16 +4,10 @@ using Address = PdfGenerator.Models.Invoice.Address;
 
 namespace PdfGenerator.Components.Invoice
 {
-    public class AddressComponent : IComponent
+    public class AddressComponent(string title, Address address) : IComponent
     {
-        private string Title { get; }
-        private Address Address { get; }
-
-        public AddressComponent(string title, Address address)
-        {
-            Title = title;
-            Address = address;
-        }
+        private string Title { get; } = title;
+        private Address Address { get; } = address;
 
         public void Compose(IContainer container)
         {

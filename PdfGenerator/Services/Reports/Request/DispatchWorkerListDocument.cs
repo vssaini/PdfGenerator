@@ -7,19 +7,12 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Services.Reports.Request
 {
-    public class DispatchWorkerListDocument : IDocument
+    public class DispatchWorkerListDocument(DispatchWorkerListReportModel model) : IDocument
     {
-        private readonly DispatchWorkerListReportModel _model;
-
         private const int DefaultFontSize = 10;
         private const string DefaultFont = "Arial";
 
         private const string FallbackFont = "Microsoft PhagsPa";
-
-        public DispatchWorkerListDocument(DispatchWorkerListReportModel model)
-        {
-            _model = model;
-        }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
         public DocumentSettings GetSettings() => DocumentSettings.Default;
@@ -61,7 +54,7 @@ namespace PdfGenerator.Services.Reports.Request
 
             container.Column(column =>
             {
-                column.Item().AlignCenter().Text(_model.Header.Title).Style(titleStyle);
+                column.Item().AlignCenter().Text(model.Header.Title).Style(titleStyle);
                 column.Item().PaddingVertical(5).LineHorizontal(2).LineColor(Colors.Black);
             });
         }
@@ -74,9 +67,9 @@ namespace PdfGenerator.Services.Reports.Request
 
                 column.Item().PaddingBottom(10).Row(row =>
                 {
-                    row.RelativeItem().Component(new DispatchLeftColumnComponent(_model.DispatchSummary));
+                    row.RelativeItem().Component(new DispatchLeftColumnComponent(model.DispatchSummary));
                     row.ConstantItem(50);
-                    row.RelativeItem().Component(new DispatchRightColumnComponent(_model.DispatchSummary));
+                    row.RelativeItem().Component(new DispatchRightColumnComponent(model.DispatchSummary));
                 });
 
                 ComposeTables(column);
@@ -86,7 +79,7 @@ namespace PdfGenerator.Services.Reports.Request
 
         private void ComposeTables(ColumnDescriptor column)
         {
-            var workersGrp = _model.Workers
+            var workersGrp = model.Workers
                 .GroupBy(w => w.OriginalSkil)
                 .Select(g => new
                 {
@@ -131,12 +124,12 @@ namespace PdfGenerator.Services.Reports.Request
             {
                 row.RelativeItem().PaddingTop(5).Column(c =>
                 {
-                    c.Item().Text(_model.Footer.CurrentUserName).Style(fontStyle);
+                    c.Item().Text(model.Footer.CurrentUserName).Style(fontStyle);
                 });
 
                 row.RelativeItem().PaddingTop(5).Column(c =>
                 {
-                    c.Item().Text(_model.Footer.CurrentDateTime).Style(fontStyle);
+                    c.Item().Text(model.Footer.CurrentDateTime).Style(fontStyle);
                 });
 
                 row.RelativeItem().PaddingLeft(50).PaddingTop(5).Column(c =>
@@ -153,7 +146,7 @@ namespace PdfGenerator.Services.Reports.Request
 
                 row.RelativeItem().PaddingTop(5).AlignRight().Column(c =>
                 {
-                    c.Item().Text(_model.Footer.PropertyMessage).Style(fontStyle);
+                    c.Item().Text(model.Footer.PropertyMessage).Style(fontStyle);
                 });
             });
         }

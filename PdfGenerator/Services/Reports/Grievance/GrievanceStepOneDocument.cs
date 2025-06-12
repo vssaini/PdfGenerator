@@ -7,18 +7,11 @@ using IContainer = QuestPDF.Infrastructure.IContainer;
 
 namespace PdfGenerator.Services.Reports.Grievance
 {
-    public class GrievanceStepOneDocument : IDocument
+    public class GrievanceStepOneDocument(GrievanceLetterStepOneModel model) : IDocument
     {
-        private readonly GrievanceLetterStepOneModel _model;
-
         private const int DefaultFontSize = 12;
         private const string DefaultFont = "Times New Roman";
         private const string ArialFont = "Arial";
-
-        public GrievanceStepOneDocument(GrievanceLetterStepOneModel model)
-        {
-            _model = model;
-        }
 
         public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
         public DocumentSettings GetSettings() => DocumentSettings.Default;
@@ -55,11 +48,11 @@ namespace PdfGenerator.Services.Reports.Grievance
 
             container.PaddingVertical(20).Row(row =>
             {
-                row.ConstantItem(70).Width(70).Image(Image.FromFile(_model.Header.CompanyLogoPath));
+                row.ConstantItem(70).Width(70).Image(Image.FromFile(model.Header.CompanyLogoPath));
 
-                row.RelativeItem().AlignCenter().Text(text => text.Span(_model.Header.Title).Style(fontStyle));
+                row.RelativeItem().AlignCenter().Text(text => text.Span(model.Header.Title).Style(fontStyle));
 
-                row.ConstantItem(90).Width(90).AlignRight().Image(Image.FromFile(_model.Header.LocalLogoPath));
+                row.ConstantItem(90).Width(90).AlignRight().Image(Image.FromFile(model.Header.LocalLogoPath));
             });
         }
 
@@ -79,7 +72,7 @@ namespace PdfGenerator.Services.Reports.Grievance
         {
             container.Row(row =>
             {
-                row.RelativeItem().Component(new AddressComponent(_model.Address));
+                row.RelativeItem().Component(new AddressComponent(model.Address));
             });
         }
 
@@ -100,7 +93,7 @@ namespace PdfGenerator.Services.Reports.Grievance
                         text.AlignLeft();
                         text.Span("Re:");
                         text.Span("   ");
-                        text.Span(_model.Subject);
+                        text.Span(model.Subject);
                     });
                 });
             });
@@ -116,11 +109,11 @@ namespace PdfGenerator.Services.Reports.Grievance
                     {
                         text.ParagraphSpacing(10);
 
-                        text.Line(_model.Body.FirstPara);
-                        text.Line(_model.Body.SecondPara);
-                        text.Line(_model.Body.ThirdPara);
-                        text.Line(_model.Body.ClosingPara);
-                        text.Line(_model.Signature.ComplementaryClose);
+                        text.Line(model.Body.FirstPara);
+                        text.Line(model.Body.SecondPara);
+                        text.Line(model.Body.ThirdPara);
+                        text.Line(model.Body.ClosingPara);
+                        text.Line(model.Signature.ComplementaryClose);
                     });
 
                 });
@@ -135,8 +128,8 @@ namespace PdfGenerator.Services.Reports.Grievance
                 {
                     column.Item().Text(text =>
                     {
-                        text.Line(_model.Signature.WriterName);
-                        text.Line(_model.Signature.WriterDesignation);
+                        text.Line(model.Signature.WriterName);
+                        text.Line(model.Signature.WriterDesignation);
                     });
                 });
             });
@@ -154,12 +147,12 @@ namespace PdfGenerator.Services.Reports.Grievance
                 {
                     column.Item().Text(text =>
                     {
-                        text.Line($"Cc:    {_model.CarbonCopy.PersonOne}");
-                        text.Line($"          {_model.CarbonCopy.PersonTwo}");
-                        text.Line($"          {_model.CarbonCopy.PersonThree}");
+                        text.Line($"Cc:    {model.CarbonCopy.PersonOne}");
+                        text.Line($"          {model.CarbonCopy.PersonTwo}");
+                        text.Line($"          {model.CarbonCopy.PersonThree}");
 
                         text.Line(" "); // Intentional space
-                        text.Line(_model.CertifiedStatement).Style(fontStyle);
+                        text.Line(model.CertifiedStatement).Style(fontStyle);
                     });
                 });
             });
@@ -175,19 +168,19 @@ namespace PdfGenerator.Services.Reports.Grievance
             {
                 row.RelativeItem().AlignLeft().PaddingTop(5).Column(c =>
                 {
-                    c.Item().Text(_model.Footer.Telephone).Style(fontStyle);
-                    c.Item().Text(_model.Footer.Fax).Style(fontStyle);
+                    c.Item().Text(model.Footer.Telephone).Style(fontStyle);
+                    c.Item().Text(model.Footer.Fax).Style(fontStyle);
                 });
 
                 row.RelativeItem().AlignCenter().PaddingTop(5).Column(c =>
                 {
-                    c.Item().Text(_model.Footer.CompanyAddressFirstLine).Style(fontStyle);
-                    c.Item().Text(_model.Footer.CompanyAddressSecondLine).Style(fontStyle);
+                    c.Item().Text(model.Footer.CompanyAddressFirstLine).Style(fontStyle);
+                    c.Item().Text(model.Footer.CompanyAddressSecondLine).Style(fontStyle);
                 });
 
                 row.RelativeItem().AlignRight().PaddingTop(5).Column(c =>
                 {
-                    c.Item().Text(_model.Footer.CompanyWebsite).Style(fontStyle);
+                    c.Item().Text(model.Footer.CompanyWebsite).Style(fontStyle);
                 });
             });
         }

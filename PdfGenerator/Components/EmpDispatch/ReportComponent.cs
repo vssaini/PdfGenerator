@@ -7,29 +7,22 @@ using SkiaSharp;
 
 namespace PdfGenerator.Components.EmpDispatch
 {
-    public class ReportComponent : IComponent
+    public class ReportComponent(List<EmpDispatchResponse> rows) : IComponent
     {
-        private readonly List<EmpDispatchResponse> _rows;
-
-        public ReportComponent(List<EmpDispatchResponse> rows)
-        {
-            _rows = rows;
-        }
-
         public void Compose(IContainer container)
         {
             container.PaddingVertical(20).Column(column =>
             {
                 column.Spacing(5);
 
-                for (var i = 0; i < _rows.Count; i++)
+                for (var i = 0; i < rows.Count; i++)
                 {
                     if (i > 0)
                     {
                         column.Item().Row(r => r.ConstantItem(20).PaddingTop(10));
                     }
 
-                    var edh = _rows[i];
+                    var edh = rows[i];
                     column.Item().Row(r => ComposeEmployer(r, edh.EmployerName));
 
                     ComposeEmployerLocations(edh, column);
@@ -37,7 +30,7 @@ namespace PdfGenerator.Components.EmpDispatch
                     column.Item().Row(r => ComposeEmployerTotalDispatched(r, edh));
                 }
 
-                column.Item().Row(r => ComposeTotalDispatched(r, _rows));
+                column.Item().Row(r => ComposeTotalDispatched(r, rows));
             });
         }
 

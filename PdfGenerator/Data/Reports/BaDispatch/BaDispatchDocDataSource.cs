@@ -9,22 +9,14 @@ using Header = PdfGenerator.Models.Reports.Common.Header;
 
 namespace PdfGenerator.Data.Reports.BaDispatch
 {
-    public sealed class BaDispatchDocDataSource : IBaDispatchDocDataSource
+    public sealed class BaDispatchDocDataSource(IBaDispatchRepo baRepo, ILogService logService)
+        : IBaDispatchDocDataSource
     {
-        private readonly IBaDispatchRepo _baRepo;
-        private readonly ILogService _logService;
-
-        public BaDispatchDocDataSource(IBaDispatchRepo baRepo, ILogService logService)
-        {
-            _baRepo = baRepo;
-            _logService = logService;
-        }
-
         public async Task<BaDispatchReportModel> GetBaDispatchReportModelAsync(DispatchFilter filter)
         {
-            var baDispatchResponses = await _baRepo.GetBaDispatchResponsesAsync(filter);
+            var baDispatchResponses = await baRepo.GetBaDispatchResponsesAsync(filter);
 
-            _logService.LogInformation("Generating BA Dispatch report model");
+            logService.LogInformation("Generating BA Dispatch report model");
 
             var header = new Header
             {

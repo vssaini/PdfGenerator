@@ -5,15 +5,8 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.EmpDispatch
 {
-    internal class SkillTableComponent : IComponent
+    internal class SkillTableComponent(EmpDispatchSkill skill) : IComponent
     {
-        private readonly EmpDispatchSkill _skill;
-
-        public SkillTableComponent(EmpDispatchSkill skill)
-        {
-            _skill = skill;
-        }
-
         public void Compose(IContainer container)
         {
             container.Element(ComposeTable);
@@ -40,7 +33,7 @@ namespace PdfGenerator.Components.EmpDispatch
                 // step 2
                 table.Header(header =>
                 {
-                    header.Cell().ColumnSpan(5).Element(CaptionStyle).Text(_skill.SkillName);
+                    header.Cell().ColumnSpan(5).Element(CaptionStyle).Text(skill.SkillName);
 
                     header.Cell().Element(CellStyle).Text("");
                     header.Cell().Element(CellStyle).Text("Date");
@@ -74,11 +67,11 @@ namespace PdfGenerator.Components.EmpDispatch
                 });
 
                 // step 3
-                for (var i = 0; i < _skill.DispatchRows.Count; i++)
+                for (var i = 0; i < skill.DispatchRows.Count; i++)
                 {
-                    var item = _skill.DispatchRows[i];
+                    var item = skill.DispatchRows[i];
 
-                    var slNo = Convert.ToString(_skill.DispatchRows.IndexOf(item) + 1);
+                    var slNo = Convert.ToString(skill.DispatchRows.IndexOf(item) + 1);
 
                     table.Cell().Element(CellStyle).Text(slNo);
                     table.Cell().Element(CellStyle).Text(item.ReportDate);

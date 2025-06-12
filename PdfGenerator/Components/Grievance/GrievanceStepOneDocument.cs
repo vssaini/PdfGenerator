@@ -6,27 +6,17 @@ using IContainer = QuestPDF.Infrastructure.IContainer;
 
 namespace PdfGenerator.Components.Grievance;
 
-public class GrievanceStepOneDocument : IDocument
+public class GrievanceStepOneDocument(GrievanceLetterStepOneModel model, int fontSize, string fontFamily)
+    : IDocument
 {
-    private readonly int _fontSize;
-    private readonly string _fontFamily;
-    private readonly GrievanceLetterStepOneModel _model;
-
     private const string ArialFont = "Arial";
-
-    public GrievanceStepOneDocument(GrievanceLetterStepOneModel model, int fontSize, string fontFamily)
-    {
-        _fontSize = fontSize;
-        _fontFamily = fontFamily;
-        _model = model;
-    }
 
     public DocumentMetadata GetMetadata() => DocumentMetadata.Default;
     public DocumentSettings GetSettings() => DocumentSettings.Default;
 
     public void Compose(IDocumentContainer container)
     {
-        var pageStyle = TextStyle.Default.FontSize(_fontSize).FontFamily(_fontFamily).FontColor(Colors.Grey.Darken4);
+        var pageStyle = TextStyle.Default.FontSize(fontSize).FontFamily(fontFamily).FontColor(Colors.Grey.Darken4);
 
         container
             .Page(page =>
@@ -47,11 +37,11 @@ public class GrievanceStepOneDocument : IDocument
 
         container.PaddingVertical(20).Row(row =>
         {
-            row.ConstantItem(100).Width(70).Image(_model.Header.CompanyLogoPath);
+            row.ConstantItem(100).Width(70).Image(model.Header.CompanyLogoPath);
 
-            row.RelativeItem().AlignCenter().Text(text => text.Span(_model.Header.Title).Style(fontStyle));
+            row.RelativeItem().AlignCenter().Text(text => text.Span(model.Header.Title).Style(fontStyle));
 
-            row.ConstantItem(100).Width(100).AlignRight().Image(_model.Header.CompanyLogoPath);
+            row.ConstantItem(100).Width(100).AlignRight().Image(model.Header.CompanyLogoPath);
         });
     }
 
@@ -77,7 +67,7 @@ public class GrievanceStepOneDocument : IDocument
     {
         container.Row(row =>
         {
-            row.RelativeItem().Component(new AddressComponent(_model.Address));
+            row.RelativeItem().Component(new AddressComponent(model.Address));
         });
     }
 
@@ -95,7 +85,7 @@ public class GrievanceStepOneDocument : IDocument
                     text.AlignLeft();
                     text.Span("Re:");
                     text.Span("   ");
-                    text.Span(_model.Subject);
+                    text.Span(model.Subject);
                 });
             });
         });
@@ -111,11 +101,11 @@ public class GrievanceStepOneDocument : IDocument
                 {
                     text.ParagraphSpacing(10);
 
-                    text.Line(_model.Body.FirstPara);
-                    text.Line(_model.Body.SecondPara);
-                    text.Line(_model.Body.ThirdPara);
-                    text.Line(_model.Body.ClosingPara);
-                    text.Line(_model.Signature.ComplementaryClose);
+                    text.Line(model.Body.FirstPara);
+                    text.Line(model.Body.SecondPara);
+                    text.Line(model.Body.ThirdPara);
+                    text.Line(model.Body.ClosingPara);
+                    text.Line(model.Signature.ComplementaryClose);
                 });
 
             });
@@ -130,8 +120,8 @@ public class GrievanceStepOneDocument : IDocument
             {
                 column.Item().PaddingTop(25).Text(text =>
                 {
-                    text.Line(_model.Signature.WriterName);
-                    text.Line(_model.Signature.WriterDesignation);
+                    text.Line(model.Signature.WriterName);
+                    text.Line(model.Signature.WriterDesignation);
                 });
             });
         });
@@ -147,11 +137,11 @@ public class GrievanceStepOneDocument : IDocument
             {
                 column.Item().Text(text =>
                 {
-                    text.Line($"Cc:    {_model.CarbonCopy.PersonOne}");
-                    text.Line($"          {_model.CarbonCopy.PersonTwo}");
-                    text.Line($"          {_model.CarbonCopy.PersonThree}");
+                    text.Line($"Cc:    {model.CarbonCopy.PersonOne}");
+                    text.Line($"          {model.CarbonCopy.PersonTwo}");
+                    text.Line($"          {model.CarbonCopy.PersonThree}");
 
-                    text.Line(_model.CertifiedStatement).Style(fontStyle);
+                    text.Line(model.CertifiedStatement).Style(fontStyle);
                 });
             });
         });
@@ -165,19 +155,19 @@ public class GrievanceStepOneDocument : IDocument
         {
             row.RelativeItem().AlignLeft().PaddingTop(5).Column(c =>
             {
-                c.Item().Text(_model.Footer.Telephone).Style(fontStyle);
-                c.Item().Text(_model.Footer.Fax).Style(fontStyle);
+                c.Item().Text(model.Footer.Telephone).Style(fontStyle);
+                c.Item().Text(model.Footer.Fax).Style(fontStyle);
             });
 
             row.RelativeItem().AlignCenter().PaddingTop(5).Column(c =>
             {
-                c.Item().Text(_model.Footer.CompanyAddressFirstLine).Style(fontStyle);
-                c.Item().Text(_model.Footer.CompanyAddressSecondLine).Style(fontStyle);
+                c.Item().Text(model.Footer.CompanyAddressFirstLine).Style(fontStyle);
+                c.Item().Text(model.Footer.CompanyAddressSecondLine).Style(fontStyle);
             });
 
             row.RelativeItem().AlignRight().PaddingTop(5).Column(c =>
             {
-                c.Item().Text(_model.Footer.CompanyWebsite).Style(fontStyle);
+                c.Item().Text(model.Footer.CompanyWebsite).Style(fontStyle);
             });
         });
     }

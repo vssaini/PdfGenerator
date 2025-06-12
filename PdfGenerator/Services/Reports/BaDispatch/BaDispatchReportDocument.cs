@@ -6,26 +6,19 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Services.Reports.BaDispatch
 {
-    public class BaDispatchReportDocument : IDocument
+    public class BaDispatchReportDocument(BaDispatchReportModel model) : IDocument
     {
-        private readonly BaDispatchReportModel _model;
-
         private const int DefaultFontSize = 9;
         private const string DefaultFont = "Arial";
         private const string ArialFont = "Arial";
-
-        public BaDispatchReportDocument(BaDispatchReportModel model)
-        {
-            _model = model;
-        }
 
         public DocumentMetadata GetMetadata()
         {
             return new DocumentMetadata
             {
-                Title = _model.Header.Title,
-                Author = _model.Footer.CurrentUserName,
-                Subject = $"{_model.Header.Title} {_model.Header.DateRange}"
+                Title = model.Header.Title,
+                Author = model.Footer.CurrentUserName,
+                Subject = $"{model.Header.Title} {model.Header.DateRange}"
             };
         }
 
@@ -68,8 +61,8 @@ namespace PdfGenerator.Services.Reports.BaDispatch
 
             container.Column(column =>
             {
-                column.Item().Text(text => text.Span(_model.Header.Title).Style(titleStyle));
-                column.Item().BorderBottom(1).PaddingVertical(2).PaddingBottom(5).Text(text => text.Span(_model.Header.DateRange).Style(dateStyle));
+                column.Item().Text(text => text.Span(model.Header.Title).Style(titleStyle));
+                column.Item().BorderBottom(1).PaddingVertical(2).PaddingBottom(5).Text(text => text.Span(model.Header.DateRange).Style(dateStyle));
             });
         }
 
@@ -86,7 +79,7 @@ namespace PdfGenerator.Services.Reports.BaDispatch
                     .SemiBold()
                     .Italic();
 
-                column.Item().Component(new ReportComponent(_model.BaDispatchResponses));
+                column.Item().Component(new ReportComponent(model.BaDispatchResponses));
             });
         }
 
@@ -100,12 +93,12 @@ namespace PdfGenerator.Services.Reports.BaDispatch
             {
                 row.RelativeItem().PaddingTop(5).Column(c =>
                 {
-                    c.Item().Text(_model.Footer.CurrentUserName).Style(fontStyle);
+                    c.Item().Text(model.Footer.CurrentUserName).Style(fontStyle);
                 });
 
                 row.RelativeItem().PaddingTop(5).Column(c =>
                 {
-                    c.Item().Text(_model.Footer.CurrentDateTime).Style(fontStyle);
+                    c.Item().Text(model.Footer.CurrentDateTime).Style(fontStyle);
                 });
 
                 row.RelativeItem().PaddingLeft(50).PaddingTop(5).Column(c =>
@@ -122,7 +115,7 @@ namespace PdfGenerator.Services.Reports.BaDispatch
 
                 row.RelativeItem().PaddingTop(5).AlignRight().Column(c =>
                 {
-                    c.Item().Text(_model.Footer.PropertyMessage).Style(fontStyle);
+                    c.Item().Text(model.Footer.PropertyMessage).Style(fontStyle);
                 });
             });
         }

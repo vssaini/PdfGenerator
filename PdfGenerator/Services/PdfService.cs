@@ -12,51 +12,36 @@ using PdfGenerator.Models.Reports.Common;
 using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 using PdfGenerator.Models.Royalty;
 using QuestPDF.Infrastructure;
-using System.Globalization;
 using SerilogTimings;
+using System.Globalization;
 
 namespace PdfGenerator.Services;
 
-public class PdfService
+public class PdfService(
+    ILogger<PdfService> logger,
+    IInvoiceDocService invDocService,
+    IRoyaltyDocService royDocService,
+    IGrievanceDocService grvDocService,
+    IBaDispatchDocService baDocService,
+    IActiveMemberDocService amDocService,
+    IDispatchWorkerListDocService dwlDocService,
+    IDispatchSumDocService dsDocService,
+    IEmpDispatchDocService empDocService)
 {
-    private readonly ILogger<PdfService> _logger;
-    private readonly IInvoiceDocService _invDocService;
-    private readonly IRoyaltyDocService _royDocService;
-    private readonly IGrievanceDocService _grvDocService;
-    private readonly IBaDispatchDocService _baDocService;
-    private readonly IActiveMemberDocService _amDocService;
-    private readonly IDispatchWorkerListDocService _dwlDocService;
-    private readonly IDispatchSumDocService _dsDocService;
-    private readonly IEmpDispatchDocService _empDocService;
-
-    public PdfService(ILogger<PdfService> logger, IInvoiceDocService invDocService, IRoyaltyDocService royDocService, IGrievanceDocService grvDocService, IBaDispatchDocService baDocService, IActiveMemberDocService amDocService, IDispatchWorkerListDocService dwlDocService, IDispatchSumDocService dsDocService, IEmpDispatchDocService empDocService)
-    {
-        _logger = logger;
-        _invDocService = invDocService;
-        _royDocService = royDocService;
-        _grvDocService = grvDocService;
-        _baDocService = baDocService;
-        _amDocService = amDocService;
-        _dwlDocService = dwlDocService;
-        _dsDocService = dsDocService;
-        _empDocService = empDocService;
-    }
-
     public async Task Run(Document document)
     {
         SetQuestPdfLicense();
         SetAppCulture();
+        EnableQuestPdfDebugging(false);
 
-        using (var op = Operation.Begin("Generating report for document {Document}", document))
-        {
-            await GenerateDocumentAsync(document);
-            op.Complete();
-        }
+        using var op = Operation.Begin("Generating report for document {Document}", document);
+        await GenerateDocumentAsync(document);
+        op.Complete();
     }
 
     private void SetQuestPdfLicense()
     {
-        _logger.LogInformation("Setting QuestPDF license");
+        logger.LogInformation("Setting QuestPDF license");
 
         // Ref - https://www.questpdf.com/license/configuration.html
         QuestPDF.Settings.License = LicenseType.Community;
@@ -64,7 +49,7 @@ public class PdfService
 
     private void SetAppCulture()
     {
-        _logger.LogInformation("Setting app culture to en-US");
+        logger.LogInformation("Setting app culture to en-US");
 
         const string culture = "en-US";
         var cultureInfo = CultureInfo.GetCultureInfo(culture);
@@ -73,51 +58,60 @@ public class PdfService
         Thread.CurrentThread.CurrentUICulture = cultureInfo;
     }
 
+    private void EnableQuestPdfDebugging(bool enableDebugging)
+    {
+        if (enableDebugging)
+            logger.LogInformation("Enabling debugging for QuestPDF");
+
+        // To investigate the location of the root cause, please run the application with a debugger attached
+        QuestPDF.Settings.EnableDebugging = enableDebugging;
+    }
+
     private async Task GenerateDocumentAsync(Document document)
     {
         switch (document)
         {
             case Document.Invoice:
-                await _invDocService.GenerateInvoiceDocAsync();
+                await invDocService.GenerateInvoiceDocAsync();
                 break;
 
             case Document.Royalty:
                 var royFilter = new RoyaltyFilter(1997, 153043);
-                await _royDocService.GenerateRoyaltyDocAsync(royFilter);
+                await royDocService.GenerateRoyaltyDocAsync(royFilter);
                 break;
 
             case Document.GrievanceStepOneLetter:
                 var grvFilter = new GrievanceFilter(4140);
-                await _grvDocService.GenerateGrievanceStepOneDocAsync(grvFilter);
+                await grvDocService.GenerateGrievanceStepOneDocAsync(grvFilter);
                 break;
 
             case Document.BaDispatch:
                 var startDate = new DateTime(2024, 07, 22);
                 var endDate = new DateTime(2024, 07, 22);
                 var dispatchFilter = new DispatchFilter(startDate, endDate, showPdfPreview: false);
-                await _baDocService.GenerateBaDispatchReportDocAsync(dispatchFilter);
+                await baDocService.GenerateBaDispatchReportDocAsync(dispatchFilter);
                 break;
 
             case Document.ActiveMember:
-                await _amDocService.GenerateActiveMemberDocAsync();
+                await amDocService.GenerateActiveMemberDocAsync();
                 break;
 
             case Document.RequestDispatchWorkerList:
-                await _dwlDocService.GenerateDispatchWorkerListDocAsync(279288);
+                await dwlDocService.GenerateDispatchWorkerListDocAsync(279288);
                 break;
 
             case Document.EBoardDispatchSummary:
                 startDate = new DateTime(2024, 07, 12);
                 endDate = new DateTime(2024, 07, 19);
                 dispatchFilter = new DispatchFilter(startDate, endDate, showPdfPreview: false);
-                await _dsDocService.GenerateDispatchSummaryDocAsync(dispatchFilter);
+                await dsDocService.GenerateDispatchSummaryDocAsync(dispatchFilter);
                 break;
 
             case Document.EmployerDispatch:
                 startDate = new DateTime(2024, 07, 01);
                 endDate = new DateTime(2024, 07, 10);
                 dispatchFilter = new DispatchFilter(startDate, endDate, isPreview: true);
-                await _empDocService.GenerateEmpDispatchReportDocAsync(dispatchFilter);
+                await empDocService.GenerateEmpDispatchReportDocAsync(dispatchFilter);
                 break;
 
             default:

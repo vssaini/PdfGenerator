@@ -4,22 +4,14 @@ using QuestPDF.Previewer;
 
 namespace PdfGenerator.Services.Reports.Membership
 {
-    public class ActiveMemberDocService : IActiveMemberDocService
+    public class ActiveMemberDocService(IActiveMemberDocDataSource amDocDs, ILogService logService)
+        : IActiveMemberDocService
     {
-        private readonly ILogService _logService;
-        private readonly IActiveMemberDocDataSource _amDocDs;
-
-        public ActiveMemberDocService(IActiveMemberDocDataSource amDocDs, ILogService logService)
-        {
-            _amDocDs = amDocDs;
-            _logService = logService;
-        }
-
         public async Task GenerateActiveMemberDocAsync()
         {
-            _logService.LogInformation("Generating Active Members report document");
+            logService.LogInformation("Generating Active Members report document");
 
-            var model = await _amDocDs.GetActiveMemberModelAsync();
+            var model = await amDocDs.GetActiveMemberModelAsync();
 
             var document = new ActiveMemberDocument(model);
 

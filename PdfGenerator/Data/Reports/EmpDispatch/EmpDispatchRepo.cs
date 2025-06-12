@@ -7,20 +7,12 @@ using System.Data;
 
 namespace PdfGenerator.Data.Reports.EmpDispatch
 {
-    public class EmpDispatchRepo : IEmpDispatchRepo
+    public class EmpDispatchRepo(ISqlConnectionFactory sqlConnectionFactory, ILogService logService)
+        : IEmpDispatchRepo
     {
-        private readonly ISqlConnectionFactory _sqlConnectionFactory;
-        private readonly ILogService _logService;
-
-        public EmpDispatchRepo(ISqlConnectionFactory sqlConnectionFactory, ILogService logService)
-        {
-            _sqlConnectionFactory = sqlConnectionFactory;
-            _logService = logService;
-        }
-        
         public async Task<List<EmpDispatchResponse>> GetEmpDispatchResponsesAsync(DispatchFilter filter)
         {
-            _logService.LogInformation("Getting Employer Dispatch reports from database");
+            logService.LogInformation("Getting Employer Dispatch reports from database");
 
             var dParams = GetParamsForSp(filter);
             var reports = await GetDispatchHistoriesFromDbAsync(dParams);
@@ -43,7 +35,7 @@ namespace PdfGenerator.Data.Reports.EmpDispatch
             const string spName = "dbo.usp_EmployerDispatchHistory_ByReportDate";
             var command = new CommandDefinition(spName, dParams, commandType: CommandType.StoredProcedure);
 
-            using var connection = _sqlConnectionFactory.CreateConnection();
+            using var connection = sqlConnectionFactory.CreateConnection();
 
             await using var gr = await connection.QueryMultipleAsync(command);
             var reports = gr.Read<usp_EmployerDispatchHistory_ByReportDate_Result>().ToList();

@@ -5,15 +5,8 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.Membership
 {
-    public class MemberComponent : IComponent
+    public class MemberComponent(ActiveMember member) : IComponent
     {
-        private readonly ActiveMember _member;
-
-        public MemberComponent(ActiveMember member)
-        {
-            _member = member;
-        }
-
         public void Compose(IContainer container)
         {
             container.PaddingVertical(20).Column(column =>
@@ -30,8 +23,8 @@ namespace PdfGenerator.Components.Membership
             container.PaddingBottom(20).Row(row =>
             {
                 row.ConstantItem(300).Text("");
-                row.ConstantItem(150).Text(_member.VoterStatus);
-                row.ConstantItem(100).Text(_member.WorkerId.ToString());
+                row.ConstantItem(150).Text(member.VoterStatus);
+                row.ConstantItem(100).Text(member.WorkerId.ToString());
             });
         }
 
@@ -39,9 +32,9 @@ namespace PdfGenerator.Components.Membership
         {
             container.Row(row =>
             {
-                row.ConstantItem(150).AlignRight().Text(_member.Date);
+                row.ConstantItem(150).AlignRight().Text(member.Date);
                 row.ConstantItem(120).Text("");
-                row.RelativeItem().AlignLeft().PaddingLeft(45).Text(_member.WorkerName);
+                row.RelativeItem().AlignLeft().PaddingLeft(45).Text(member.WorkerName);
             });
         }
 

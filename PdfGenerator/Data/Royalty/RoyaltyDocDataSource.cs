@@ -4,22 +4,16 @@ using PdfGenerator.Queries;
 
 namespace PdfGenerator.Data.Royalty
 {
-    public sealed class RoyaltyDocDataSource : IRoyaltyDocDataSource
+    public sealed class RoyaltyDocDataSource(IRoyaltyRepo royRepo) : IRoyaltyDocDataSource
     {
-        private readonly IRoyaltyRepo _royRepo;
         private List<RoyaltyResponse> _royalties;
         private static readonly Random Random = new();
 
         private static DateTime _asOfDate;
 
-        public RoyaltyDocDataSource(IRoyaltyRepo royRepo)
-        {
-            _royRepo = royRepo;
-        }
-
         public async Task<RoyaltyModel> GetRoyaltyModelAsync(GetRoyaltyQuery query)
         {
-            _royalties = await _royRepo.GetRoyaltiesAsync(query);
+            _royalties = await royRepo.GetRoyaltiesAsync(query);
             var royaltyItems = GetRoyaltyItems();
 
             return new RoyaltyModel

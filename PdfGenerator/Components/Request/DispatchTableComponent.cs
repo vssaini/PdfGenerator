@@ -5,21 +5,11 @@ using QuestPDF.Infrastructure;
 
 namespace PdfGenerator.Components.Request
 {
-    internal class DispatchTableComponent : IComponent
+    internal class DispatchTableComponent(string originalSkill, List<RequestWorkerListVm> workers, bool isLastRecord)
+        : IComponent
     {
-        private readonly string _originalSkill;
-        private readonly List<RequestWorkerListVm> _workers;
-        private readonly bool _isLastRecord;
-
         private const int DefaultFontSize = 10;
         private const string DefaultFont = "Arial";
-
-        public DispatchTableComponent(string originalSkill, List<RequestWorkerListVm> workers, bool isLastRecord)
-        {
-            _originalSkill = originalSkill;
-            _workers = workers;
-            _isLastRecord = isLastRecord;
-        }
 
         public void Compose(IContainer container)
         {
@@ -57,7 +47,7 @@ namespace PdfGenerator.Components.Request
                         .Text(t =>
                         {
                             t.DefaultTextStyle(fontStyle);
-                            t.Span(_originalSkill);
+                            t.Span(originalSkill);
                             t.AlignCenter();
 
                         }); //item.OriginalSkill
@@ -79,12 +69,12 @@ namespace PdfGenerator.Components.Request
 
 
                 // step 3
-                for (var i = 0; i < _workers.Count; i++)
+                for (var i = 0; i < workers.Count; i++)
                 {
                     var counter = i;
-                    var item = _workers[i];
+                    var item = workers[i];
 
-                    var slNo = _workers.IndexOf(item) + 1;
+                    var slNo = workers.IndexOf(item) + 1;
 
                     table.Cell().Element(CellStyle).AlignCenter().Text(slNo.ToString());
                     table.Cell().Element(CellStyle).AlignCenter().Text(item.ReportTime);
@@ -96,7 +86,7 @@ namespace PdfGenerator.Components.Request
                     IContainer CellStyle(IContainer cellContainer)
                     {
                         return cellContainer
-                            .BorderBottom(_isLastRecord ? 0.5f : 0)
+                            .BorderBottom(isLastRecord ? 0.5f : 0)
                             .BorderColor(Colors.Black)
                             .Background(counter % 2 == 0 ? Colors.White : "#EFF2F7")
                             .PaddingVertical(3)

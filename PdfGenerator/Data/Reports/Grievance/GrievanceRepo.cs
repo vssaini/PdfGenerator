@@ -7,17 +7,9 @@ using System.Data;
 
 namespace PdfGenerator.Data.Reports.Grievance
 {
-    public class GrievanceRepo : IGrievanceRepo
+    public class GrievanceRepo(ISqlConnectionFactory sqlConnectionFactory, ILogger<GrievanceRepo> logger)
+        : IGrievanceRepo
     {
-        private readonly ISqlConnectionFactory _sqlConnectionFactory;
-        private readonly ILogger<GrievanceRepo> _logger;
-
-        public GrievanceRepo(ISqlConnectionFactory sqlConnectionFactory, ILogger<GrievanceRepo> logger)
-        {
-            _sqlConnectionFactory = sqlConnectionFactory;
-            _logger = logger;
-        }
-
         public async Task<GrievanceLetterStepOneResponse> GetGrievanceLetterStepOneAsync(GrievanceFilter filter)
         {
             var dParams = GetParamsForSp(filter);
@@ -37,11 +29,11 @@ namespace PdfGenerator.Data.Reports.Grievance
         private async Task<GrievanceLetterStepOneResponse> GetGrievanceLetterStepOneAsync(SqlMapper.IDynamicParameters dParams)
         {
             const string spName = "dbo.usp_Grievance_Letter_StepOne";
-            _logger.LogInformation("Executing SP {SpName} to get grievance letter step one data.", spName);
+            logger.LogInformation("Executing SP {SpName} to get grievance letter step one data.", spName);
 
             var command = new CommandDefinition(spName, dParams, commandType: CommandType.StoredProcedure);
 
-            using var connection = _sqlConnectionFactory.CreateConnection();
+            using var connection = sqlConnectionFactory.CreateConnection();
 
             await using var gr = await connection.QueryMultipleAsync(command);
             var grvLetStepOneResp = gr.Read<GrievanceLetterStepOneResponse>().FirstOrDefault();

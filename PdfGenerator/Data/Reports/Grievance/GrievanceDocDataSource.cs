@@ -6,23 +6,16 @@ using System.Reflection;
 
 namespace PdfGenerator.Data.Reports.Grievance
 {
-    public sealed class GrievanceDocDataSource : IGrievanceDocDataSource
+    public sealed class GrievanceDocDataSource(IGrievanceRepo grvRepo, ILogger<GrievanceDocDataSource> logger)
+        : IGrievanceDocDataSource
     {
-        private readonly IGrievanceRepo _grvRepo;
         private GrievanceLetterStepOneResponse _grvLetStepOneResp;
-        private readonly ILogger<GrievanceDocDataSource> _logger;
-
-        public GrievanceDocDataSource(IGrievanceRepo grvRepo, ILogger<GrievanceDocDataSource> logger)
-        {
-            _grvRepo = grvRepo;
-            _logger = logger;
-        }
 
         public async Task<GrievanceLetterStepOneModel> GetGrievanceStepOneModelAsync(GrievanceFilter filter)
         {
-            _grvLetStepOneResp = await _grvRepo.GetGrievanceLetterStepOneAsync(filter);
+            _grvLetStepOneResp = await grvRepo.GetGrievanceLetterStepOneAsync(filter);
 
-            _logger.LogInformation("Generating grievance step one model for {GrievanceId}", filter.GrievanceId);
+            logger.LogInformation("Generating grievance step one model for {GrievanceId}", filter.GrievanceId);
 
             var header = new Header
             {

@@ -6,15 +6,8 @@ using System.Data;
 
 namespace PdfGenerator.Data.Reports.Membership
 {
-    public class ActiveMemberRepo : IActiveMemberRepo
+    public class ActiveMemberRepo(ISqlConnectionFactory sqlConnectionFactory) : IActiveMemberRepo
     {
-        private readonly ISqlConnectionFactory _sqlConnectionFactory;
-
-        public ActiveMemberRepo(ISqlConnectionFactory sqlConnectionFactory)
-        {
-            _sqlConnectionFactory = sqlConnectionFactory;
-        }
-
         public Task<List<ActiveMember>> GetActiveMembersAsync(int pageNumber)
         {
             const int pageSize = 10;
@@ -40,7 +33,7 @@ namespace PdfGenerator.Data.Reports.Membership
             const string spName = "dbo.usp_GetActiveMembers";
             var command = new CommandDefinition(spName, dParams, commandType: CommandType.StoredProcedure);
 
-            using var connection = _sqlConnectionFactory.CreateConnection();
+            using var connection = sqlConnectionFactory.CreateConnection();
             await using var gr = await connection.QueryMultipleAsync(command);
             var activeMembers = gr.Read<ActiveMember>().ToList();
 
