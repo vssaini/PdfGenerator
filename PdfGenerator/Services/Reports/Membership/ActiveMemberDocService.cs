@@ -1,21 +1,20 @@
 ﻿using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.Membership;
-using QuestPDF.Previewer;
+using QuestPDF.Companion;
 
-namespace PdfGenerator.Services.Reports.Membership
+namespace PdfGenerator.Services.Reports.Membership;
+
+public class ActiveMemberDocService(IActiveMemberDocDataSource amDocDs, ILogService logService)
+    : IActiveMemberDocService
 {
-    public class ActiveMemberDocService(IActiveMemberDocDataSource amDocDs, ILogService logService)
-        : IActiveMemberDocService
+    public async Task GenerateActiveMemberDocAsync()
     {
-        public async Task GenerateActiveMemberDocAsync()
-        {
-            logService.LogInformation("Generating Active Members report document");
+        logService.LogInformation("Generating Active Members report document");
 
-            var model = await amDocDs.GetActiveMemberModelAsync();
+        var model = await amDocDs.GetActiveMemberModelAsync();
 
-            var document = new ActiveMemberDocument(model);
+        var document = new ActiveMemberDocument(model);
 
-            await document.ShowInPreviewerAsync();
-        }
+        await document.ShowInCompanionAsync();
     }
 }

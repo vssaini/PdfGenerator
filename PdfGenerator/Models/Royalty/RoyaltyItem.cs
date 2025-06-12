@@ -1,9 +1,8 @@
-﻿namespace PdfGenerator.Models.Royalty
-{
-    public sealed class RoyaltyItem
-    {
-        public string Country { get; set; }
+﻿namespace PdfGenerator.Models.Royalty;
 
-        public List<PeriodRow> PeriodRows { get; set; } = new();
-    }
+public sealed class RoyaltyItem
+{
+    public string Country { get; set; }
+
+    public List<PeriodRow> PeriodRows { get; set; } = new();
 }

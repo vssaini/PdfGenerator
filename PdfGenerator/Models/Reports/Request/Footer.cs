@@ -1,9 +1,8 @@
-﻿namespace PdfGenerator.Models.Reports.Request
+﻿namespace PdfGenerator.Models.Reports.Request;
+
+public class Footer
 {
-    public class Footer
-    {
-        public string CurrentUserName { get; set; }
-        public string CurrentDateTime { get; set; }
-        public string PropertyMessage { get; set; }
-    }
+    public string CurrentUserName { get; set; }
+    public string CurrentDateTime { get; set; }
+    public string PropertyMessage { get; set; }
 }

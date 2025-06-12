@@ -1,7 +1,6 @@
-﻿namespace PdfGenerator.Contracts.Reports.Membership
+﻿namespace PdfGenerator.Contracts.Reports.Membership;
+
+public interface IActiveMemberDocService
 {
-    public interface IActiveMemberDocService
-    {
-        Task GenerateActiveMemberDocAsync();
-    }
+    Task GenerateActiveMemberDocAsync();
 }

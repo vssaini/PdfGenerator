@@ -5,100 +5,99 @@ using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 using SkiaSharp;
 
-namespace PdfGenerator.Components.BaDispatch
+namespace PdfGenerator.Components.BaDispatch;
+
+public class ReportComponent(List<BaDispatchResponse> rows) : IComponent
 {
-    public class ReportComponent(List<BaDispatchResponse> rows) : IComponent
+    public void Compose(IContainer container)
     {
-        public void Compose(IContainer container)
+        container.PaddingVertical(20).Column(column =>
         {
-            container.PaddingVertical(20).Column(column =>
+            column.Spacing(5);
+
+            foreach (var bad in rows)
             {
-                column.Spacing(5);
+                var bad1 = bad;
+                column.Item().Row(r => ComposeLocation(r, bad1.LocationName));
 
-                foreach (var bad in rows)
+                ComposeLocationEmployers(bad, column);
+            }
+        });
+    }
+
+    private static void ComposeLocation(RowDescriptor row, string locationName)
+    {
+        const float lineSize = 2f;
+        const float padVertical = 10f;
+
+        row.ConstantItem(10)
+            .PaddingVertical(padVertical)
+            .LineHorizontal(lineSize)
+            .LineColor(Colors.Black);
+
+        row.AutoItem()
+            .Layers(layers =>
+            {
+                layers.Layer().SkiaSharpCanvas((canvas, size) =>
                 {
-                    var bad1 = bad;
-                    column.Item().Row(r => ComposeLocation(r, bad1.LocationName));
+                    DrawRectangle(Colors.Black, true);
 
-                    ComposeLocationEmployers(bad, column);
-                }
-            });
-        }
-
-        private static void ComposeLocation(RowDescriptor row, string locationName)
-        {
-            const float lineSize = 2f;
-            const float padVertical = 10f;
-
-            row.ConstantItem(10)
-                .PaddingVertical(padVertical)
-                .LineHorizontal(lineSize)
-                .LineColor(Colors.Black);
-
-            row.AutoItem()
-                .Layers(layers =>
-                {
-                    layers.Layer().SkiaSharpCanvas((canvas, size) =>
+                    void DrawRectangle(string color, bool isStroke)
                     {
-                        DrawRectangle(Colors.Black, true);
-
-                        void DrawRectangle(string color, bool isStroke)
+                        using var paint = new SKPaint
                         {
-                            using var paint = new SKPaint
-                            {
-                                Color = SKColor.Parse(color),
-                                IsStroke = isStroke,
-                                StrokeWidth = 1,
-                                IsAntialias = true
-                            };
+                            Color = SKColor.Parse(color),
+                            IsStroke = isStroke,
+                            StrokeWidth = 1,
+                            IsAntialias = true
+                        };
 
-                            canvas.DrawRect(0, 0, size.Width, size.Height - 4, paint);
-                        }
-                    });
-
-                    layers
-                        .PrimaryLayer()
-                        .Width(6, Unit.Inch)
-                        .Height(0.3f, Unit.Inch)
-                        .AlignMiddle()
-                        .PaddingLeft(5)
-                        .PaddingBottom(2)
-                        .Text(locationName)
-                        .FontColor(Colors.Black)
-                        .FontSize(12)
-                        .SemiBold()
-                        .Italic();
+                        canvas.DrawRect(0, 0, size.Width, size.Height - 4, paint);
+                    }
                 });
 
-            row.RelativeItem()
-                .PaddingVertical(padVertical)
-                .LineHorizontal(lineSize)
-                .LineColor(Colors.Black);
-        }
-
-        private static void ComposeLocationEmployers(BaDispatchResponse bad, ColumnDescriptor column)
-        {
-            foreach (var emp in bad.Employers)
-            {
-                column.Item()
-                    .PaddingLeft(30)
-                    .PaddingVertical(8)
-                    .Text(emp.EmployerName)
+                layers
+                    .PrimaryLayer()
+                    .Width(6, Unit.Inch)
+                    .Height(0.3f, Unit.Inch)
+                    .AlignMiddle()
+                    .PaddingLeft(5)
+                    .PaddingBottom(2)
+                    .Text(locationName)
+                    .FontColor(Colors.Black)
                     .FontSize(12)
                     .SemiBold()
                     .Italic();
+            });
 
-                ComposeEmployerShows(emp, column);
-            }
-        }
+        row.RelativeItem()
+            .PaddingVertical(padVertical)
+            .LineHorizontal(lineSize)
+            .LineColor(Colors.Black);
+    }
 
-        private static void ComposeEmployerShows(Employer emp, ColumnDescriptor column)
+    private static void ComposeLocationEmployers(BaDispatchResponse bad, ColumnDescriptor column)
+    {
+        foreach (var emp in bad.Employers)
         {
-            foreach (var show in emp.Shows)
-            {
-                column.Item().Row(row => row.RelativeItem().Component(new SummaryComponent(show.Summary)));
-                column.Item().Row(row => row.RelativeItem().Component(new TableComponent(show.DispatchRows)));
-            }
+            column.Item()
+                .PaddingLeft(30)
+                .PaddingVertical(8)
+                .Text(emp.EmployerName)
+                .FontSize(12)
+                .SemiBold()
+                .Italic();
+
+            ComposeEmployerShows(emp, column);
+        }
+    }
+
+    private static void ComposeEmployerShows(Employer emp, ColumnDescriptor column)
+    {
+        foreach (var show in emp.Shows)
+        {
+            column.Item().Row(row => row.RelativeItem().Component(new SummaryComponent(show.Summary)));
+            column.Item().Row(row => row.RelativeItem().Component(new TableComponent(show.DispatchRows)));
         }
     }
 }

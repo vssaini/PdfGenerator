@@ -1,9 +1,8 @@
 ﻿using PdfGenerator.Models.Reports.Membership;
 
-namespace PdfGenerator.Contracts.Reports.Membership
+namespace PdfGenerator.Contracts.Reports.Membership;
+
+public interface IActiveMemberDocDataSource
 {
-    public interface IActiveMemberDocDataSource
-    {
-        Task<ActiveMemberReportModel> GetActiveMemberModelAsync();
-    }
+    Task<ActiveMemberReportModel> GetActiveMemberModelAsync();
 }

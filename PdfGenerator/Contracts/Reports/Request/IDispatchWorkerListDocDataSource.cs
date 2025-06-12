@@ -1,9 +1,8 @@
 ﻿using PdfGenerator.Models.Reports.Request;
 
-namespace PdfGenerator.Contracts.Reports.Request
+namespace PdfGenerator.Contracts.Reports.Request;
+
+public interface IDispatchWorkerListDocDataSource
 {
-    public interface IDispatchWorkerListDocDataSource
-    {
-        Task<DispatchWorkerListReportModel> GetDispatchWorkerListModelAsync(int requestId);
-    }
+    Task<DispatchWorkerListReportModel> GetDispatchWorkerListModelAsync(int requestId);
 }

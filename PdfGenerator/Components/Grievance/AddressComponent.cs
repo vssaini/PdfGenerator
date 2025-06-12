@@ -2,29 +2,28 @@
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
-namespace PdfGenerator.Components.Grievance
+namespace PdfGenerator.Components.Grievance;
+
+public class AddressComponent(Address address) : IComponent
 {
-    public class AddressComponent(Address address) : IComponent
+    private readonly string _date = DateTime.Now.ToString("MMMM dd, yyyy");
+    private Address Address { get; } = address;
+
+    public void Compose(IContainer container)
     {
-        private readonly string _date = DateTime.Now.ToString("MMMM dd, yyyy");
-        private Address Address { get; } = address;
+        var address = $"{Address.Address1}, {Address.Address2}".Trim().TrimEnd(',');
 
-        public void Compose(IContainer container)
+        container.Column(column =>
         {
-            var address = $"{Address.Address1}, {Address.Address2}".Trim().TrimEnd(',');
+            column.Spacing(2);
 
-            container.Column(column =>
-            {
-                column.Spacing(2);
+            column.Item().PaddingBottom(10).Text(_date);
 
-                column.Item().PaddingBottom(10).Text(_date);
-
-                column.Item().Text(Address.Name);
-                column.Item().Text(Address.Designation);
-                column.Item().Text(Address.Employer);
-                column.Item().Text(address);
-                column.Item().Text(Address.CountryWithPinCode);
-            });
-        }
+            column.Item().Text(Address.Name);
+            column.Item().Text(Address.Designation);
+            column.Item().Text(Address.Employer);
+            column.Item().Text(address);
+            column.Item().Text(Address.CountryWithPinCode);
+        });
     }
 }

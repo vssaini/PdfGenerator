@@ -2,81 +2,81 @@
 using PdfGenerator.Models.Royalty;
 using PdfGenerator.Queries;
 
-namespace PdfGenerator.Data.Royalty
+namespace PdfGenerator.Data.Royalty;
+
+public sealed class RoyaltyDocDataSource(IRoyaltyRepo royRepo) : IRoyaltyDocDataSource
 {
-    public sealed class RoyaltyDocDataSource(IRoyaltyRepo royRepo) : IRoyaltyDocDataSource
+    private List<RoyaltyResponse> _royalties;
+    private static readonly Random Random = new();
+
+    private static DateTime _asOfDate;
+
+    public async Task<RoyaltyModel> GetRoyaltyModelAsync(GetRoyaltyQuery query)
     {
-        private List<RoyaltyResponse> _royalties;
-        private static readonly Random Random = new();
+        _royalties = await royRepo.GetRoyaltiesAsync(query);
+        var royaltyItems = GetRoyaltyItems();
 
-        private static DateTime _asOfDate;
-
-        public async Task<RoyaltyModel> GetRoyaltyModelAsync(GetRoyaltyQuery query)
+        return new RoyaltyModel
         {
-            _royalties = await royRepo.GetRoyaltiesAsync(query);
-            var royaltyItems = GetRoyaltyItems();
+            AsOfDate = _asOfDate,
+            RunDate = DateTime.Now,
 
-            return new RoyaltyModel
-            {
-                AsOfDate = _asOfDate,
-                RunDate = DateTime.Now,
+            StatementTitle = "Statement of Artist Royalties From Foreign Sales",
+            StatementSubTitle = $"First Six Months of {_asOfDate.Year}",
+            PrintedFromTitle = "Printed from View",
 
-                StatementTitle = "Statement of Artist Royalties From Foreign Sales",
-                StatementSubTitle = $"First Six Months of {_asOfDate.Year}",
-                PrintedFromTitle = "Printed from View",
+            Artist = _royalties.Any() ? _royalties.Select(r => r.Artist).First() : "NA",
+            Account = _royalties.Any() ? _royalties.Select(r => r.AccountNumber).First() : 0,
 
-                Artist = _royalties.Any() ? _royalties.Select(r => r.Artist).First() : "NA",
-                Account = _royalties.Any() ? _royalties.Select(r => r.AccountNumber).First() : 0,
+            Items = royaltyItems,
 
-                Items = royaltyItems,
+            Year = _asOfDate.Year
+        };
+    }
 
-                Year = _asOfDate.Year
-            };
+    private List<RoyaltyItem> GetRoyaltyItems()
+    {
+        var royaltyItems = new List<RoyaltyItem>();
+
+        var countryRoyalties = _royalties.GroupBy(r => r.Country);
+
+        foreach (var cr in countryRoyalties)
+        {
+            var royItem = new RoyaltyItem { Country = cr.Key };
+
+            var quarterRoyalties = cr.GroupBy(rr => (rr.FromDate.Month - 1) / 3).ToList();
+            royItem.PeriodRows = quarterRoyalties.Select(GetPeriodRow).ToList();
+
+            royaltyItems.Add(royItem);
         }
 
-        private List<RoyaltyItem> GetRoyaltyItems()
+        return royaltyItems;
+    }
+
+    private static PeriodRow GetPeriodRow(IGrouping<int, RoyaltyResponse> qr)
+    {
+        // Not sorting by FromDate as already receiving sorted data from SP
+        var endDate = _asOfDate = qr.OrderByDescending(r => r.ToDate).First().ToDate;
+
+        var pr = new PeriodRow
         {
-            var royaltyItems = new List<RoyaltyItem>();
+            Period = new Period(qr.First().FromDate, endDate),
+            Rows = GetRoyaltyRows(qr)
+        };
+        pr.SubTotalPeriod = new SubTotalPeriod(pr.Rows.Sum(r => r.Units), pr.Rows.Sum(r => r.Amount));
 
-            var countryRoyalties = _royalties.GroupBy(r => r.Country);
+        return pr;
+    }
 
-            foreach (var cr in countryRoyalties)
-            {
-                var royItem = new RoyaltyItem { Country = cr.Key };
+    private static List<RoyaltyRow> GetRoyaltyRows(IEnumerable<RoyaltyResponse> qr)
+    {
+        var catalogNumbers = new[] { "005 002", "005 033" };
+        var catalogSuffixes = new[] { "060017", "060017@" };
 
-                var quarterRoyalties = cr.GroupBy(rr => (rr.FromDate.Month - 1) / 3).ToList();
-                royItem.PeriodRows = quarterRoyalties.Select(GetPeriodRow).ToList();
-
-                royaltyItems.Add(royItem);
-            }
-
-            return royaltyItems;
-        }
-
-        private static PeriodRow GetPeriodRow(IGrouping<int, RoyaltyResponse> qr)
-        {
-            // Not sorting by FromDate as already receiving sorted data from SP
-            var endDate = _asOfDate = qr.OrderByDescending(r => r.ToDate).First().ToDate;
-
-            var pr = new PeriodRow
-            {
-                Period = new Period(qr.First().FromDate, endDate),
-                Rows = GetRoyaltyRows(qr)
-            };
-            pr.SubTotalPeriod = new SubTotalPeriod(pr.Rows.Sum(r => r.Units), pr.Rows.Sum(r => r.Amount));
-
-            return pr;
-        }
-
-        private static List<RoyaltyRow> GetRoyaltyRows(IEnumerable<RoyaltyResponse> qr)
-        {
-            var catalogNumbers = new[] { "005 002", "005 033" };
-            var catalogSuffixes = new[] { "060017", "060017@" };
-
-            return qr.Select(r => new RoyaltyRow
+        return qr.Select(r => new RoyaltyRow
             {
                 CatalogNumber =
-                        $"{catalogNumbers[Random.Next(0, catalogNumbers.Length)]} {catalogSuffixes[Random.Next(0, catalogSuffixes.Length)]}",
+                    $"{catalogNumbers[Random.Next(0, catalogNumbers.Length)]} {catalogSuffixes[Random.Next(0, catalogSuffixes.Length)]}",
                 Units = r.Units,
                 Rate = (decimal)Math.Round(Random.NextDouble() * 100, 2),
                 Amount = r.RoyaltyAmount,
@@ -87,7 +87,6 @@ namespace PdfGenerator.Data.Royalty
                 Type = "B01",
                 LicPercentage = r.LicPercentage
             })
-                .ToList();
-        }
+            .ToList();
     }
 }

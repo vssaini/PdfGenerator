@@ -1,7 +1,6 @@
-﻿namespace PdfGenerator.Models.Reports.Membership
+﻿namespace PdfGenerator.Models.Reports.Membership;
+
+public class ActiveMemberReportModel
 {
-    public class ActiveMemberReportModel
-    {
-        public List<ActiveMember> ActiveMembers { get; set; }
-    }
+    public List<ActiveMember> ActiveMembers { get; set; }
 }

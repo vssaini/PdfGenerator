@@ -1,10 +1,9 @@
 ﻿using PdfGenerator.Models.Reports.BaDispatch;
 using PdfGenerator.Models.Reports.Common;
 
-namespace PdfGenerator.Contracts.Reports.BaDispatch
+namespace PdfGenerator.Contracts.Reports.BaDispatch;
+
+public interface IBaDispatchRepo
 {
-    public interface IBaDispatchRepo
-    {
-        Task<List<BaDispatchResponse>> GetBaDispatchResponsesAsync(DispatchFilter filter);
-    }
+    Task<List<BaDispatchResponse>> GetBaDispatchResponsesAsync(DispatchFilter filter);
 }

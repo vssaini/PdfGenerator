@@ -2,28 +2,28 @@
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
 
-namespace PdfGenerator.Components.Request
+namespace PdfGenerator.Components.Request;
+
+public class DispatchLeftColumnComponent(RequestHeaderVm dispatchSummary) : IComponent
 {
-    public class DispatchLeftColumnComponent(RequestHeaderVm dispatchSummary) : IComponent
+    public void Compose(IContainer container)
     {
-        public void Compose(IContainer container)
+        container.Column(column =>
         {
-            container.Column(column =>
-            {
-                column.Spacing(2);
-                column.Item().Element(ComposeTable);
-            });
-        }
+            column.Spacing(2);
+            column.Item().Element(ComposeTable);
+        });
+    }
 
-        private void ComposeTable(IContainer container)
-        {
-            var fontStyle = TextStyle.Default
-                .FontSize(9)
-                .FontFamily("Arial");
+    private void ComposeTable(IContainer container)
+    {
+        var fontStyle = TextStyle.Default
+            .FontSize(9)
+            .FontFamily("Arial");
 
-            container
-                .DefaultTextStyle(fontStyle)
-                .Table(table =>
+        container
+            .DefaultTextStyle(fontStyle)
+            .Table(table =>
             {
                 // step 1
                 table.ColumnsDefinition(columns =>
@@ -63,6 +63,5 @@ namespace PdfGenerator.Components.Request
                     return container.AlignLeft().PaddingVertical(2);
                 }
             });
-        }
     }
 }

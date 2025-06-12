@@ -3,21 +3,21 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace PdfGenerator.Components.BaDispatch
-{
-    internal class TableComponent(List<DispatchRow> dispatches) : IComponent
-    {
-        public void Compose(IContainer container)
-        {
-            container.Element(ComposeTable);
-        }
+namespace PdfGenerator.Components.BaDispatch;
 
-        private void ComposeTable(IContainer container)
-        {
-            container
-                .PaddingHorizontal(20)
-                .PaddingBottom(13)
-                .Table(table =>
+internal class TableComponent(List<DispatchRow> dispatches) : IComponent
+{
+    public void Compose(IContainer container)
+    {
+        container.Element(ComposeTable);
+    }
+
+    private void ComposeTable(IContainer container)
+    {
+        container
+            .PaddingHorizontal(20)
+            .PaddingBottom(13)
+            .Table(table =>
             {
                 // step 1
                 table.ColumnsDefinition(columns =>
@@ -94,6 +94,5 @@ namespace PdfGenerator.Components.BaDispatch
                     }
                 }
             });
-        }
     }
 }

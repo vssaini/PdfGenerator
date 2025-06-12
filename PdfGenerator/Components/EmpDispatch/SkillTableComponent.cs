@@ -3,22 +3,22 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace PdfGenerator.Components.EmpDispatch
-{
-    internal class SkillTableComponent(EmpDispatchSkill skill) : IComponent
-    {
-        public void Compose(IContainer container)
-        {
-            container.Element(ComposeTable);
-        }
+namespace PdfGenerator.Components.EmpDispatch;
 
-        private void ComposeTable(IContainer container)
-        {
-            container
-                .PaddingLeft(30)
-                .PaddingHorizontal(20)
-                .PaddingVertical(5)
-                .Table(table =>
+internal class SkillTableComponent(EmpDispatchSkill skill) : IComponent
+{
+    public void Compose(IContainer container)
+    {
+        container.Element(ComposeTable);
+    }
+
+    private void ComposeTable(IContainer container)
+    {
+        container
+            .PaddingLeft(30)
+            .PaddingHorizontal(20)
+            .PaddingVertical(5)
+            .Table(table =>
             {
                 // step 1
                 table.ColumnsDefinition(columns =>
@@ -103,6 +103,5 @@ namespace PdfGenerator.Components.EmpDispatch
                     }
                 }
             });
-        }
     }
 }

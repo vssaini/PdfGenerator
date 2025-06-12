@@ -4,87 +4,86 @@ using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 using PdfGenerator.Properties;
 using System.Reflection;
 
-namespace PdfGenerator.Data.Reports.Grievance
+namespace PdfGenerator.Data.Reports.Grievance;
+
+public sealed class GrievanceDocDataSource(IGrievanceRepo grvRepo, ILogger<GrievanceDocDataSource> logger)
+    : IGrievanceDocDataSource
 {
-    public sealed class GrievanceDocDataSource(IGrievanceRepo grvRepo, ILogger<GrievanceDocDataSource> logger)
-        : IGrievanceDocDataSource
+    private GrievanceLetterStepOneResponse _grvLetStepOneResp;
+
+    public async Task<GrievanceLetterStepOneModel> GetGrievanceStepOneModelAsync(GrievanceFilter filter)
     {
-        private GrievanceLetterStepOneResponse _grvLetStepOneResp;
+        _grvLetStepOneResp = await grvRepo.GetGrievanceLetterStepOneAsync(filter);
 
-        public async Task<GrievanceLetterStepOneModel> GetGrievanceStepOneModelAsync(GrievanceFilter filter)
+        logger.LogInformation("Generating grievance step one model for {GrievanceId}", filter.GrievanceId);
+
+        var header = new Header
         {
-            _grvLetStepOneResp = await grvRepo.GetGrievanceLetterStepOneAsync(filter);
+            CompanyLogoPath = GetImageAbsolutePath("CompanyLogo.png"),
+            Title = Resources.LetterHeader,
+            LocalLogoPath = GetImageAbsolutePath("LocalLogo.png")
+        };
 
-            logger.LogInformation("Generating grievance step one model for {GrievanceId}", filter.GrievanceId);
-
-            var header = new Header
-            {
-                CompanyLogoPath = GetImageAbsolutePath("CompanyLogo.png"),
-                Title = Resources.LetterHeader,
-                LocalLogoPath = GetImageAbsolutePath("LocalLogo.png")
-            };
-
-            var address = new Address
-            {
-                Name = _grvLetStepOneResp.Contact,
-                Designation = _grvLetStepOneResp.ContactTitle,
-                Employer = _grvLetStepOneResp.Employer,
-                Address1 = _grvLetStepOneResp.Address1,
-                Address2 = _grvLetStepOneResp.Address2,
-                CountryWithPinCode = _grvLetStepOneResp._CSZ
-            };
-
-            var body = new Body
-            {
-                FirstPara = _grvLetStepOneResp.StepOne.Trim(),
-                SecondPara = _grvLetStepOneResp.Expr5.Trim(),
-                ThirdPara = _grvLetStepOneResp.Issue.Trim(),
-                ClosingPara = _grvLetStepOneResp.Remedy.Trim()
-            };
-
-            var signature = new Signature
-            {
-                ComplementaryClose = Resources.ComplementaryClose,
-                WriterName = _grvLetStepOneResp.Assigned,
-                WriterDesignation = _grvLetStepOneResp.AssingedTitle
-            };
-
-            var cc = new CarbonCopy
-            {
-                PersonThree = string.IsNullOrWhiteSpace(_grvLetStepOneResp.CC) ? "Laura Brassington" : _grvLetStepOneResp.CC
-            };
-
-            var footer = new Footer
-            {
-                Telephone = Resources.Telephone,
-                Fax = Resources.Fax,
-                CompanyAddressFirstLine = Resources.CompanyAddressFirstLine,
-                CompanyAddressSecondLine = Resources.CompanyAddressSecondLine,
-                CompanyWebsite = Resources.CompanyWebsite
-            };
-
-            return new GrievanceLetterStepOneModel
-            {
-                Header = header,
-                Address = address,
-                Subject = _grvLetStepOneResp.Re,
-                Body = body,
-                Signature = signature,
-                CarbonCopy = cc,
-                CertifiedStatement = Resources.CertifiedStatement,
-                Footer = footer
-            };
-        }
-
-        private static string GetImageAbsolutePath(string imgNameWithExtension)
+        var address = new Address
         {
-            var assemblyPath = Assembly.GetExecutingAssembly().Location;
-            var dirPath = Path.GetDirectoryName(assemblyPath);
+            Name = _grvLetStepOneResp.Contact,
+            Designation = _grvLetStepOneResp.ContactTitle,
+            Employer = _grvLetStepOneResp.Employer,
+            Address1 = _grvLetStepOneResp.Address1,
+            Address2 = _grvLetStepOneResp.Address2,
+            CountryWithPinCode = _grvLetStepOneResp._CSZ
+        };
 
-            if (string.IsNullOrEmpty(dirPath))
-                throw new DirectoryNotFoundException("Unable to get directory path");
+        var body = new Body
+        {
+            FirstPara = _grvLetStepOneResp.StepOne.Trim(),
+            SecondPara = _grvLetStepOneResp.Expr5.Trim(),
+            ThirdPara = _grvLetStepOneResp.Issue.Trim(),
+            ClosingPara = _grvLetStepOneResp.Remedy.Trim()
+        };
 
-            return Path.Combine(dirPath, "Resources", imgNameWithExtension);
-        }
+        var signature = new Signature
+        {
+            ComplementaryClose = Resources.ComplementaryClose,
+            WriterName = _grvLetStepOneResp.Assigned,
+            WriterDesignation = _grvLetStepOneResp.AssingedTitle
+        };
+
+        var cc = new CarbonCopy
+        {
+            PersonThree = string.IsNullOrWhiteSpace(_grvLetStepOneResp.CC) ? "Laura Brassington" : _grvLetStepOneResp.CC
+        };
+
+        var footer = new Footer
+        {
+            Telephone = Resources.Telephone,
+            Fax = Resources.Fax,
+            CompanyAddressFirstLine = Resources.CompanyAddressFirstLine,
+            CompanyAddressSecondLine = Resources.CompanyAddressSecondLine,
+            CompanyWebsite = Resources.CompanyWebsite
+        };
+
+        return new GrievanceLetterStepOneModel
+        {
+            Header = header,
+            Address = address,
+            Subject = _grvLetStepOneResp.Re,
+            Body = body,
+            Signature = signature,
+            CarbonCopy = cc,
+            CertifiedStatement = Resources.CertifiedStatement,
+            Footer = footer
+        };
+    }
+
+    private static string GetImageAbsolutePath(string imgNameWithExtension)
+    {
+        var assemblyPath = Assembly.GetExecutingAssembly().Location;
+        var dirPath = Path.GetDirectoryName(assemblyPath);
+
+        if (string.IsNullOrEmpty(dirPath))
+            throw new DirectoryNotFoundException("Unable to get directory path");
+
+        return Path.Combine(dirPath, "Resources", imgNameWithExtension);
     }
 }

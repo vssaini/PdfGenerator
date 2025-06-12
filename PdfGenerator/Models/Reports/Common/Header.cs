@@ -1,8 +1,7 @@
-﻿namespace PdfGenerator.Models.Reports.Common
+﻿namespace PdfGenerator.Models.Reports.Common;
+
+public class Header
 {
-    public class Header
-    {
-        public string Title { get; set; }
-        public string DateRange { get; set; }
-    }
+    public string Title { get; set; }
+    public string DateRange { get; set; }
 }

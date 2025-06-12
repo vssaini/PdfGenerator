@@ -3,26 +3,25 @@ using PdfGenerator.Contracts;
 using PdfGenerator.Contracts.Reports.Request;
 using PdfGenerator.Models.Reports.Request;
 
-namespace PdfGenerator.Data.Reports.Request
+namespace PdfGenerator.Data.Reports.Request;
+
+public class DispatchWorkerListRepo(ISqlConnectionFactory sqlConnectionFactory) : IDispatchWorkerListRepo
 {
-    public class DispatchWorkerListRepo(ISqlConnectionFactory sqlConnectionFactory) : IDispatchWorkerListRepo
+    public async Task<RequestWorkerListReportVm> GetDispatchWorkerAsync(int requestId)
     {
-        public async Task<RequestWorkerListReportVm> GetDispatchWorkerAsync(int requestId)
+        const string sql = "SELECT * FROM dbo.vw_RequestHeader_html WHERE RequestID = @requestId;" +
+                           "SELECT * FROM dbo.vw_Request_WorkerList WHERE RequestID2 = @requestId";
+
+        using var connection = sqlConnectionFactory.CreateConnection();
+        await using var gr = await connection.QueryMultipleAsync(sql, new { requestId });
+
+        var requestHeader = gr.Read<RequestHeaderVm>().FirstOrDefault();
+        var workers = gr.Read<RequestWorkerListVm>().ToList();
+
+        return new RequestWorkerListReportVm
         {
-            const string sql = "SELECT * FROM dbo.vw_RequestHeader_html WHERE RequestID = @requestId;" +
-                               "SELECT * FROM dbo.vw_Request_WorkerList WHERE RequestID2 = @requestId";
-
-            using var connection = sqlConnectionFactory.CreateConnection();
-            await using var gr = await connection.QueryMultipleAsync(sql, new { requestId });
-
-            var requestHeader = gr.Read<RequestHeaderVm>().FirstOrDefault();
-            var workers = gr.Read<RequestWorkerListVm>().ToList();
-
-            return new RequestWorkerListReportVm
-            {
-                RequestHeader = requestHeader,
-                Workers = workers
-            };
-        }
+            RequestHeader = requestHeader,
+            Workers = workers
+        };
     }
 }

@@ -3,23 +3,23 @@ using QuestPDF.Fluent;
 using QuestPDF.Helpers;
 using QuestPDF.Infrastructure;
 
-namespace PdfGenerator.Components.EBoard
-{
-    internal class TableComponent(string employerName, List<DispatchSumRow> disSumRows) : IComponent
-    {
-        public void Compose(IContainer container)
-        {
-            container.Element(ComposeTable);
-        }
+namespace PdfGenerator.Components.EBoard;
 
-        private void ComposeTable(IContainer container)
-        {
-            const string headerBgColor = "#EFEBE9";
-            const string cellBgColor = "#EDE7F6";
+internal class TableComponent(string employerName, List<DispatchSumRow> disSumRows) : IComponent
+{
+    public void Compose(IContainer container)
+    {
+        container.Element(ComposeTable);
+    }
+
+    private void ComposeTable(IContainer container)
+    {
+        const string headerBgColor = "#EFEBE9";
+        const string cellBgColor = "#EDE7F6";
             
-            container
-                .PaddingHorizontal(20)
-                .Table(table =>
+        container
+            .PaddingHorizontal(20)
+            .Table(table =>
             {
                 // step 1
                 table.ColumnsDefinition(columns =>
@@ -120,6 +120,5 @@ namespace PdfGenerator.Components.EBoard
                     }
                 }
             });
-        }
     }
 }

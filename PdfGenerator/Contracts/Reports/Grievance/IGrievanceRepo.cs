@@ -1,9 +1,8 @@
 ﻿using PdfGenerator.Models.Reports.Grievance.LetterStepOne;
 
-namespace PdfGenerator.Contracts.Reports.Grievance
+namespace PdfGenerator.Contracts.Reports.Grievance;
+
+public interface IGrievanceRepo
 {
-    public interface IGrievanceRepo
-    {
-        Task<GrievanceLetterStepOneResponse> GetGrievanceLetterStepOneAsync(GrievanceFilter filter);
-    }
+    Task<GrievanceLetterStepOneResponse> GetGrievanceLetterStepOneAsync(GrievanceFilter filter);
 }

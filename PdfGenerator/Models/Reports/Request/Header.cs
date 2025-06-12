@@ -1,7 +1,6 @@
-﻿namespace PdfGenerator.Models.Reports.Request
+﻿namespace PdfGenerator.Models.Reports.Request;
+
+public class Header
 {
-    public class Header
-    {
-        public string Title { get; set; }
-    }
+    public string Title { get; set; }
 }

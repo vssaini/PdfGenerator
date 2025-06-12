@@ -1,7 +1,6 @@
-﻿namespace PdfGenerator.Contracts.Reports.Request
+﻿namespace PdfGenerator.Contracts.Reports.Request;
+
+public interface IDispatchWorkerListDocService
 {
-    public interface IDispatchWorkerListDocService
-    {
-        Task GenerateDispatchWorkerListDocAsync(int requestId);
-    }
+    Task GenerateDispatchWorkerListDocAsync(int requestId);
 }
