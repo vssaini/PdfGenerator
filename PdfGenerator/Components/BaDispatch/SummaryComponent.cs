@@ -50,18 +50,18 @@ internal class SummaryComponent(Summary summary) : IComponent
                     .Text(text =>
                     {
                         text.DefaultTextStyle(fontStyle);
-                        text.Span("Requestor").Bold();
+                        text.Span("Loc").Bold();
                         text.Span("   ");
-                        text.Span(summary.Requestor);
+                        text.Span(summary.Location);
                     });
 
                 rColumn.Item()
                     .Text(text =>
                     {
                         text.DefaultTextStyle(fontStyle);
-                        text.Span("Report To").Bold();
+                        text.Span("Details").Bold();
                         text.Span("    ");
-                        text.Span(summary.Requestor);
+                        text.Span(TrimText(summary.Details, 25));
                     });
             });
 
@@ -75,7 +75,9 @@ internal class SummaryComponent(Summary summary) : IComponent
                     {
                         text.DefaultTextStyle(fontStyle);
                         text.AlignLeft();
+                        text.Span("Report To").Bold();
                         text.Span("   ");
+                        text.Span(summary.ReportTo);
                     });
 
                 rColumn.Item()
@@ -88,5 +90,13 @@ internal class SummaryComponent(Summary summary) : IComponent
                         text.Span(summary.BusinessAssociate ?? "NA");
                     });
             });
+    }
+    
+    private static string TrimText(string text, int maxLength)
+    {
+        if (string.IsNullOrWhiteSpace(text))
+            return string.Empty;
+
+        return text.Length <= maxLength ? text : text[..maxLength] + "...";
     }
 }

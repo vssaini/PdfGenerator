@@ -40,6 +40,8 @@ public class BaDispatchRepo(ISqlConnectionFactory sqlConnectionFactory, ILogServ
                                 {
                                     RequestId = showGroup.First().RequestID,
                                     Show = showGroup.First().Show,
+                                    Location = showGroup.First().LocationSub,
+                                    Details = showGroup.First().Booth,
                                     Requestor = showGroup.First().Requestor,
                                     ReportTo = $"{showGroup.First().ReportToName} {showGroup.First().ReportToPhone}",
                                     BusinessAssociate = showGroup.First().BA

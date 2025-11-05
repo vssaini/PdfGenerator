@@ -22,9 +22,18 @@ public class Summary
 {
     public int RequestId { get; set; }
     public string Show { get; set; }
+    
+    /// <summary>
+    /// Represents LocationSub field in the database.
+    /// </summary>
+    public string Location { get; set; }
+    /// <summary>
+    /// Represents Booth field in the database.
+    /// </summary>
+    public string Details { get; set; }
 
     public string Requestor { get; set; }
+    
     public string ReportTo { get; set; }
-
     public string BusinessAssociate { get; set; }
 }
