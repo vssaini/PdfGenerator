@@ -86,8 +86,8 @@ public class PdfService(
                 break;
 
             case Document.BaDispatch:
-                var startDate = new DateTime(2024, 07, 22);
-                var endDate = new DateTime(2024, 07, 22);
+                var startDate = new DateTime(2025, 01, 01);
+                var endDate = new DateTime(2025, 02, 27);
                 var dispatchFilter = new DispatchFilter(startDate, endDate, showPdfPreview: false);
                 await baDocService.GenerateBaDispatchReportDocAsync(dispatchFilter);
                 break;

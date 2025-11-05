@@ -21,7 +21,7 @@
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.0.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.6" />
     <PackageReference Include="morelinq" Version="4.4.0" />
-    <PackageReference Include="QuestPDF" Version="2025.5.1" />
+    <PackageReference Include="QuestPDF" Version="2025.7.4" />
     <PackageReference Include="SkiaSharp" Version="3.119.0" />
 
     <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.0" />    

@@ -24,7 +24,7 @@ public class BaDispatchRepo(ISqlConnectionFactory sqlConnectionFactory, ILogServ
             .GroupBy(dr => dr.Location)
             .Select(locationGroup => new BaDispatchResponse
             {
-                LocationName = locationGroup.Key,
+                LocationName = string.IsNullOrWhiteSpace(locationGroup.Key) ? "Not Assigned" : locationGroup.Key,
                 Employers = locationGroup
                     .OrderBy(dr => dr.Employer)
                     .GroupBy(dr => dr.Employer)
@@ -103,7 +103,8 @@ public class BaDispatchRepo(ISqlConnectionFactory sqlConnectionFactory, ILogServ
         return subDispatchReports;
     }
 
-    private static List<DispatchRow> GetDispatchRows(int requestId, IEnumerable<vw_BADispatchReport_Sub> subDispatchReports)
+    private static List<DispatchRow> GetDispatchRows(int requestId,
+        IEnumerable<vw_BADispatchReport_Sub> subDispatchReports)
     {
         return subDispatchReports
             .Where(x => x.RequestID == requestId)

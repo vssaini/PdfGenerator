@@ -10,8 +10,7 @@ public class BaDispatchReportDocument(BaDispatchReportModel model) : IDocument
 {
     private const int DefaultFontSize = 9;
     private const string DefaultFont = "Arial";
-    private const string ArialFont = "Arial";
-
+    
     public DocumentMetadata GetMetadata()
     {
         return new DocumentMetadata
@@ -38,6 +37,7 @@ public class BaDispatchReportDocument(BaDispatchReportModel model) : IDocument
             {
                 page.Size(PageSizes.A4);
                 page.Margin(margin, Unit.Inch);
+                page.PageColor(Colors.White);
                 page.DefaultTextStyle(pageStyle);
 
                 page.Header().Element(ComposeHeader);
@@ -50,13 +50,13 @@ public class BaDispatchReportDocument(BaDispatchReportModel model) : IDocument
     {
         var titleStyle = TextStyle.Default
             .FontSize(18)
-            .FontFamily(ArialFont)
+            .FontFamily(DefaultFont)
             .SemiBold()
             .Italic();
 
         var dateStyle = TextStyle.Default
             .FontSize(12)
-            .FontFamily(ArialFont)
+            .FontFamily(DefaultFont)
             .SemiBold();
 
         container.Column(column =>
@@ -87,7 +87,7 @@ public class BaDispatchReportDocument(BaDispatchReportModel model) : IDocument
     {
         var fontStyle = TextStyle.Default
             .FontSize(8)
-            .FontFamily(ArialFont);
+            .FontFamily(DefaultFont);
 
         container.PaddingVertical(20).BorderTop(1).PaddingBottom(1).Row(row =>
         {
